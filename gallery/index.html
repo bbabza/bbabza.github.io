@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <script>try{if(location.pathname.endsWith("index.html"))history.replaceState(null,"",location.pathname.slice(0,-10)||"./")}catch(e){}</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Photo Gallery — The Bezwada Bar Association, Vijayawada." />
+  <title>Gallery | The Bezwada Bar Association</title>
+  <link rel="icon" href="../images/logo.jpeg" type="image/jpeg" />
+  <link rel="stylesheet" href="../css/styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet" />
+</head>
+<body data-root="../">
+
+  <div class="topbar">
+    <div class="container">
+      <span>&#128222; 0866 &ndash; 2574321</span>
+      <span>&#9993; bbabza@gmail.com</span>
+      <span>&#128205; Civil Courts Campus, Governorpet, Vijayawada &ndash; 520 002</span>
+      <span>&#128197; Established 1906</span>
+    </div>
+  </div>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="../index.html" class="logo-block">
+        <div class="emblem">
+          <img src="../images/logo.jpeg" alt="The Bezwada Bar Association Logo" class="header-logo" />
+        </div>
+        <div class="logo-text">
+          <h1>The Bezwada Bar Association</h1>
+          <p class="tagline">Let Justice Prevail &mdash; Estd. 1906</p>
+        </div>
+      </a>
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation"><span></span><span></span><span></span></button>
+      <nav class="main-nav" id="mainNav">
+        <ul>
+          <li><a href="../index.html">Home</a></li>
+          <li><a href="../about/index.html">About</a></li>
+          <li><a href="../office-bearers/index.html">Office Bearers</a></li>
+          <li><a href="../members/index.html">Members</a></li>
+          <li><a href="../news/index.html">News &amp; Events</a></li>
+          <li><a href="../gallery/index.html" aria-current="page">Gallery</a></li>
+          <li><a href="../contact/index.html" class="btn-nav">Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <div class="news-ticker" id="newsTicker">
+    <div class="ticker-label"><span class="ticker-dot"></span>LATEST NEWS</div>
+    <div class="ticker-viewport">
+      <div class="ticker-track" id="tickerTrack"><span class="ticker-placeholder">Loading latest news&hellip;</span></div>
+    </div>
+    <button class="ticker-pause" id="tickerPause" title="Pause / Resume">&#10074;&#10074;</button>
+  </div>
+
+  <div class="page-hero">
+    <div class="container">
+      <p class="page-hero-eyebrow">Moments</p>
+      <h2>Photo Gallery</h2>
+      <div class="breadcrumb">
+        <a href="../index.html">Home</a>
+        <span class="breadcrumb-sep">&#8250;</span>
+        <span>Gallery</span>
+      </div>
+    </div>
+  </div>
+
+  <section class="section section-light">
+    <div class="container">
+      <div class="gallery-filters">
+        <button class="gfilter-btn active" data-filter="all">All</button>
+        <button class="gfilter-btn" data-filter="events">Events</button>
+        <button class="gfilter-btn" data-filter="welfare">Welfare</button>
+        <button class="gfilter-btn" data-filter="heritage">Heritage</button>
+      </div>
+      <div class="gallery-grid" id="galleryGrid">
+        <div class="gallery-item" data-category="events">
+          <div class="gallery-placeholder" style="background:linear-gradient(135deg,#1e7a6e 60%,#c9a227);">
+            <span>Annual General<br/>Body Meeting</span>
+          </div>
+        </div>
+        <div class="gallery-item" data-category="events">
+          <div class="gallery-placeholder" style="background:linear-gradient(135deg,#2a9d8f 60%,#a07d1a);">
+            <span>Moot Court<br/>Competition</span>
+          </div>
+        </div>
+        <div class="gallery-item" data-category="welfare">
+          <div class="gallery-placeholder" style="background:linear-gradient(135deg,#0f5c54 60%,#c9a227);">
+            <span>Legal Aid Camp<br/>Ibrahimpatnam</span>
+          </div>
+        </div>
+        <div class="gallery-item" data-category="heritage">
+          <div class="gallery-placeholder" style="background:linear-gradient(135deg,#2a3a1a 60%,#8b6914);">
+            <span>Civil Courts Campus<br/>Governorpet</span>
+          </div>
+        </div>
+        <div class="gallery-item" data-category="events">
+          <div class="gallery-placeholder" style="background:linear-gradient(135deg,#1e7a6e 60%,#c9a227);">
+            <span>Constitution Day<br/>Seminar</span>
+          </div>
+        </div>
+        <div class="gallery-item" data-category="welfare">
+          <div class="gallery-placeholder" style="background:linear-gradient(135deg,#1a5a52 60%,#c9a227);">
+            <span>Digital Library<br/>Inauguration</span>
+          </div>
+        </div>
+        <div class="gallery-item" data-category="heritage">
+          <div class="gallery-placeholder" style="background:linear-gradient(135deg,#2a1a1a 60%,#c9a227);">
+            <span>Bar Association Hall<br/>Governorpet</span>
+          </div>
+        </div>
+        <div class="gallery-item" data-category="events">
+          <div class="gallery-placeholder" style="background:linear-gradient(135deg,#1e7a6e 60%,#a07d1a);">
+            <span>Sports Meet<br/>Annual</span>
+          </div>
+        </div>
+      </div>
+      <p class="gallery-note">Replace placeholder tiles with actual photographs. Upload images to <code>../images/gallery/</code> and update the <code>src</code> attributes accordingly.</p>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <h3>The Bezwada Bar Association</h3>
+        <p>Upholding justice and serving the legal fraternity of Vijayawada since 1906.</p>
+        <p>Civil Courts Campus, Gopala Reddy Road,<br/>Governorpet, Vijayawada &ndash; 520 002</p>
+        <p class="footer-tel">&#128222; 0866 &ndash; 2574321 &bull; &#9993; bbabza@gmail.com</p>
+      </div>
+      <div class="footer-links">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="../index.html">Home</a></li>
+          <li><a href="../about/index.html">About</a></li>
+          <li><a href="../office-bearers/index.html">Office Bearers</a></li>
+          <li><a href="../members/index.html">Members Directory</a></li>
+          <li><a href="../news/index.html">News &amp; Events</a></li>
+          <li><a href="../contact/index.html">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>Resources</h4>
+        <ul>
+          <li><a href="https://www.barcouncilofindia.org" target="_blank" rel="noopener">Bar Council of India</a></li>
+          <li><a href="https://hc.ap.nic.in" target="_blank" rel="noopener">AP High Court</a></li>
+          <li><a href="https://nalsa.gov.in" target="_blank" rel="noopener">NALSA &mdash; Legal Aid</a></li>
+          <li><a href="https://districts.ecourts.gov.in/krishna" target="_blank" rel="noopener">District Courts &mdash; Krishna</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>Affiliations</h4>
+        <ul>
+          <li>Bar Council of Andhra Pradesh</li>
+          <li>Bar Council of India</li>
+          <li>District Legal Services Authority</li>
+          <li>Krishna District Court</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="container">
+        <p>&copy; 2026 The Bezwada Bar Association. All rights reserved.</p>
+        <p>Governorpet &bull; Vijayawada &bull; Krishna District &bull; Andhra Pradesh</p>
+      </div>
+    </div>
+  </footer>
+
+  <button class="back-to-top" id="backToTop" aria-label="Back to top">&#8679;</button>
+  <script src="../js/script.js"></script>
+</body>
+</html>

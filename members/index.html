@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <script>try{if(location.pathname.endsWith("index.html"))history.replaceState(null,"",location.pathname.slice(0,-10)||"./")}catch(e){}</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Members Directory — The Bezwada Bar Association, Vijayawada." />
+  <title>Members Directory | The Bezwada Bar Association</title>
+  <link rel="icon" href="../images/logo.jpeg" type="image/jpeg" />
+  <link rel="stylesheet" href="../css/styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet" />
+</head>
+<body data-root="../">
+
+  <div class="topbar">
+    <div class="container">
+      <span>&#128222; 0866 &ndash; 2574321</span>
+      <span>&#9993; bbabza@gmail.com</span>
+      <span>&#128205; Civil Courts Campus, Governorpet, Vijayawada &ndash; 520 002</span>
+      <span>&#128197; Established 1906</span>
+    </div>
+  </div>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="../index.html" class="logo-block">
+        <div class="emblem">
+          <img src="../images/logo.jpeg" alt="The Bezwada Bar Association Logo" class="header-logo" />
+        </div>
+        <div class="logo-text">
+          <h1>The Bezwada Bar Association</h1>
+          <p class="tagline">Let Justice Prevail &mdash; Estd. 1906</p>
+        </div>
+      </a>
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation"><span></span><span></span><span></span></button>
+      <nav class="main-nav" id="mainNav">
+        <ul>
+          <li><a href="../index.html">Home</a></li>
+          <li><a href="../about/index.html">About</a></li>
+          <li><a href="../office-bearers/index.html">Office Bearers</a></li>
+          <li><a href="../members/index.html" aria-current="page">Members</a></li>
+          <li><a href="../news/index.html">News &amp; Events</a></li>
+          <li><a href="../gallery/index.html">Gallery</a></li>
+          <li><a href="../contact/index.html" class="btn-nav">Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <div class="news-ticker" id="newsTicker">
+    <div class="ticker-label"><span class="ticker-dot"></span>LATEST NEWS</div>
+    <div class="ticker-viewport">
+      <div class="ticker-track" id="tickerTrack"><span class="ticker-placeholder">Loading latest news&hellip;</span></div>
+    </div>
+    <button class="ticker-pause" id="tickerPause" title="Pause / Resume">&#10074;&#10074;</button>
+  </div>
+
+  <div class="page-hero">
+    <div class="container">
+      <p class="page-hero-eyebrow">Fraternity</p>
+      <h2>Members Directory</h2>
+      <div class="breadcrumb">
+        <a href="../index.html">Home</a>
+        <span class="breadcrumb-sep">&#8250;</span>
+        <span>Members</span>
+      </div>
+    </div>
+  </div>
+
+  <section class="section section-light">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-badge">Enrolled Advocates</span>
+        <h2 class="section-title">Members Directory</h2>
+        <div class="divider"></div>
+        <p class="section-sub">A partial listing of enrolled advocates. Full directory available at the Association office.</p>
+      </div>
+      <div class="members-controls">
+        <input type="text" id="memberSearch" placeholder="Search by name, enrollment no., or practice area..." class="search-input" />
+        <select id="memberFilter" class="filter-select">
+          <option value="">All Practice Areas</option>
+          <option>Civil</option>
+          <option>Criminal</option>
+          <option>Constitutional</option>
+          <option>Family</option>
+          <option>Labour</option>
+          <option>Revenue</option>
+          <option>Commercial</option>
+        </select>
+      </div>
+      <div class="table-wrapper">
+        <table class="members-table" id="membersTable">
+          <thead>
+            <tr>
+              <th>Enr. No.</th>
+              <th>Name</th>
+              <th>Practice Area</th>
+              <th>Enrolled</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>AP/001/1985</td><td>Sri Alapati Subrahmanyam</td><td>Civil</td><td>1985</td><td><span class="badge badge-active">Active</span></td></tr>
+            <tr><td>AP/002/1990</td><td>Smt. Bhavani Devi Challa</td><td>Family</td><td>1990</td><td><span class="badge badge-active">Active</span></td></tr>
+            <tr><td>AP/003/1993</td><td>Sri Dasari Venkata Rao</td><td>Criminal</td><td>1993</td><td><span class="badge badge-active">Active</span></td></tr>
+            <tr><td>AP/004/1996</td><td>Sri Elanaga Srinivasa Rao</td><td>Revenue</td><td>1996</td><td><span class="badge badge-active">Active</span></td></tr>
+            <tr><td>AP/005/1998</td><td>Smt. Ganta Padmaja</td><td>Constitutional</td><td>1998</td><td><span class="badge badge-active">Active</span></td></tr>
+            <tr><td>AP/006/2000</td><td>Sri Harish Chandra Mouli</td><td>Commercial</td><td>2000</td><td><span class="badge badge-active">Active</span></td></tr>
+            <tr><td>AP/007/2003</td><td>Sri Indukuri Prasad</td><td>Labour</td><td>2003</td><td><span class="badge badge-active">Active</span></td></tr>
+            <tr><td>AP/008/2005</td><td>Smt. Jyothi Lakshmi Katari</td><td>Family</td><td>2005</td><td><span class="badge badge-active">Active</span></td></tr>
+            <tr><td>AP/009/2007</td><td>Sri Konduri Bala Krishna</td><td>Civil</td><td>2007</td><td><span class="badge badge-active">Active</span></td></tr>
+            <tr><td>AP/010/2009</td><td>Sri Lakshmi Narayan Pattnaik</td><td>Criminal</td><td>2009</td><td><span class="badge badge-active">Active</span></td></tr>
+            <tr><td>AP/011/2011</td><td>Smt. Mangala Devi Nalluri</td><td>Revenue</td><td>2011</td><td><span class="badge badge-active">Active</span></td></tr>
+            <tr><td>AP/012/2013</td><td>Sri Nanduri Kiran Kumar</td><td>Commercial</td><td>2013</td><td><span class="badge badge-active">Active</span></td></tr>
+            <tr><td>AP/013/2015</td><td>Sri Omkar Reddy Potluri</td><td>Constitutional</td><td>2015</td><td><span class="badge badge-active">Active</span></td></tr>
+            <tr><td>AP/014/2017</td><td>Smt. Pavani Yellampalli</td><td>Labour</td><td>2017</td><td><span class="badge badge-active">Active</span></td></tr>
+            <tr><td>AP/015/2019</td><td>Sri Ravi Teja Samudrala</td><td>Civil</td><td>2019</td><td><span class="badge badge-active">Active</span></td></tr>
+            <tr><td>AP/016/2020</td><td>Smt. Sailaja Kommineni</td><td>Family</td><td>2020</td><td><span class="badge badge-active">Active</span></td></tr>
+            <tr><td>AP/017/2021</td><td>Sri Tirumala Rao Maddala</td><td>Criminal</td><td>2021</td><td><span class="badge badge-active">Active</span></td></tr>
+            <tr><td>AP/018/2022</td><td>Smt. Uma Devi Venugopal</td><td>Revenue</td><td>2022</td><td><span class="badge badge-active">Active</span></td></tr>
+            <tr><td>AP/019/2023</td><td>Sri Vijay Krishna Tadepalli</td><td>Commercial</td><td>2023</td><td><span class="badge badge-active">Active</span></td></tr>
+            <tr><td>AP/020/2024</td><td>Smt. Yamini Priya Muddada</td><td>Constitutional</td><td>2024</td><td><span class="badge badge-active">Active</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="table-note">Showing 20 of 1,800+ members &mdash; Contact the Association office for the complete directory or enrollment inquiries.</p>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <h3>The Bezwada Bar Association</h3>
+        <p>Upholding justice and serving the legal fraternity of Vijayawada since 1906.</p>
+        <p>Civil Courts Campus, Gopala Reddy Road,<br/>Governorpet, Vijayawada &ndash; 520 002</p>
+        <p class="footer-tel">&#128222; 0866 &ndash; 2574321 &bull; &#9993; bbabza@gmail.com</p>
+      </div>
+      <div class="footer-links">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="../index.html">Home</a></li>
+          <li><a href="../about/index.html">About</a></li>
+          <li><a href="../office-bearers/index.html">Office Bearers</a></li>
+          <li><a href="../members/index.html">Members Directory</a></li>
+          <li><a href="../news/index.html">News &amp; Events</a></li>
+          <li><a href="../contact/index.html">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>Resources</h4>
+        <ul>
+          <li><a href="https://www.barcouncilofindia.org" target="_blank" rel="noopener">Bar Council of India</a></li>
+          <li><a href="https://hc.ap.nic.in" target="_blank" rel="noopener">AP High Court</a></li>
+          <li><a href="https://nalsa.gov.in" target="_blank" rel="noopener">NALSA &mdash; Legal Aid</a></li>
+          <li><a href="https://districts.ecourts.gov.in/krishna" target="_blank" rel="noopener">District Courts &mdash; Krishna</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>Affiliations</h4>
+        <ul>
+          <li>Bar Council of Andhra Pradesh</li>
+          <li>Bar Council of India</li>
+          <li>District Legal Services Authority</li>
+          <li>Krishna District Court</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="container">
+        <p>&copy; 2026 The Bezwada Bar Association. All rights reserved.</p>
+        <p>Governorpet &bull; Vijayawada &bull; Krishna District &bull; Andhra Pradesh</p>
+      </div>
+    </div>
+  </footer>
+
+  <button class="back-to-top" id="backToTop" aria-label="Back to top">&#8679;</button>
+  <script src="../js/script.js"></script>
+</body>
+</html>

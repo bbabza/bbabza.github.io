@@ -2,16 +2,17 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <script>try{if(location.pathname.endsWith("index.html"))history.replaceState(null,"",location.pathname.slice(0,-10)||"./")}catch(e){}</script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="The Bezwada Bar Association — Civil Courts Campus, Governorpet, Vijayawada. Serving the legal fraternity since 1906." />
   <title>The Bezwada Bar Association | Vijayawada</title>
+  <link rel="icon" href="images/logo.jpeg" type="image/jpeg" />
   <link rel="stylesheet" href="css/styles.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet" />
 </head>
-<body>
+<body data-root="">
 
-  <!-- ═══════════════════════════════ TOPBAR ═══════════════════════════════ -->
   <div class="topbar">
     <div class="container">
       <span>&#128222; 0866 &ndash; 2574321</span>
@@ -21,44 +22,41 @@
     </div>
   </div>
 
-  <!-- ══════════════════════════════ HEADER ════════════════════════════════ -->
-  <header class="site-header" id="home">
+  <header class="site-header">
     <div class="container header-inner">
-      <div class="logo-block">
-        <div class="emblem" aria-hidden="true">
-          <svg viewBox="0 0 80 80" width="72" height="72">
-            <circle cx="40" cy="40" r="38" fill="none" stroke="#c9a227" stroke-width="2"/>
-            <circle cx="40" cy="40" r="32" fill="none" stroke="#c9a227" stroke-width="0.8"/>
-            <line x1="40" y1="18" x2="40" y2="62" stroke="#c9a227" stroke-width="2"/>
-            <line x1="26" y1="28" x2="54" y2="28" stroke="#c9a227" stroke-width="2"/>
-            <path d="M22 28 Q18 36 26 38 Q34 36 30 28" fill="none" stroke="#c9a227" stroke-width="1.5"/>
-            <path d="M50 28 Q46 36 54 38 Q62 36 58 28" fill="none" stroke="#c9a227" stroke-width="1.5"/>
-            <rect x="33" y="60" width="14" height="3" rx="1" fill="#c9a227"/>
-          </svg>
+      <a href="index.html" class="logo-block">
+        <div class="emblem">
+          <img src="images/logo.jpeg" alt="The Bezwada Bar Association Logo" class="header-logo" />
         </div>
         <div class="logo-text">
           <h1>The Bezwada Bar Association</h1>
           <p class="tagline">Let Justice Prevail &mdash; Estd. 1906</p>
         </div>
-      </div>
-      <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
-        <span></span><span></span><span></span>
-      </button>
+      </a>
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation"><span></span><span></span><span></span></button>
       <nav class="main-nav" id="mainNav">
         <ul>
-          <li><a href="#home">Home</a></li>
-          <li><a href="#about">About</a></li>
-          <li><a href="#bearers">Office Bearers</a></li>
-          <li><a href="#members">Members</a></li>
-          <li><a href="#news">News &amp; Events</a></li>
-          <li><a href="#gallery">Gallery</a></li>
-          <li><a href="#contact" class="btn-nav">Contact</a></li>
+          <li><a href="index.html" aria-current="page">Home</a></li>
+          <li><a href="about/index.html">About</a></li>
+          <li><a href="office-bearers/index.html">Office Bearers</a></li>
+          <li><a href="members/index.html">Members</a></li>
+          <li><a href="news/index.html">News &amp; Events</a></li>
+          <li><a href="gallery/index.html">Gallery</a></li>
+          <li><a href="contact/index.html" class="btn-nav">Contact</a></li>
         </ul>
       </nav>
     </div>
   </header>
 
-  <!-- ═══════════════════════════════ HERO ══════════════════════════════════ -->
+  <div class="news-ticker" id="newsTicker">
+    <div class="ticker-label"><span class="ticker-dot"></span>LATEST NEWS</div>
+    <div class="ticker-viewport">
+      <div class="ticker-track" id="tickerTrack"><span class="ticker-placeholder">Loading latest news&hellip;</span></div>
+    </div>
+    <button class="ticker-pause" id="tickerPause" title="Pause / Resume">&#10074;&#10074;</button>
+  </div>
+
+  <!-- HERO -->
   <section class="hero">
     <div class="hero-overlay"></div>
     <div class="container hero-content">
@@ -66,8 +64,8 @@
       <h2>Upholding Justice.<br/>Serving the Bar.</h2>
       <p class="hero-sub">The Bezwada Bar Association has stood as the cornerstone of the legal fraternity in Vijayawada for over a century, championing the rights of advocates and the cause of justice since 1906.</p>
       <div class="hero-actions">
-        <a href="#about" class="btn btn-gold">Discover Our Legacy</a>
-        <a href="#members" class="btn btn-outline">Members Directory</a>
+        <a href="about/index.html" class="btn btn-gold">Discover Our Legacy</a>
+        <a href="members/index.html" class="btn btn-outline">Members Directory</a>
       </div>
     </div>
     <div class="hero-stats">
@@ -80,541 +78,72 @@
     </div>
   </section>
 
-  <!-- ══════════════════════════════ ABOUT ══════════════════════════════════ -->
-  <section class="section section-light" id="about">
+  <!-- SECTION CARDS -->
+  <section class="section section-light">
     <div class="container">
       <div class="section-header">
-        <span class="section-badge">Our Story</span>
-        <h2 class="section-title">About The Bezwada Bar Association</h2>
+        <span class="section-badge">Explore</span>
+        <h2 class="section-title">Explore Our Association</h2>
         <div class="divider"></div>
       </div>
-      <div class="about-grid">
-        <div class="about-text">
-          <h3>A Legacy of Legal Excellence</h3>
-          <p>The Bezwada Bar Association was established in <strong>1906</strong> in the historic city of Vijayawada (Bezwada), on the banks of the Krishna River. Founded by a distinguished group of advocates committed to the rule of law and professional integrity, the association has served as the backbone of the legal community in Krishna District for over a century.</p>
-          <p>Through the decades of India's independence movement, post-independence legal reforms, and the formation of Andhra Pradesh, the Bezwada Bar Association has remained a steadfast guardian of the legal profession — advocating for judicial reforms, legal education, and the welfare of its members.</p>
-          <p>Today, with over 1,800 enrolled advocates, the association functions at the <strong>Civil Courts Campus, Gopala Reddy Road, Governorpet, Vijayawada</strong>, and maintains strong ties with the Andhra Pradesh High Court, the Bar Council of Andhra Pradesh, and the Bar Council of India.</p>
-          <div class="about-pillars">
-            <div class="pillar">
-              <span class="pillar-icon">&#9878;</span>
-              <div>
-                <strong>Mission</strong>
-                <p>To protect and promote the rights, welfare, and professional interests of advocates practicing in Vijayawada.</p>
-              </div>
-            </div>
-            <div class="pillar">
-              <span class="pillar-icon">&#128204;</span>
-              <div>
-                <strong>Vision</strong>
-                <p>A vibrant, inclusive legal community committed to access to justice, ethics, and the rule of law.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="about-timeline">
-          <h3>Our Journey</h3>
-          <ul class="timeline">
-            <li>
-              <span class="tl-year">1906</span>
-              <div class="tl-body"><strong>Foundation</strong><p>The Bezwada Bar Association formally constituted by leading advocates of the Krishna District.</p></div>
-            </li>
-            <li>
-              <span class="tl-year">1947</span>
-              <div class="tl-body"><strong>Post-Independence Era</strong><p>Association played an active role in shaping legal institutions in newly independent India.</p></div>
-            </li>
-            <li>
-              <span class="tl-year">1956</span>
-              <div class="tl-body"><strong>State Reorganisation</strong><p>Adapted to the formation of Andhra Pradesh; strengthened ties with the newly established AP High Court.</p></div>
-            </li>
-            <li>
-              <span class="tl-year">1985</span>
-              <div class="tl-body"><strong>New Premises</strong><p>Shifted to the Civil Courts Campus, Gopala Reddy Road, Governorpet — the current premises.</p></div>
-            </li>
-            <li>
-              <span class="tl-year">2014</span>
-              <div class="tl-body"><strong>State Bifurcation</strong><p>Navigated the reorganisation of Andhra Pradesh; continued to represent advocates' interests during transition.</p></div>
-            </li>
-            <li>
-              <span class="tl-year">2026</span>
-              <div class="tl-body"><strong>Advocacy for Members</strong><p>The Governing Body unanimously resolved to abstain from duties in protest against police atrocities on advocates, reaffirming the Bar's commitment to protecting its members.</p></div>
-            </li>
-          </ul>
-        </div>
+      <div class="section-cards-grid">
+        <a href="about/index.html" class="section-card">
+          <div class="section-card-icon">&#128220;</div>
+          <h3>About &amp; History</h3>
+          <p>Learn about our century-long legacy, mission, vision, and the milestones that have shaped the Bezwada Bar Association since 1906.</p>
+          <span class="section-card-link">Read Our Story &rarr;</span>
+        </a>
+        <a href="office-bearers/index.html" class="section-card">
+          <div class="section-card-icon">&#9878;</div>
+          <h3>Office Bearers</h3>
+          <p>Meet the elected leadership — President, General Secretary, and all office bearers steering the Association's affairs.</p>
+          <span class="section-card-link">Meet the Leaders &rarr;</span>
+        </a>
+        <a href="members/index.html" class="section-card">
+          <div class="section-card-icon">&#128101;</div>
+          <h3>Members Directory</h3>
+          <p>Search and browse our directory of enrolled advocates practising at the Civil Courts, Vijayawada.</p>
+          <span class="section-card-link">Browse Directory &rarr;</span>
+        </a>
+        <a href="news/index.html" class="section-card">
+          <div class="section-card-icon">&#128240;</div>
+          <h3>News &amp; Events</h3>
+          <p>Stay updated with the latest announcements, upcoming events, notices, and circulars from the Association.</p>
+          <span class="section-card-link">View News &rarr;</span>
+        </a>
+        <a href="gallery/index.html" class="section-card">
+          <div class="section-card-icon">&#128247;</div>
+          <h3>Photo Gallery</h3>
+          <p>Relive the moments from our events, seminars, legal aid camps, cultural programmes, and landmark occasions.</p>
+          <span class="section-card-link">View Gallery &rarr;</span>
+        </a>
+        <a href="contact/index.html" class="section-card">
+          <div class="section-card-icon">&#128205;</div>
+          <h3>Contact Us</h3>
+          <p>Reach the Association office at Civil Courts Campus, Governorpet. Get in touch with our office bearers directly.</p>
+          <span class="section-card-link">Get in Touch &rarr;</span>
+        </a>
       </div>
     </div>
   </section>
 
-  <!-- ════════════════════════════ OFFICE BEARERS ══════════════════════════ -->
-  <section class="section section-dark" id="bearers">
+  <!-- RECENT NEWS PREVIEW -->
+  <section class="section section-white">
     <div class="container">
       <div class="section-header">
-        <span class="section-badge">Leadership</span>
-        <h2 class="section-title">Office Bearers</h2>
-        <div class="divider divider-gold"></div>
-      </div>
-      <div class="bearers-grid">
-
-        <!-- President -->
-        <div class="bearer-card bearer-card--featured">
-          <div class="bearer-avatar" aria-hidden="true">
-            <svg viewBox="0 0 100 100" width="90" height="90"><circle cx="50" cy="38" r="22" fill="#c9a227" opacity="0.35"/><circle cx="50" cy="38" r="16" fill="#c9a227" opacity="0.5"/><ellipse cx="50" cy="82" rx="32" ry="22" fill="#c9a227" opacity="0.2"/></svg>
-          </div>
-          <div class="bearer-info">
-            <p class="bearer-role">President</p>
-            <h3>Vishnubhotla Lakshmi Narayana</h3>
-            <p class="bearer-qual">B.Com., LL.B.</p>
-            <p class="bearer-phone">&#128222; 98485 36066 &nbsp;|&nbsp; &#9993; vin@vin.co.in</p>
-          </div>
-        </div>
-
-        <!-- General Secretary -->
-        <div class="bearer-card bearer-card--featured" style="margin-top:-12px;">
-          <div class="bearer-avatar" aria-hidden="true">
-            <svg viewBox="0 0 100 100" width="90" height="90"><circle cx="50" cy="38" r="22" fill="#c9a227" opacity="0.35"/><circle cx="50" cy="38" r="16" fill="#c9a227" opacity="0.5"/><ellipse cx="50" cy="82" rx="32" ry="22" fill="#c9a227" opacity="0.2"/></svg>
-          </div>
-          <div class="bearer-info">
-            <p class="bearer-role">General Secretary</p>
-            <h3>Valiboyina Kiran Kumar</h3>
-            <p class="bearer-qual">B.A., LL.B.</p>
-            <p class="bearer-phone">&#128222; 96666 33666 &nbsp;|&nbsp; &#9993; valiboyinakirankumar@gmail.com</p>
-          </div>
-        </div>
-
-        <!-- Vice President -->
-        <div class="bearer-card">
-          <div class="bearer-avatar" aria-hidden="true">
-            <svg viewBox="0 0 100 100" width="64" height="64"><circle cx="50" cy="38" r="22" fill="#c9a227" opacity="0.25"/><ellipse cx="50" cy="82" rx="32" ry="22" fill="#c9a227" opacity="0.12"/></svg>
-          </div>
-          <div class="bearer-info">
-            <p class="bearer-role">Vice President</p>
-            <h3>Bandarupalli Lenin</h3>
-            <p class="bearer-phone">&#128222; 99851 58326</p>
-          </div>
-        </div>
-
-        <!-- Joint Secretary -->
-        <div class="bearer-card">
-          <div class="bearer-avatar" aria-hidden="true">
-            <svg viewBox="0 0 100 100" width="64" height="64"><circle cx="50" cy="38" r="22" fill="#c9a227" opacity="0.25"/><ellipse cx="50" cy="82" rx="32" ry="22" fill="#c9a227" opacity="0.12"/></svg>
-          </div>
-          <div class="bearer-info">
-            <p class="bearer-role">Joint Secretary</p>
-            <h3>Jetti Ravi Kumar</h3>
-            <p class="bearer-phone">&#128222; 88856 66125</p>
-          </div>
-        </div>
-
-        <!-- Treasurer -->
-        <div class="bearer-card">
-          <div class="bearer-avatar" aria-hidden="true">
-            <svg viewBox="0 0 100 100" width="64" height="64"><circle cx="50" cy="38" r="22" fill="#c9a227" opacity="0.25"/><ellipse cx="50" cy="82" rx="32" ry="22" fill="#c9a227" opacity="0.12"/></svg>
-          </div>
-          <div class="bearer-info">
-            <p class="bearer-role">Treasurer</p>
-            <h3>Vemulapalli Padmaja</h3>
-            <p class="bearer-phone">&#128222; 92461 78353</p>
-          </div>
-        </div>
-
-        <!-- Library Secretary -->
-        <div class="bearer-card">
-          <div class="bearer-avatar" aria-hidden="true">
-            <svg viewBox="0 0 100 100" width="64" height="64"><circle cx="50" cy="38" r="22" fill="#c9a227" opacity="0.25"/><ellipse cx="50" cy="82" rx="32" ry="22" fill="#c9a227" opacity="0.12"/></svg>
-          </div>
-          <div class="bearer-info">
-            <p class="bearer-role">Library Secretary</p>
-            <h3>Musti Srikanth</h3>
-            <p class="bearer-phone">&#128222; 95338 30605</p>
-          </div>
-        </div>
-
-        <!-- Sports Secretary -->
-        <div class="bearer-card">
-          <div class="bearer-avatar" aria-hidden="true">
-            <svg viewBox="0 0 100 100" width="64" height="64"><circle cx="50" cy="38" r="22" fill="#c9a227" opacity="0.25"/><ellipse cx="50" cy="82" rx="32" ry="22" fill="#c9a227" opacity="0.12"/></svg>
-          </div>
-          <div class="bearer-info">
-            <p class="bearer-role">Sports Secretary</p>
-            <h3>Garikapati Rama Teja</h3>
-            <p class="bearer-phone">&#128222; 94400 91932</p>
-          </div>
-        </div>
-
-        <!-- Cultural Secretary -->
-        <div class="bearer-card">
-          <div class="bearer-avatar" aria-hidden="true">
-            <svg viewBox="0 0 100 100" width="64" height="64"><circle cx="50" cy="38" r="22" fill="#c9a227" opacity="0.25"/><ellipse cx="50" cy="82" rx="32" ry="22" fill="#c9a227" opacity="0.12"/></svg>
-          </div>
-          <div class="bearer-info">
-            <p class="bearer-role">Cultural Secretary</p>
-            <h3>Karingula Indira</h3>
-            <p class="bearer-phone">&#128222; 94923 76008</p>
-          </div>
-        </div>
-
-        <!-- Lady Secretary -->
-        <div class="bearer-card">
-          <div class="bearer-avatar" aria-hidden="true">
-            <svg viewBox="0 0 100 100" width="64" height="64"><circle cx="50" cy="38" r="22" fill="#c9a227" opacity="0.25"/><ellipse cx="50" cy="82" rx="32" ry="22" fill="#c9a227" opacity="0.12"/></svg>
-          </div>
-          <div class="bearer-info">
-            <p class="bearer-role">Lady Secretary</p>
-            <h3>Essamsetty Usha Jyothi</h3>
-            <p class="bearer-phone">&#128222; 90100 58884</p>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- ══════════════════════════════ MEMBERS ════════════════════════════════ -->
-  <section class="section section-light" id="members">
-    <div class="container">
-      <div class="section-header">
-        <span class="section-badge">Fraternity</span>
-        <h2 class="section-title">Members Directory</h2>
-        <div class="divider"></div>
-        <p class="section-sub">A partial listing of enrolled advocates. Full directory available at the Association office.</p>
-      </div>
-      <div class="members-controls">
-        <input type="text" id="memberSearch" placeholder="Search by name, enrollment no., or practice area..." class="search-input" />
-        <select id="memberFilter" class="filter-select">
-          <option value="">All Practice Areas</option>
-          <option>Civil</option>
-          <option>Criminal</option>
-          <option>Constitutional</option>
-          <option>Family</option>
-          <option>Labour</option>
-          <option>Revenue</option>
-          <option>Commercial</option>
-        </select>
-      </div>
-      <div class="table-wrapper">
-        <table class="members-table" id="membersTable">
-          <thead>
-            <tr>
-              <th>Enr. No.</th>
-              <th>Name</th>
-              <th>Practice Area</th>
-              <th>Enrolled</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr><td>AP/001/1985</td><td>Sri Alapati Subrahmanyam</td><td>Civil</td><td>1985</td><td><span class="badge badge-active">Active</span></td></tr>
-            <tr><td>AP/002/1990</td><td>Smt. Bhavani Devi Challa</td><td>Family</td><td>1990</td><td><span class="badge badge-active">Active</span></td></tr>
-            <tr><td>AP/003/1993</td><td>Sri Dasari Venkata Rao</td><td>Criminal</td><td>1993</td><td><span class="badge badge-active">Active</span></td></tr>
-            <tr><td>AP/004/1996</td><td>Sri Elanaga Srinivasa Rao</td><td>Revenue</td><td>1996</td><td><span class="badge badge-active">Active</span></td></tr>
-            <tr><td>AP/005/1998</td><td>Smt. Ganta Padmaja</td><td>Constitutional</td><td>1998</td><td><span class="badge badge-active">Active</span></td></tr>
-            <tr><td>AP/006/2000</td><td>Sri Harish Chandra Mouli</td><td>Commercial</td><td>2000</td><td><span class="badge badge-active">Active</span></td></tr>
-            <tr><td>AP/007/2003</td><td>Sri Indukuri Prasad</td><td>Labour</td><td>2003</td><td><span class="badge badge-active">Active</span></td></tr>
-            <tr><td>AP/008/2005</td><td>Smt. Jyothi Lakshmi Katari</td><td>Family</td><td>2005</td><td><span class="badge badge-active">Active</span></td></tr>
-            <tr><td>AP/009/2007</td><td>Sri Konduri Bala Krishna</td><td>Civil</td><td>2007</td><td><span class="badge badge-active">Active</span></td></tr>
-            <tr><td>AP/010/2009</td><td>Sri Lakshmi Narayan Pattnaik</td><td>Criminal</td><td>2009</td><td><span class="badge badge-active">Active</span></td></tr>
-            <tr><td>AP/011/2011</td><td>Smt. Mangala Devi Nalluri</td><td>Revenue</td><td>2011</td><td><span class="badge badge-active">Active</span></td></tr>
-            <tr><td>AP/012/2013</td><td>Sri Nanduri Kiran Kumar</td><td>Commercial</td><td>2013</td><td><span class="badge badge-active">Active</span></td></tr>
-            <tr><td>AP/013/2015</td><td>Sri Omkar Reddy Potluri</td><td>Constitutional</td><td>2015</td><td><span class="badge badge-active">Active</span></td></tr>
-            <tr><td>AP/014/2017</td><td>Smt. Pavani Yellampalli</td><td>Labour</td><td>2017</td><td><span class="badge badge-active">Active</span></td></tr>
-            <tr><td>AP/015/2019</td><td>Sri Ravi Teja Samudrala</td><td>Civil</td><td>2019</td><td><span class="badge badge-active">Active</span></td></tr>
-            <tr><td>AP/016/2020</td><td>Smt. Sailaja Kommineni</td><td>Family</td><td>2020</td><td><span class="badge badge-active">Active</span></td></tr>
-            <tr><td>AP/017/2021</td><td>Sri Tirumala Rao Maddala</td><td>Criminal</td><td>2021</td><td><span class="badge badge-active">Active</span></td></tr>
-            <tr><td>AP/018/2022</td><td>Smt. Uma Devi Venugopal</td><td>Revenue</td><td>2022</td><td><span class="badge badge-active">Active</span></td></tr>
-            <tr><td>AP/019/2023</td><td>Sri Vijay Krishna Tadepalli</td><td>Commercial</td><td>2023</td><td><span class="badge badge-active">Active</span></td></tr>
-            <tr><td>AP/020/2024</td><td>Smt. Yamini Priya Muddada</td><td>Constitutional</td><td>2024</td><td><span class="badge badge-active">Active</span></td></tr>
-          </tbody>
-        </table>
-      </div>
-      <p class="table-note">Showing 20 of 1,800+ members &mdash; Contact the Association office for the complete directory or enrollment inquiries.</p>
-    </div>
-  </section>
-
-  <!-- ══════════════════════════════ NEWS ═══════════════════════════════════ -->
-  <section class="section section-white" id="news">
-    <div class="container">
-      <div class="section-header">
-        <span class="section-badge">Stay Informed</span>
-        <h2 class="section-title">News &amp; Events</h2>
+        <span class="section-badge">Latest</span>
+        <h2 class="section-title">Recent News</h2>
         <div class="divider"></div>
       </div>
-      <div class="news-tabs">
-        <button class="tab-btn active" data-tab="news-tab">News</button>
-        <button class="tab-btn" data-tab="events-tab">Upcoming Events</button>
-        <button class="tab-btn" data-tab="notices-tab">Notices</button>
+      <div class="home-news-grid" id="homeNewsGrid">
+        <p style="grid-column:1/-1;text-align:center;color:var(--muted);">Loading&hellip;</p>
       </div>
-
-      <div id="news-tab" class="tab-content active">
-        <div class="news-grid">
-          <article class="news-card news-card--featured">
-            <div class="news-meta"><span class="news-cat">Urgent</span><span class="news-date">03 Aug 2026</span></div>
-            <h3>Bar Abstains from Duties in Protest Against Police Atrocities on Advocate at Hindupur</h3>
-            <p>The Governing Body of the Bezwada Bar Association unanimously resolved that all members of the Association shall abstain from duties on 03.08.2026, in protest against a recent incident involving an Advocate at Hindupur wherein a practising Advocate was assaulted and subjected to abusive and humiliating treatment by police personnel, despite they being fully aware that the victim was an Advocate.</p>
-            <p>The recurring incidents of police excesses and atrocities against members of the legal fraternity are despicable and such incidents strike at the dignity of the legal profession and undermine the administration of justice.</p>
-            <a href="#" class="read-more">Read More &rarr;</a>
-          </article>
-          <article class="news-card">
-            <div class="news-meta"><span class="news-cat">Welfare</span><span class="news-date">10 Jul 2026</span></div>
-            <h3>Group Insurance Scheme Extended to All Members</h3>
-            <p>The executive committee has approved an enhanced group insurance policy for all active members. Members are requested to submit updated details at the office.</p>
-            <a href="#" class="read-more">Read More &rarr;</a>
-          </article>
-          <article class="news-card">
-            <div class="news-meta"><span class="news-cat">Infrastructure</span><span class="news-date">22 Jun 2026</span></div>
-            <h3>New Digital Library Wing Inaugurated</h3>
-            <p>A state-of-the-art digital library equipped with online legal databases, SCC Online, Manupatra, and AIR terminals was inaugurated at the Bar Association Hall.</p>
-            <a href="#" class="read-more">Read More &rarr;</a>
-          </article>
-          <article class="news-card">
-            <div class="news-meta"><span class="news-cat">Legal Aid</span><span class="news-date">5 May 2026</span></div>
-            <h3>Free Legal Aid Camp Held at Ibrahimpatnam</h3>
-            <p>In collaboration with the District Legal Services Authority, the Association organised a free legal aid camp benefiting over 300 villagers on issues of land rights, family disputes, and pension matters.</p>
-            <a href="#" class="read-more">Read More &rarr;</a>
-          </article>
-        </div>
-      </div>
-
-      <div id="events-tab" class="tab-content">
-        <div class="events-list">
-          <div class="event-item">
-            <div class="event-date-block"><span class="event-day">15</span><span class="event-month">Sep</span></div>
-            <div class="event-details">
-              <h3>Annual General Body Meeting</h3>
-              <p>Mandatory AGM for all enrolled members. Agenda: election of office bearers, budget approval, and policy resolutions.</p>
-              <div class="event-meta"><span>&#128205; Bar Association Hall, Civil Courts Campus</span> <span>&#128336; 10:00 AM</span></div>
-            </div>
-          </div>
-          <div class="event-item">
-            <div class="event-date-block"><span class="event-day">02</span><span class="event-month">Oct</span></div>
-            <div class="event-details">
-              <h3>Gandhi Jayanti Legal Awareness Drive</h3>
-              <p>Street-level legal awareness programme. Volunteers needed — register at the office.</p>
-              <div class="event-meta"><span>&#128205; Gandhi Park, Vijayawada</span> <span>&#128336; 8:00 AM</span></div>
-            </div>
-          </div>
-          <div class="event-item">
-            <div class="event-date-block"><span class="event-day">25</span><span class="event-month">Oct</span></div>
-            <div class="event-details">
-              <h3>Moot Court Competition</h3>
-              <p>Inter-college moot court competition open to law students from recognised institutions in Andhra Pradesh. Registration deadline: 10 October.</p>
-              <div class="event-meta"><span>&#128205; District Court Main Hall, Vijayawada</span> <span>&#128336; 9:30 AM</span></div>
-            </div>
-          </div>
-          <div class="event-item">
-            <div class="event-date-block"><span class="event-day">26</span><span class="event-month">Nov</span></div>
-            <div class="event-details">
-              <h3>Constitution Day Seminar</h3>
-              <p>Annual seminar on constitutional values and fundamental rights. Chief Guest: A sitting judge of the AP High Court.</p>
-              <div class="event-meta"><span>&#128205; Bar Association Hall, Governorpet</span> <span>&#128336; 11:00 AM</span></div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div id="notices-tab" class="tab-content">
-        <div class="notices-list">
-          <div class="notice-item notice-urgent">
-            <span class="notice-label">Urgent</span>
-            <div>
-              <h4>Work Abstention — 03 August 2026</h4>
-              <p>All members are directed to abstain from court duties on 03.08.2026 in solidarity with the advocate assaulted at Hindupur. The Governing Body appeals to all members to extend their cooperation.</p>
-            </div>
-          </div>
-          <div class="notice-item">
-            <span class="notice-label">Notice</span>
-            <div>
-              <h4>Annual Subscription — Last Date: 30 Sep 2026</h4>
-              <p>All members are directed to pay the annual subscription fee before 30 September 2026 to avoid suspension of membership. Contact the office for fee details.</p>
-            </div>
-          </div>
-          <div class="notice-item">
-            <span class="notice-label">Circular</span>
-            <div>
-              <h4>Updation of Contact Details</h4>
-              <p>Members are requested to update their mobile numbers and email addresses in the membership register at the Association office on any working day.</p>
-            </div>
-          </div>
-          <div class="notice-item">
-            <span class="notice-label">Circular</span>
-            <div>
-              <h4>Court Timing Amendment</h4>
-              <p>All courts in Vijayawada will operate from 10:30 AM to 4:30 PM. Members are advised to take note and plan accordingly.</p>
-            </div>
-          </div>
-        </div>
+      <div class="view-all-wrap">
+        <a href="news/index.html" class="btn btn-gold">View All News &amp; Events</a>
       </div>
     </div>
   </section>
 
-  <!-- ══════════════════════════════ GALLERY ════════════════════════════════ -->
-  <section class="section section-light" id="gallery">
-    <div class="container">
-      <div class="section-header">
-        <span class="section-badge">Moments</span>
-        <h2 class="section-title">Photo Gallery</h2>
-        <div class="divider"></div>
-      </div>
-      <div class="gallery-filters">
-        <button class="gfilter-btn active" data-filter="all">All</button>
-        <button class="gfilter-btn" data-filter="events">Events</button>
-        <button class="gfilter-btn" data-filter="welfare">Welfare</button>
-        <button class="gfilter-btn" data-filter="heritage">Heritage</button>
-      </div>
-      <div class="gallery-grid" id="galleryGrid">
-        <div class="gallery-item" data-category="events">
-          <div class="gallery-placeholder" style="background: linear-gradient(135deg,#1e7a6e 60%,#c9a227);">
-            <span>Annual General<br/>Body Meeting</span>
-          </div>
-        </div>
-        <div class="gallery-item" data-category="events">
-          <div class="gallery-placeholder" style="background: linear-gradient(135deg,#2a9d8f 60%,#a07d1a);">
-            <span>Moot Court<br/>Competition</span>
-          </div>
-        </div>
-        <div class="gallery-item" data-category="welfare">
-          <div class="gallery-placeholder" style="background: linear-gradient(135deg,#0f5c54 60%,#c9a227);">
-            <span>Legal Aid Camp<br/>Ibrahimpatnam</span>
-          </div>
-        </div>
-        <div class="gallery-item" data-category="heritage">
-          <div class="gallery-placeholder" style="background: linear-gradient(135deg,#2a3a1a 60%,#8b6914);">
-            <span>Civil Courts Campus<br/>Governorpet</span>
-          </div>
-        </div>
-        <div class="gallery-item" data-category="events">
-          <div class="gallery-placeholder" style="background: linear-gradient(135deg,#1e7a6e 60%,#c9a227);">
-            <span>Constitution Day<br/>Seminar</span>
-          </div>
-        </div>
-        <div class="gallery-item" data-category="welfare">
-          <div class="gallery-placeholder" style="background: linear-gradient(135deg,#1a5a52 60%,#c9a227);">
-            <span>Digital Library<br/>Inauguration</span>
-          </div>
-        </div>
-        <div class="gallery-item" data-category="heritage">
-          <div class="gallery-placeholder" style="background: linear-gradient(135deg,#2a1a1a 60%,#c9a227);">
-            <span>Bar Association Hall<br/>Governorpet</span>
-          </div>
-        </div>
-        <div class="gallery-item" data-category="events">
-          <div class="gallery-placeholder" style="background: linear-gradient(135deg,#1e7a6e 60%,#a07d1a);">
-            <span>Sports Meet<br/>Annual</span>
-          </div>
-        </div>
-      </div>
-      <p class="gallery-note">Replace placeholder tiles with actual photographs. Upload images to <code>images/gallery/</code> and update the <code>src</code> attributes accordingly.</p>
-    </div>
-  </section>
-
-  <!-- ══════════════════════════════ CONTACT ════════════════════════════════ -->
-  <section class="section section-dark" id="contact">
-    <div class="container">
-      <div class="section-header">
-        <span class="section-badge">Get in Touch</span>
-        <h2 class="section-title">Contact Us</h2>
-        <div class="divider divider-gold"></div>
-      </div>
-      <div class="contact-grid">
-        <div class="contact-info">
-          <div class="contact-block">
-            <h3>The Bezwada Bar Association</h3>
-            <div class="contact-detail">
-              <span class="contact-icon">&#128205;</span>
-              <div>
-                <strong>Address</strong>
-                <p>Civil Courts Campus, Gopala Reddy Road,<br/>
-                Governorpet, Vijayawada &ndash; 520 002<br/>
-                Krishna District, Andhra Pradesh</p>
-              </div>
-            </div>
-            <div class="contact-detail">
-              <span class="contact-icon">&#128222;</span>
-              <div>
-                <strong>Phone</strong>
-                <p>0866 &ndash; 2574321 (Office)</p>
-              </div>
-            </div>
-            <div class="contact-detail">
-              <span class="contact-icon">&#9993;</span>
-              <div>
-                <strong>Email</strong>
-                <p>bbabza@gmail.com</p>
-              </div>
-            </div>
-            <div class="contact-detail">
-              <span class="contact-icon">&#128100;</span>
-              <div>
-                <strong>President</strong>
-                <p>Vishnubhotla Lakshmi Narayana<br/>
-                &#128222; 98485 36066 &nbsp; &#9993; vin@vin.co.in</p>
-              </div>
-            </div>
-            <div class="contact-detail">
-              <span class="contact-icon">&#128100;</span>
-              <div>
-                <strong>General Secretary</strong>
-                <p>Valiboyina Kiran Kumar<br/>
-                &#128222; 96666 33666 &nbsp; &#9993; valiboyinakirankumar@gmail.com</p>
-              </div>
-            </div>
-            <div class="contact-detail">
-              <span class="contact-icon">&#128336;</span>
-              <div>
-                <strong>Office Hours</strong>
-                <p>Monday &ndash; Saturday: 10:00 AM &ndash; 5:00 PM<br/>Sunday &amp; Court Holidays: Closed</p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="contact-form-wrap">
-          <h3>Send a Message</h3>
-          <form class="contact-form" id="contactForm">
-            <div class="form-row">
-              <div class="form-group">
-                <label for="fname">Full Name *</label>
-                <input type="text" id="fname" name="name" required placeholder="Sri / Smt. ..." />
-              </div>
-              <div class="form-group">
-                <label for="femail">Email Address *</label>
-                <input type="email" id="femail" name="email" required placeholder="your@email.com" />
-              </div>
-            </div>
-            <div class="form-group">
-              <label for="fsubject">Subject *</label>
-              <input type="text" id="fsubject" name="subject" required placeholder="Membership inquiry / General" />
-            </div>
-            <div class="form-group">
-              <label for="fmessage">Message *</label>
-              <textarea id="fmessage" name="message" rows="5" required placeholder="Write your message here..."></textarea>
-            </div>
-            <button type="submit" class="btn btn-gold">Send Message</button>
-            <p class="form-note" id="formMsg"></p>
-          </form>
-        </div>
-        <div class="contact-map">
-          <h3>Location</h3>
-          <div class="map-placeholder">
-            <svg viewBox="0 0 400 220" width="100%" style="display:block">
-              <rect width="400" height="220" fill="#1e7a6e"/>
-              <line x1="0" y1="110" x2="400" y2="110" stroke="#2a9d8f" stroke-width="8"/>
-              <line x1="200" y1="0" x2="200" y2="220" stroke="#2a9d8f" stroke-width="8"/>
-              <line x1="0" y1="55" x2="400" y2="55" stroke="#2a9d8f" stroke-width="4"/>
-              <line x1="0" y1="165" x2="400" y2="165" stroke="#2a9d8f" stroke-width="4"/>
-              <line x1="100" y1="0" x2="100" y2="220" stroke="#2a9d8f" stroke-width="4"/>
-              <line x1="300" y1="0" x2="300" y2="220" stroke="#2a9d8f" stroke-width="4"/>
-              <circle cx="200" cy="105" r="12" fill="#c9a227"/>
-              <circle cx="200" cy="103" r="6" fill="#1e7a6e"/>
-              <line x1="200" y1="117" x2="200" y2="130" stroke="#c9a227" stroke-width="2"/>
-              <text x="200" y="152" text-anchor="middle" fill="#c9a227" font-size="11" font-family="sans-serif">Civil Courts Campus</text>
-              <text x="200" y="167" text-anchor="middle" fill="rgba(255,255,255,0.7)" font-size="9" font-family="sans-serif">Gopala Reddy Road, Governorpet, Vijayawada</text>
-            </svg>
-            <p class="map-note">Replace with a Google Maps <code>&lt;iframe&gt;</code> embed for live directions.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ════════════════════════════════ FOOTER ═══════════════════════════════ -->
   <footer class="site-footer">
     <div class="container footer-inner">
       <div class="footer-brand">
@@ -626,12 +155,12 @@
       <div class="footer-links">
         <h4>Quick Links</h4>
         <ul>
-          <li><a href="#home">Home</a></li>
-          <li><a href="#about">About</a></li>
-          <li><a href="#bearers">Office Bearers</a></li>
-          <li><a href="#members">Members Directory</a></li>
-          <li><a href="#news">News &amp; Events</a></li>
-          <li><a href="#contact">Contact</a></li>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="about/index.html">About</a></li>
+          <li><a href="office-bearers/index.html">Office Bearers</a></li>
+          <li><a href="members/index.html">Members Directory</a></li>
+          <li><a href="news/index.html">News &amp; Events</a></li>
+          <li><a href="contact/index.html">Contact</a></li>
         </ul>
       </div>
       <div class="footer-links">
@@ -662,7 +191,6 @@
   </footer>
 
   <button class="back-to-top" id="backToTop" aria-label="Back to top">&#8679;</button>
-
   <script src="js/script.js"></script>
 </body>
 </html>

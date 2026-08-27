@@ -3,6 +3,82 @@
 (function () {
   'use strict';
 
+  // Root path prefix — set via data-root on <body> for subfolder pages
+  const ROOT = document.body.getAttribute('data-root') || '';
+
+  // ── Scrolling news ticker ──────────────────────────────────
+  (function initTicker() {
+    const track    = document.getElementById('tickerTrack');
+    const pauseBtn = document.getElementById('tickerPause');
+    if (!track) return;
+
+    const PX_PER_SEC = 60;
+    let isPaused = false;
+
+    function buildTrack(items) {
+      function renderSet() {
+        return items.map((item, i) => {
+          const isLast = i === items.length - 1;
+          return `<span class="ticker-item">
+            <span class="ticker-item-date">${item.date}</span>
+            <span class="ticker-item-text">${item.text}</span>
+          </span>${isLast ? '' : '<span class="ticker-sep" aria-hidden="true">&#9679;</span>'}`;
+        }).join('');
+      }
+      const setHTML = renderSet();
+      track.innerHTML = setHTML + '<span class="ticker-sep" aria-hidden="true">&#9679;</span>' + setHTML;
+      requestAnimationFrame(() => {
+        const duration = (track.scrollWidth / 2) / PX_PER_SEC;
+        track.style.animationDuration = duration + 's';
+      });
+    }
+
+    function loadFallback() {
+      buildTrack([
+        { date: 'Aug 2026', text: 'Work abstention on 03.08.2026 — Members to abstain from court duties in protest against police atrocities on advocate at Hindupur.' },
+        { date: 'Jul 2026', text: 'Group Insurance Scheme extended to all active members — submit updated details at the Association office.' },
+        { date: 'Jun 2026', text: 'New Digital Library Wing inaugurated at Bar Association Hall — SCC Online, Manupatra and AIR terminals now available.' }
+      ]);
+    }
+
+    fetch(ROOT + 'news/news.json')
+      .then(r => { if (!r.ok) throw new Error(); return r.json(); })
+      .then(items => { if (!Array.isArray(items) || !items.length) throw new Error(); buildTrack(items); })
+      .catch(loadFallback);
+
+    pauseBtn?.addEventListener('click', () => {
+      isPaused = !isPaused;
+      track.classList.toggle('paused', isPaused);
+      pauseBtn.textContent    = isPaused ? '▶' : '❚❚';
+      pauseBtn.style.fontSize = isPaused ? '13px' : '10px';
+      pauseBtn.setAttribute('title', isPaused ? 'Resume' : 'Pause');
+    });
+    track.addEventListener('mouseenter', () => { if (!isPaused) track.classList.add('paused'); });
+    track.addEventListener('mouseleave', () => { if (!isPaused) track.classList.remove('paused'); });
+  })();
+
+  // ── Home page: recent news preview ────────────────────────
+  (function initHomeNews() {
+    const grid = document.getElementById('homeNewsGrid');
+    if (!grid) return;
+    fetch(ROOT + 'news/news.json')
+      .then(r => r.json())
+      .then(items => {
+        grid.innerHTML = items.slice(0, 3).map(item => `
+          <article class="news-card">
+            <div class="news-meta">
+              <span class="news-cat">Latest</span>
+              <span class="news-date">${item.date}</span>
+            </div>
+            <p>${item.text}</p>
+            <a href="news/index.html" class="read-more">View All News &rarr;</a>
+          </article>`).join('');
+      })
+      .catch(() => {
+        grid.innerHTML = '<p style="color:var(--muted);grid-column:1/-1;text-align:center">Unable to load latest news. <a href="news/">Visit the News page</a>.</p>';
+      });
+  })();
+
   // ── Mobile nav toggle ──────────────────────────────────────
   const navToggle = document.getElementById('navToggle');
   const mainNav   = document.getElementById('mainNav');
