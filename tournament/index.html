@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <script>try{if(location.pathname.endsWith("index.html"))history.replaceState(null,"",location.pathname.slice(0,-10)||"./")}catch(e){}</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="State Level Badminton Tournament 2026 — Register for The Bezwada Bar Association's annual badminton championship. Men Singles, Women Singles, Doubles and more." />
+  <title>Badminton Tournament 2026 | The Bezwada Bar Association</title>
+  <link rel="icon" href="../images/logo.jpeg" type="image/jpeg" />
+  <link rel="stylesheet" href="../css/styles.css" />
+  <link rel="stylesheet" href="../css/fonts.css" />
+</head>
+<body data-root="../">
+
+  <div class="topbar">
+    <div class="container">
+      <span>&#128222; 0866 &ndash; 2574321</span>
+      <span>&#9993; bbabza@gmail.com</span>
+      <span>&#128205; Civil Courts Campus, Governorpet, Vijayawada &ndash; 520 002</span>
+      <span>&#128197; Established 1906</span>
+    </div>
+  </div>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="../index.html" class="logo-block">
+        <div class="emblem">
+          <img src="../images/logo.jpeg" alt="The Bezwada Bar Association Logo" class="header-logo" />
+        </div>
+        <div class="logo-text">
+          <h1>The Bezwada Bar Association</h1>
+          <p class="tagline">Let Justice Prevail &mdash; Estd. 1906</p>
+        </div>
+      </a>
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation"><span></span><span></span><span></span></button>
+      <nav class="main-nav" id="mainNav">
+        <ul>
+          <li><a href="../index.html">Home</a></li>
+          <li><a href="../about/index.html">About</a></li>
+          <li><a href="../office-bearers/index.html">Office Bearers</a></li>
+          <li><a href="../members/index.html">Members</a></li>
+          <li><a href="../news/index.html">News &amp; Events</a></li>
+          <li><a href="../gallery/index.html">Gallery</a></li>
+          <li><a href="../tournament/index.html" aria-current="page" style="color:var(--gold)!important;background:rgba(201,162,39,.18)!important;">&#127992; Tournament</a></li>
+          <li><a href="../contact/index.html" class="btn-nav">Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <div class="news-ticker" id="newsTicker">
+    <div class="ticker-label"><span class="ticker-dot"></span>LATEST NEWS</div>
+    <div class="ticker-viewport">
+      <div class="ticker-track" id="tickerTrack"><span class="ticker-placeholder">Loading latest news&hellip;</span></div>
+    </div>
+    <button class="ticker-pause" id="tickerPause" title="Pause / Resume">&#10074;&#10074;</button>
+  </div>
+
+  <div class="page-hero">
+    <div class="container">
+      <p class="page-hero-eyebrow">&#127992; State Level Championship</p>
+      <h2>BBA Badminton Tournament 2026</h2>
+      <div class="breadcrumb">
+        <a href="../index.html">Home</a>
+        <span class="breadcrumb-sep">&#8250;</span>
+        <span>Tournament</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tournament info strip -->
+  <div class="tourn-info-strip">
+    <div class="container">
+      <div class="tourn-info-item">
+        <span class="tourn-info-icon">&#128197;</span>
+        <div>
+          <span class="tourn-info-label">Tournament Dates</span>
+          <span class="tourn-info-val">25 &ndash; 27 October 2026</span>
+        </div>
+      </div>
+      <div class="tourn-info-item">
+        <span class="tourn-info-icon">&#128205;</span>
+        <div>
+          <span class="tourn-info-label">Venue</span>
+          <span class="tourn-info-val">Bar Association Hall, Vijayawada</span>
+        </div>
+      </div>
+      <div class="tourn-info-item">
+        <span class="tourn-info-icon">&#9200;</span>
+        <div>
+          <span class="tourn-info-label">Registration Closes</span>
+          <span class="tourn-info-val">15 October 2026</span>
+        </div>
+      </div>
+      <div class="tourn-info-item">
+        <span class="tourn-info-icon">&#127942;</span>
+        <div>
+          <span class="tourn-info-label">Eligibility</span>
+          <span class="tourn-info-val">Bar Association Members Only</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 1: Select Categories -->
+  <section class="section section-light" id="selectSection">
+    <div class="container">
+
+      <div class="tourn-step-bar" id="stepBar">
+        <div class="tourn-step active" id="step1">
+          <div class="tourn-step-num">1</div>
+          <span>Select Events</span>
+        </div>
+        <div class="tourn-step-connector" id="conn1"></div>
+        <div class="tourn-step" id="step2">
+          <div class="tourn-step-num">2</div>
+          <span>Your Details</span>
+        </div>
+        <div class="tourn-step-connector" id="conn2"></div>
+        <div class="tourn-step" id="step3">
+          <div class="tourn-step-num">3</div>
+          <span>Confirmation</span>
+        </div>
+      </div>
+
+      <div class="tourn-layout" id="step1Panel">
+        <!-- Categories -->
+        <div class="categories-col">
+          <div class="section-badge" style="margin-bottom:12px;">Step 1 of 3</div>
+          <h3 style="font-family:var(--ff-serif);font-size:1.5rem;color:var(--navy2);margin-bottom:6px;">Choose Your Events</h3>
+          <p style="color:var(--muted);font-size:14px;margin-bottom:0;">Select one or more categories. You may enter multiple events.</p>
+
+          <div class="categories-grid" id="categoriesGrid">
+
+            <div class="category-card" id="card-men-singles" onclick="toggleCategory('men-singles')">
+              <input type="checkbox" id="cat-men-singles" value="men-singles" />
+              <div class="cat-icon-wrap">&#127992;</div>
+              <div class="cat-body">
+                <div class="cat-title">Men Singles</div>
+                <div class="cat-type">Individual &bull; Open Age</div>
+                <div class="cat-fee">&#8377;500 per entry</div>
+              </div>
+              <div class="cat-check-ring">&#10003;</div>
+            </div>
+
+            <div class="category-card" id="card-women-singles" onclick="toggleCategory('women-singles')">
+              <input type="checkbox" id="cat-women-singles" value="women-singles" />
+              <div class="cat-icon-wrap">&#127992;</div>
+              <div class="cat-body">
+                <div class="cat-title">Women Singles</div>
+                <div class="cat-type">Individual &bull; Open Age</div>
+                <div class="cat-fee">&#8377;500 per entry</div>
+              </div>
+              <div class="cat-check-ring">&#10003;</div>
+            </div>
+
+            <div class="category-card" id="card-mixed-doubles" onclick="toggleCategory('mixed-doubles')">
+              <input type="checkbox" id="cat-mixed-doubles" value="mixed-doubles" />
+              <div class="cat-icon-wrap">&#127992;</div>
+              <div class="cat-body">
+                <div class="cat-title">Mixed Doubles</div>
+                <div class="cat-type">Pair &bull; 1 Male + 1 Female</div>
+                <div class="cat-fee">&#8377;800 per pair</div>
+              </div>
+              <div class="cat-check-ring">&#10003;</div>
+            </div>
+
+            <div class="category-card" id="card-men-doubles" onclick="toggleCategory('men-doubles')">
+              <input type="checkbox" id="cat-men-doubles" value="men-doubles" />
+              <div class="cat-icon-wrap">&#127992;</div>
+              <div class="cat-body">
+                <div class="cat-title">Men Doubles</div>
+                <div class="cat-type">Pair &bull; Open Age</div>
+                <div class="cat-fee">&#8377;800 per pair</div>
+              </div>
+              <div class="cat-check-ring">&#10003;</div>
+            </div>
+
+            <div class="category-card" id="card-women-doubles" onclick="toggleCategory('women-doubles')">
+              <input type="checkbox" id="cat-women-doubles" value="women-doubles" />
+              <div class="cat-icon-wrap">&#127992;</div>
+              <div class="cat-body">
+                <div class="cat-title">Women Doubles</div>
+                <div class="cat-type">Pair &bull; Open Age</div>
+                <div class="cat-fee">&#8377;800 per pair</div>
+              </div>
+              <div class="cat-check-ring">&#10003;</div>
+            </div>
+
+            <div class="category-card" id="card-senior-doubles" onclick="toggleCategory('senior-doubles')">
+              <input type="checkbox" id="cat-senior-doubles" value="senior-doubles" />
+              <div class="cat-icon-wrap">&#127992;</div>
+              <div class="cat-body">
+                <div class="cat-title">Age 60+ Men Doubles</div>
+                <div class="cat-type">Pair &bull; Both players 60+</div>
+                <div class="cat-fee">&#8377;500 per pair</div>
+              </div>
+              <div class="cat-check-ring">&#10003;</div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Cart -->
+        <div class="cart-col">
+          <div class="cart-panel" id="cartPanel">
+            <div class="cart-header">&#127914; Registration Summary</div>
+            <div class="cart-body">
+              <div id="cartContent">
+                <div class="cart-empty">
+                  <div class="cart-empty-icon">&#127992;</div>
+                  <p>Select events from the left to begin registration.</p>
+                </div>
+              </div>
+              <button class="btn btn-gold cart-proceed" id="proceedBtn" onclick="proceedToStep2()" disabled style="opacity:.45;cursor:not-allowed;">
+                Proceed to Register &rarr;
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STEP 2: Registration Form -->
+  <section class="section section-white" id="regSection" style="display:none;">
+    <div class="container" style="max-width:860px;">
+
+      <div class="tourn-step-bar">
+        <div class="tourn-step done"><div class="tourn-step-num">&#10003;</div><span>Select Events</span></div>
+        <div class="tourn-step-connector done"></div>
+        <div class="tourn-step active"><div class="tourn-step-num">2</div><span>Your Details</span></div>
+        <div class="tourn-step-connector"></div>
+        <div class="tourn-step"><div class="tourn-step-num">3</div><span>Confirmation</span></div>
+      </div>
+
+      <!-- Selected events summary -->
+      <div style="background:var(--light);border:1px solid #cde8e5;border-radius:10px;padding:16px 20px;margin-bottom:32px;">
+        <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--navy2);margin-bottom:8px;">Selected Events</div>
+        <div id="regEventSummary" style="display:flex;flex-wrap:wrap;gap:8px;"></div>
+        <a href="#selectSection" onclick="backToStep1(event)" style="font-size:12px;color:var(--navy);font-weight:700;margin-top:10px;display:inline-block;">&#8592; Change selection</a>
+      </div>
+
+      <form id="tournamentForm" novalidate>
+
+        <div class="reg-form-card" style="margin-bottom:24px;">
+          <div class="reg-section-header">
+            <div class="reg-step-badge">A</div>
+            <h3>Your Details</h3>
+          </div>
+          <div class="reg-form-grid">
+            <div class="form-group">
+              <label for="r-name">Full Name *</label>
+              <input type="text" id="r-name" required placeholder="Sri / Smt. Full Name" />
+            </div>
+            <div class="form-group">
+              <label for="r-enr">Bar Enrollment No. *</label>
+              <input type="text" id="r-enr" required placeholder="e.g. AP/001/2005" />
+            </div>
+            <div class="form-group">
+              <label for="r-bar">Bar Association / District *</label>
+              <input type="text" id="r-bar" required placeholder="e.g. Bezwada Bar Association" />
+            </div>
+            <div class="form-group">
+              <label for="r-mobile">Mobile Number *</label>
+              <input type="tel" id="r-mobile" required placeholder="10-digit mobile number" maxlength="10" />
+            </div>
+            <div class="form-group" style="grid-column:1/-1;">
+              <label for="r-email">Email Address</label>
+              <input type="email" id="r-email" placeholder="your@email.com (optional)" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Doubles partner fields — injected by JS -->
+        <div id="partnerSection"></div>
+
+        <div class="reg-form-card">
+          <div class="reg-terms">
+            <input type="checkbox" id="r-terms" required />
+            <label for="r-terms">I confirm that I am an enrolled advocate and active Bar Association member. I agree to abide by the tournament rules and decisions of the organising committee. I understand that entry fees are non-refundable.</label>
+          </div>
+          <div class="reg-terms">
+            <input type="checkbox" id="r-eligible" required />
+            <label for="r-eligible">I confirm that all participants named in this form meet the eligibility criteria for their respective categories (including age criteria for Age 60+ event).</label>
+          </div>
+
+          <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:8px;">
+            <button type="submit" class="btn btn-gold" id="submitBtn" style="flex:1;padding:14px;">Submit Registration &rarr;</button>
+            <button type="button" class="btn btn-outline" onclick="backToStep1(event)" style="background:var(--muted);color:var(--white);border-color:var(--muted);">&#8592; Back</button>
+          </div>
+          <p id="formError" style="color:#c0392b;font-size:13px;margin-top:10px;display:none;"></p>
+        </div>
+
+      </form>
+    </div>
+  </section>
+
+  <!-- STEP 3: Confirmation -->
+  <section class="section section-light" id="confirmSection" style="display:none;">
+    <div class="container">
+      <div class="confirm-card">
+        <div class="confirm-icon">&#127881;</div>
+        <h3>Registration Submitted!</h3>
+        <p style="color:var(--muted);font-size:14px;">Your registration has been received. Please note your reference number:</p>
+        <div class="confirm-ref" id="confirmRef">BBA-TRN-2026-0000</div>
+
+        <div style="text-align:left;margin:0 0 8px;">
+          <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--navy2);margin-bottom:8px;">Registered By</div>
+          <div id="confirmName" style="font-size:15px;font-weight:600;color:var(--text);"></div>
+          <div id="confirmEnr" style="font-size:13px;color:var(--muted);"></div>
+        </div>
+
+        <div style="text-align:left;">
+          <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--navy2);margin:16px 0 8px;">Events Registered</div>
+          <ul class="confirm-events" id="confirmEvents"></ul>
+          <div class="confirm-total">
+            <span>Total Amount Payable</span>
+            <span id="confirmTotal"></span>
+          </div>
+        </div>
+
+        <div class="confirm-note">
+          &#9888;&#65039; <strong>Payment &amp; Verification:</strong> Please visit the Association office at Civil Courts Campus, Governorpet with this reference number and your Bar ID card to complete payment and verify your registration. Registration is confirmed only upon receipt of payment. Last date for payment: <strong>15 October 2026</strong>.
+        </div>
+
+        <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+          <button class="btn btn-gold" onclick="window.print()">&#128438; Print / Save</button>
+          <a href="../index.html" class="btn" style="background:var(--light);color:var(--navy2);border:1.5px solid #cde8e5;">Back to Home</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <h3>The Bezwada Bar Association</h3>
+        <p>Upholding justice and serving the legal fraternity of Vijayawada since 1906.</p>
+        <p>Civil Courts Campus, Gopala Reddy Road,<br/>Governorpet, Vijayawada &ndash; 520 002</p>
+        <p class="footer-tel">&#128222; 0866 &ndash; 2574321 &bull; &#9993; bbabza@gmail.com</p>
+      </div>
+      <div class="footer-links">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="../index.html">Home</a></li>
+          <li><a href="../about/index.html">About</a></li>
+          <li><a href="../office-bearers/index.html">Office Bearers</a></li>
+          <li><a href="../members/index.html">Members Directory</a></li>
+          <li><a href="../news/index.html">News &amp; Events</a></li>
+          <li><a href="../tournament/index.html">Tournament</a></li>
+          <li><a href="../contact/index.html">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>Resources</h4>
+        <ul>
+          <li><a href="https://www.barcouncilofindia.org" target="_blank" rel="noopener">Bar Council of India</a></li>
+          <li><a href="https://hc.ap.nic.in" target="_blank" rel="noopener">AP High Court</a></li>
+          <li><a href="https://nalsa.gov.in" target="_blank" rel="noopener">NALSA &mdash; Legal Aid</a></li>
+          <li><a href="https://districts.ecourts.gov.in/krishna" target="_blank" rel="noopener">District Courts &mdash; Krishna</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>Affiliations</h4>
+        <ul>
+          <li>Bar Council of Andhra Pradesh</li>
+          <li>Bar Council of India</li>
+          <li>District Legal Services Authority</li>
+          <li>Krishna District Court</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="container">
+        <p>&copy; 2026 The Bezwada Bar Association. All rights reserved.</p>
+        <p>Governorpet &bull; Vijayawada &bull; Krishna District &bull; Andhra Pradesh</p>
+      </div>
+    </div>
+  </footer>
+
+  <button class="back-to-top" id="backToTop" aria-label="Back to top">&#8679;</button>
+  <script src="../js/script.js"></script>
+  <script>
+  (function () {
+    'use strict';
+
+    const CATS = {
+      'men-singles':    { label: 'Men Singles',         type: 'Singles',          fee: 500, doubles: false },
+      'women-singles':  { label: 'Women Singles',       type: 'Singles',          fee: 500, doubles: false },
+      'mixed-doubles':  { label: 'Mixed Doubles',       type: 'Doubles',          fee: 800, doubles: true  },
+      'men-doubles':    { label: 'Men Doubles',         type: 'Doubles',          fee: 800, doubles: true  },
+      'women-doubles':  { label: 'Women Doubles',       type: 'Doubles',          fee: 800, doubles: true  },
+      'senior-doubles': { label: 'Age 60+ Men Doubles', type: 'Doubles (Senior)', fee: 500, doubles: true  }
+    };
+
+    const selected = new Set();
+
+    window.toggleCategory = function (id) {
+      if (selected.has(id)) selected.delete(id);
+      else selected.add(id);
+      const card = document.getElementById('card-' + id);
+      card.classList.toggle('selected', selected.has(id));
+      updateCart();
+    };
+
+    function updateCart() {
+      const content = document.getElementById('cartContent');
+      const btn = document.getElementById('proceedBtn');
+
+      if (selected.size === 0) {
+        content.innerHTML = '<div class="cart-empty"><div class="cart-empty-icon">&#127992;</div><p>Select events from the left to begin registration.</p></div>';
+        btn.disabled = true;
+        btn.style.opacity = '.45';
+        btn.style.cursor = 'not-allowed';
+        return;
+      }
+
+      let total = 0;
+      let html = '';
+      selected.forEach(id => {
+        const c = CATS[id];
+        total += c.fee;
+        html += `<div class="cart-item">
+          <div><div class="cart-item-name">${c.label}</div><div class="cart-item-type">${c.type}</div></div>
+          <div class="cart-item-fee">&#8377;${c.fee}</div>
+        </div>`;
+      });
+      html += `<div class="cart-divider"></div>
+        <div class="cart-total"><span class="cart-total-label">Total</span><span class="cart-total-amt">&#8377;${total}</span></div>
+        <p class="cart-note">&#9432; Fees payable at the Association office. Registration confirmed upon payment.</p>`;
+
+      content.innerHTML = html;
+      btn.disabled = false;
+      btn.style.opacity = '1';
+      btn.style.cursor = 'pointer';
+    }
+
+    window.proceedToStep2 = function () {
+      if (selected.size === 0) return;
+
+      // Update step indicators in step 1 panel
+      document.getElementById('step1').classList.remove('active');
+      document.getElementById('step1').classList.add('done');
+      document.getElementById('step1').querySelector('.tourn-step-num').textContent = '✓';
+      document.getElementById('conn1').classList.add('done');
+      document.getElementById('step2').classList.add('active');
+
+      // Show event summary badges in reg form
+      const summary = document.getElementById('regEventSummary');
+      summary.innerHTML = '';
+      selected.forEach(id => {
+        const span = document.createElement('span');
+        span.className = 'section-badge';
+        span.textContent = CATS[id].label;
+        summary.appendChild(span);
+      });
+
+      // Build partner fields for doubles
+      const partnerSection = document.getElementById('partnerSection');
+      partnerSection.innerHTML = '';
+      selected.forEach(id => {
+        const c = CATS[id];
+        if (!c.doubles) return;
+        const block = document.createElement('div');
+        block.className = 'reg-form-card';
+        block.style.marginBottom = '24px';
+        block.innerHTML = `
+          <div class="partner-block">
+            <div class="partner-block-title">&#127992; ${c.label} &mdash; Partner Details</div>
+            <div class="reg-form-grid">
+              <div class="form-group">
+                <label for="p-name-${id}">Partner Full Name *</label>
+                <input type="text" id="p-name-${id}" required placeholder="Partner's full name" data-partner="${id}" />
+              </div>
+              <div class="form-group">
+                <label for="p-enr-${id}">Partner Enrollment No. *</label>
+                <input type="text" id="p-enr-${id}" required placeholder="e.g. AP/002/2010" data-partner="${id}" />
+              </div>
+              <div class="form-group" style="grid-column:1/-1;">
+                <label for="p-bar-${id}">Partner Bar Association *</label>
+                <input type="text" id="p-bar-${id}" required placeholder="Partner's bar association" data-partner="${id}" />
+              </div>
+            </div>
+          </div>`;
+        partnerSection.appendChild(block);
+      });
+
+      document.getElementById('selectSection').style.display = 'none';
+      document.getElementById('regSection').style.display = 'block';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    window.backToStep1 = function (e) {
+      e && e.preventDefault();
+      document.getElementById('regSection').style.display = 'none';
+      document.getElementById('selectSection').style.display = 'block';
+      // Reset step bar in step1 panel
+      document.getElementById('step1').classList.remove('done');
+      document.getElementById('step1').classList.add('active');
+      document.getElementById('step1').querySelector('.tourn-step-num').textContent = '1';
+      document.getElementById('conn1').classList.remove('done');
+      document.getElementById('step2').classList.remove('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    document.getElementById('tournamentForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+      const err = document.getElementById('formError');
+      err.style.display = 'none';
+
+      const name    = document.getElementById('r-name').value.trim();
+      const enr     = document.getElementById('r-enr').value.trim();
+      const bar     = document.getElementById('r-bar').value.trim();
+      const mobile  = document.getElementById('r-mobile').value.trim();
+      const terms   = document.getElementById('r-terms').checked;
+      const eligible= document.getElementById('r-eligible').checked;
+
+      if (!name || !enr || !bar || !mobile) {
+        err.textContent = 'Please fill in all required fields marked with *.';
+        err.style.display = 'block';
+        return;
+      }
+      if (!/^\d{10}$/.test(mobile)) {
+        err.textContent = 'Please enter a valid 10-digit mobile number.';
+        err.style.display = 'block';
+        return;
+      }
+      if (!terms || !eligible) {
+        err.textContent = 'Please accept both declarations to proceed.';
+        err.style.display = 'block';
+        return;
+      }
+
+      // Validate partner fields
+      let partnerOk = true;
+      selected.forEach(id => {
+        if (!CATS[id].doubles) return;
+        const pn = document.getElementById('p-name-' + id)?.value.trim();
+        const pe = document.getElementById('p-enr-' + id)?.value.trim();
+        const pb = document.getElementById('p-bar-' + id)?.value.trim();
+        if (!pn || !pe || !pb) partnerOk = false;
+      });
+      if (!partnerOk) {
+        err.textContent = 'Please fill in all partner details for doubles events.';
+        err.style.display = 'block';
+        return;
+      }
+
+      // Build confirmation
+      const ref = 'BBA-TRN-2026-' + String(Date.now()).slice(-5);
+      document.getElementById('confirmRef').textContent = ref;
+      document.getElementById('confirmName').textContent = name;
+      document.getElementById('confirmEnr').textContent = enr + ' | ' + bar;
+
+      let total = 0;
+      const evList = document.getElementById('confirmEvents');
+      evList.innerHTML = '';
+      selected.forEach(id => {
+        const c = CATS[id];
+        total += c.fee;
+        const li = document.createElement('li');
+        li.innerHTML = `<span>${c.label}</span><span>&#8377;${c.fee}</span>`;
+        evList.appendChild(li);
+      });
+      document.getElementById('confirmTotal').textContent = '₹' + total;
+
+      document.getElementById('regSection').style.display = 'none';
+      document.getElementById('confirmSection').style.display = 'block';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+  })();
+  </script>
+</body>
+</html>
