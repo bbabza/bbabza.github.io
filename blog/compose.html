@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Compose Post | BBA Blog Admin</title>
+  <link rel="icon" href="../images/logo.jpeg" type="image/jpeg" />
+  <link rel="stylesheet" href="../css/styles.css" />
+  <link rel="stylesheet" href="../css/fonts.css" />
+</head>
+<body data-root="../">
+
+  <div class="topbar">
+    <div class="container">
+      <span>&#128222; 0866 &ndash; 2574321</span>
+      <span>&#9993; bbabza@gmail.com</span>
+      <span>&#128205; Civil Courts Campus, Governorpet, Vijayawada &ndash; 520 002</span>
+      <span>&#128197; Established 1906</span>
+    </div>
+  </div>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="../index.html" class="logo-block">
+        <div class="emblem">
+          <img src="../images/logo.jpeg" alt="The Bezwada Bar Association Logo" class="header-logo" />
+        </div>
+        <div class="logo-text">
+          <h1>The Bezwada Bar Association</h1>
+          <p class="tagline">Let Justice Prevail &mdash; Estd. 1906</p>
+        </div>
+      </a>
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation"><span></span><span></span><span></span></button>
+      <nav class="main-nav" id="mainNav">
+        <ul>
+          <li><a href="../index.html">Home</a></li>
+          <li><a href="../about/index.html">About</a></li>
+          <li><a href="../office-bearers/index.html">Office Bearers</a></li>
+          <li><a href="../members/index.html">Members</a></li>
+          <li><a href="../news/index.html">News &amp; Events</a></li>
+          <li><a href="../blog/index.html">Blog</a></li>
+          <li><a href="../gallery/index.html">Gallery</a></li>
+          <li><a href="../tournament/index.html" style="color:var(--gold)!important;">&#127992; Tournament</a></li>
+          <li><a href="../contact/index.html" class="btn-nav">Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <div class="page-hero">
+    <div class="container">
+      <p class="page-hero-eyebrow">&#9997; Admin</p>
+      <h2>Compose a Blog Post</h2>
+      <div class="breadcrumb">
+        <a href="../index.html">Home</a>
+        <span class="breadcrumb-sep">&#8250;</span>
+        <a href="index.html">Blog</a>
+        <span class="breadcrumb-sep">&#8250;</span>
+        <span>Compose</span>
+      </div>
+    </div>
+  </div>
+
+  <section class="section section-light">
+    <div class="container">
+      <div class="compose-wrap">
+
+        <!-- ── GitHub Settings ──────────────────────────────── -->
+        <details class="gh-settings" id="ghSettings">
+          <summary>&#9881; GitHub Connection Settings</summary>
+          <div class="gh-settings-body">
+            <p>Enter your GitHub <strong>Personal Access Token</strong> (PAT) once. The token is saved in your browser only — it is never sent anywhere except the GitHub API. Create a fine-grained PAT with <em>Contents: Read and Write</em> permission for this repository.</p>
+            <div class="gh-settings-grid">
+              <div class="form-group">
+                <label for="gh-token">Personal Access Token</label>
+                <input type="password" id="gh-token" placeholder="ghp_xxxxxxxxxxxx" autocomplete="off" spellcheck="false" />
+              </div>
+              <div class="form-group">
+                <label for="gh-owner">Repository Owner</label>
+                <input type="text" id="gh-owner" placeholder="bbabza" spellcheck="false" />
+              </div>
+              <div class="form-group">
+                <label for="gh-repo">Repository Name</label>
+                <input type="text" id="gh-repo" placeholder="bbabza.github.io" spellcheck="false" />
+              </div>
+            </div>
+            <button class="btn btn-gold" id="saveSettingsBtn" style="padding:8px 20px;font-size:13px;">Save Settings</button>
+            <span id="settingsSaved" style="display:none;margin-left:12px;font-size:13px;color:#2e7d32;font-weight:700;">&#10003; Saved</span>
+          </div>
+        </details>
+
+        <!-- ── Post Form ────────────────────────────────────── -->
+        <div class="compose-form-card">
+
+          <div class="reg-form-grid">
+
+            <div class="form-group">
+              <label for="c-title">Post Title *</label>
+              <input type="text" id="c-title" placeholder="e.g. Supreme Court Ruling on Article 21" />
+            </div>
+
+            <div class="form-group">
+              <label for="c-author">Author Name *</label>
+              <input type="text" id="c-author" placeholder="e.g. Sri B. Ramakrishna Rao" />
+            </div>
+
+            <div class="form-group">
+              <label for="c-date">Date *</label>
+              <input type="text" id="c-date" placeholder="28 Aug 2026" />
+            </div>
+
+            <div class="form-group">
+              <label for="c-category">Category *</label>
+              <select id="c-category">
+                <option value="">&#8212; Select &#8212;</option>
+                <option value="Legal Updates">Legal Updates</option>
+                <option value="Announcements">Announcements</option>
+                <option value="Events">Events</option>
+                <option value="Reports">Reports</option>
+                <option value="Opinion">Opinion</option>
+                <option value="Notices">Notices</option>
+              </select>
+            </div>
+
+            <div class="form-group" style="grid-column:1/-1;">
+              <label for="c-excerpt">Short Excerpt * <span class="label-hint">(shown on the blog card — 1 or 2 sentences)</span></label>
+              <textarea id="c-excerpt" rows="3" placeholder="A brief summary of the post that readers will see on the blog listing page…"></textarea>
+            </div>
+
+            <!-- Rich text editor -->
+            <div class="form-group" style="grid-column:1/-1;">
+              <label>Full Content *</label>
+
+              <div class="editor-wrap" id="editorWrap">
+
+                <div class="editor-toolbar" id="editorToolbar">
+
+                  <!-- Text style -->
+                  <button class="editor-btn" data-cmd="bold"          title="Bold (Ctrl+B)"><strong>B</strong></button>
+                  <button class="editor-btn" data-cmd="italic"        title="Italic (Ctrl+I)"><em>I</em></button>
+                  <button class="editor-btn" data-cmd="underline"     title="Underline (Ctrl+U)"><u>U</u></button>
+                  <button class="editor-btn" data-cmd="strikeThrough" title="Strikethrough"><s>S</s></button>
+
+                  <div class="editor-sep"></div>
+
+                  <!-- Block format -->
+                  <button class="editor-btn" data-cmd="formatBlock" data-val="p"          title="Normal paragraph">&#182; Para</button>
+                  <button class="editor-btn" data-cmd="formatBlock" data-val="h3"         title="Heading H3">H3</button>
+                  <button class="editor-btn" data-cmd="formatBlock" data-val="blockquote" title="Blockquote">&#10078;</button>
+
+                  <div class="editor-sep"></div>
+
+                  <!-- Lists -->
+                  <button class="editor-btn" data-cmd="insertUnorderedList" title="Bullet list">&#8226; List</button>
+                  <button class="editor-btn" data-cmd="insertOrderedList"   title="Numbered list">1. List</button>
+
+                  <div class="editor-sep"></div>
+
+                  <!-- Link -->
+                  <button class="editor-btn" id="btnLink"   title="Insert link">&#128279; Link</button>
+                  <button class="editor-btn" data-cmd="unlink" title="Remove link">&#128279;&#10005;</button>
+
+                  <div class="editor-sep"></div>
+
+                  <!-- Insert -->
+                  <button class="editor-btn" data-cmd="insertHorizontalRule" title="Horizontal divider">&#8213; HR</button>
+
+                  <div class="editor-sep"></div>
+
+                  <!-- Clear -->
+                  <button class="editor-btn" data-cmd="removeFormat" title="Clear formatting">&#10006; Clear</button>
+
+                </div><!-- /.editor-toolbar -->
+
+                <div class="editor-body"
+                     id="editorBody"
+                     contenteditable="true"
+                     spellcheck="true"
+                     aria-label="Post content editor"
+                     aria-multiline="true">
+                  <p><br /></p>
+                </div>
+
+              </div><!-- /.editor-wrap -->
+            </div>
+
+          </div><!-- /.reg-form-grid -->
+
+          <!-- Action row -->
+          <div class="compose-actions">
+            <button class="btn btn-gold" id="publishBtn" style="flex:1;min-width:180px;padding:14px;">&#9654; Publish to Blog</button>
+            <button class="btn" id="downloadBtn" title="Download updated posts.json to manually commit" style="padding:12px 20px;background:var(--light);color:var(--navy2);border:1.5px solid #cde8e5;">&#8659; Download JSON</button>
+            <button class="btn" id="resetBtn" style="padding:12px 20px;background:var(--muted);color:var(--white);border-color:var(--muted);">&#10006; Clear</button>
+          </div>
+
+          <p id="composeError" style="color:#c0392b;font-size:13px;margin-top:12px;display:none;"></p>
+          <div id="publishStatus" class="publish-status"></div>
+
+        </div><!-- /.compose-form-card -->
+
+      </div><!-- /.compose-wrap -->
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <h3>The Bezwada Bar Association</h3>
+        <p>Upholding justice and serving the legal fraternity of Vijayawada since 1906.</p>
+        <p>Civil Courts Campus, Gopala Reddy Road,<br/>Governorpet, Vijayawada &ndash; 520 002</p>
+        <p class="footer-tel">&#128222; 0866 &ndash; 2574321 &bull; &#9993; bbabza@gmail.com</p>
+      </div>
+      <div class="footer-links">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="../index.html">Home</a></li>
+          <li><a href="../about/index.html">About</a></li>
+          <li><a href="../members/index.html">Members Directory</a></li>
+          <li><a href="../news/index.html">News &amp; Events</a></li>
+          <li><a href="../blog/index.html">Blog</a></li>
+          <li><a href="../contact/index.html">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>Resources</h4>
+        <ul>
+          <li><a href="https://www.barcouncilofindia.org" target="_blank" rel="noopener">Bar Council of India</a></li>
+          <li><a href="https://hc.ap.nic.in" target="_blank" rel="noopener">AP High Court</a></li>
+          <li><a href="https://nalsa.gov.in" target="_blank" rel="noopener">NALSA &mdash; Legal Aid</a></li>
+          <li><a href="https://districts.ecourts.gov.in/krishna" target="_blank" rel="noopener">District Courts &mdash; Krishna</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>Affiliations</h4>
+        <ul>
+          <li>Bar Council of Andhra Pradesh</li>
+          <li>Bar Council of India</li>
+          <li>District Legal Services Authority</li>
+          <li>Krishna District Court</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="container">
+        <p>&copy; 2026 The Bezwada Bar Association. All rights reserved.</p>
+        <p>Governorpet &bull; Vijayawada &bull; Krishna District &bull; Andhra Pradesh</p>
+      </div>
+    </div>
+  </footer>
+
+  <button class="back-to-top" id="backToTop" aria-label="Back to top">&#8679;</button>
+  <script src="../js/script.js"></script>
+  <script>
+  (function () {
+    'use strict';
+
+    /* ── Helpers ──────────────────────────────────────────── */
+
+    function slugify(str) {
+      return str.toLowerCase().trim()
+        .replace(/[^a-z0-9\s-]/g, '')
+        .replace(/\s+/g, '-')
+        .replace(/-+/g, '-');
+    }
+
+    function todayStr() {
+      const d = new Date();
+      const M = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+      return String(d.getDate()).padStart(2,'0') + ' ' + M[d.getMonth()] + ' ' + d.getFullYear();
+    }
+
+    // Safely encode a Unicode string to base64 for the GitHub API
+    function b64Encode(str) {
+      const bytes = new TextEncoder().encode(str);
+      let binary = '';
+      bytes.forEach(b => { binary += String.fromCharCode(b); });
+      return btoa(binary);
+    }
+
+    // Strip browser-added junk from contenteditable HTML
+    function cleanHTML(html) {
+      const tpl = document.createElement('template');
+      tpl.innerHTML = html.trim();
+      const root = tpl.content;
+
+      const ALLOWED = new Set(['P','H3','STRONG','EM','U','S','UL','OL','LI',
+                                'BLOCKQUOTE','A','HR','BR']);
+
+      function walk(node) {
+        if (node.nodeType !== 1) return;
+        const tag = node.tagName;
+
+        // Semantic conversions
+        if (tag === 'B') { node.outerHTML = '<strong>' + node.innerHTML + '</strong>'; return; }
+        if (tag === 'I') { node.outerHTML = '<em>'     + node.innerHTML + '</em>';     return; }
+
+        // DIV → P (Chrome wraps new lines in divs)
+        if (tag === 'DIV') {
+          const p = document.createElement('p');
+          while (node.firstChild) p.appendChild(node.firstChild);
+          node.parentNode.replaceChild(p, node);
+          Array.from(p.childNodes).forEach(walk);
+          return;
+        }
+
+        // Unwrap non-allowed tags (SPAN, FONT, etc.)
+        if (!ALLOWED.has(tag)) {
+          const parent = node.parentNode;
+          while (node.firstChild) parent.insertBefore(node.firstChild, node);
+          parent.removeChild(node);
+          return;
+        }
+
+        // Strip all attributes except <a href>
+        Array.from(node.attributes).forEach(attr => {
+          if (!(tag === 'A' && attr.name === 'href')) node.removeAttribute(attr.name);
+        });
+
+        Array.from(node.childNodes).forEach(walk);
+      }
+
+      Array.from(root.childNodes).forEach(walk);
+
+      const div = document.createElement('div');
+      div.appendChild(root.cloneNode(true));
+
+      return div.innerHTML
+        .replace(/<p>\s*(<br\s*\/?>)?\s*<\/p>/gi, '')   // empty paragraphs
+        .replace(/&nbsp;/g, ' ')
+        .trim();
+    }
+
+    /* ── Settings ─────────────────────────────────────────── */
+
+    const SK = { token: 'bba_gh_token', owner: 'bba_gh_owner', repo: 'bba_gh_repo' };
+
+    function loadSettings() {
+      document.getElementById('gh-token').value = localStorage.getItem(SK.token) || '';
+      document.getElementById('gh-owner').value = localStorage.getItem(SK.owner) || 'bbabza';
+      document.getElementById('gh-repo').value  = localStorage.getItem(SK.repo)  || 'bbabza.github.io';
+      // Auto-open settings if token is not yet saved
+      if (!localStorage.getItem(SK.token)) {
+        document.getElementById('ghSettings').open = true;
+      }
+    }
+
+    document.getElementById('saveSettingsBtn').addEventListener('click', function () {
+      localStorage.setItem(SK.token, document.getElementById('gh-token').value.trim());
+      localStorage.setItem(SK.owner, document.getElementById('gh-owner').value.trim());
+      localStorage.setItem(SK.repo,  document.getElementById('gh-repo').value.trim());
+      const saved = document.getElementById('settingsSaved');
+      saved.style.display = 'inline';
+      setTimeout(() => { saved.style.display = 'none'; }, 2500);
+    });
+
+    /* ── Editor toolbar ───────────────────────────────────── */
+
+    const editor = document.getElementById('editorBody');
+
+    // Keep track of selection before toolbar button focuses away
+    let savedRange = null;
+    editor.addEventListener('mouseup', saveRange);
+    editor.addEventListener('keyup',   saveRange);
+
+    function saveRange() {
+      const sel = window.getSelection();
+      if (sel && sel.rangeCount) savedRange = sel.getRangeAt(0).cloneRange();
+    }
+
+    function restoreRange() {
+      if (!savedRange) return;
+      editor.focus();
+      const sel = window.getSelection();
+      sel.removeAllRanges();
+      sel.addRange(savedRange);
+    }
+
+    // Generic execCommand wrapper
+    function exec(cmd, val) {
+      restoreRange();
+      document.execCommand(cmd, false, val || null);
+      editor.focus();
+      updateToolbarState();
+    }
+
+    // Toolbar button wiring
+    document.querySelectorAll('.editor-btn[data-cmd]').forEach(btn => {
+      btn.addEventListener('mousedown', function (e) {
+        e.preventDefault(); // prevent editor blur
+        const cmd = this.dataset.cmd;
+        const val = this.dataset.val || null;
+        exec(cmd, val);
+      });
+    });
+
+    // Link button — prompt for URL
+    document.getElementById('btnLink').addEventListener('mousedown', function (e) {
+      e.preventDefault();
+      saveRange();
+      const url = window.prompt('Enter URL (include https://):', 'https://');
+      if (url && url !== 'https://') exec('createLink', url);
+    });
+
+    // Reflect active state on toolbar buttons
+    function updateToolbarState() {
+      const cmds = ['bold','italic','underline','strikeThrough',
+                     'insertUnorderedList','insertOrderedList'];
+      cmds.forEach(cmd => {
+        const btn = document.querySelector(`.editor-btn[data-cmd="${cmd}"]`);
+        if (btn) btn.classList.toggle('active', document.queryCommandState(cmd));
+      });
+    }
+
+    editor.addEventListener('keyup',   updateToolbarState);
+    editor.addEventListener('mouseup', updateToolbarState);
+
+    // Strip formatting on paste — accept plain text only to keep HTML clean
+    editor.addEventListener('paste', function (e) {
+      e.preventDefault();
+      const plain = (e.clipboardData || window.clipboardData).getData('text/plain');
+      document.execCommand('insertText', false, plain);
+    });
+
+    /* ── Build entry object ───────────────────────────────── */
+
+    function buildEntry() {
+      const title    = document.getElementById('c-title').value.trim();
+      const author   = document.getElementById('c-author').value.trim();
+      const date     = document.getElementById('c-date').value.trim();
+      const category = document.getElementById('c-category').value;
+      const excerpt  = document.getElementById('c-excerpt').value.trim();
+      const content  = cleanHTML(editor.innerHTML);
+
+      const err = document.getElementById('composeError');
+
+      if (!title || !author || !date || !category || !excerpt || !content) {
+        err.textContent = 'Please fill in all fields before publishing.';
+        err.style.display = 'block';
+        return null;
+      }
+      err.style.display = 'none';
+
+      return {
+        id:       slugify(title) + '-' + date.replace(/\s+/g,'-').toLowerCase(),
+        title, date, author, category, excerpt, content
+      };
+    }
+
+    /* ── GitHub API ───────────────────────────────────────── */
+
+    function setStatus(type, msg) {
+      const el = document.getElementById('publishStatus');
+      el.className = 'publish-status ' + type;
+      el.innerHTML = msg;
+      el.style.display = 'block';
+    }
+
+    async function publishToGitHub(entry) {
+      const token = localStorage.getItem(SK.token);
+      const owner = localStorage.getItem(SK.owner) || 'bbabza';
+      const repo  = localStorage.getItem(SK.repo)  || 'bbabza.github.io';
+
+      if (!token) {
+        throw new Error('No GitHub token found. Open the ⚙ Settings panel above and save your token first.');
+      }
+
+      const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/blog/posts.json`;
+      const headers = {
+        Authorization: `token ${token}`,
+        Accept: 'application/vnd.github.v3+json'
+      };
+
+      setStatus('loading', '&#9679; Fetching current posts.json from GitHub&hellip;');
+
+      // 1. Get existing file (SHA + content)
+      const getRes = await fetch(apiUrl, { headers });
+      let sha = null;
+      let existingPosts = [];
+
+      if (getRes.status === 404) {
+        // File doesn't exist yet — we'll create it
+      } else if (!getRes.ok) {
+        const e = await getRes.json().catch(() => ({}));
+        throw new Error(e.message || `GitHub API error ${getRes.status}`);
+      } else {
+        const fileData = await getRes.json();
+        sha = fileData.sha;
+        const raw = atob(fileData.content.replace(/\s/g, ''));
+        existingPosts = JSON.parse(decodeURIComponent(
+          raw.split('').map(c => '%' + c.charCodeAt(0).toString(16).padStart(2,'0')).join('')
+        ));
+      }
+
+      // 2. Prepend new post
+      const updated = [entry, ...existingPosts];
+      const newContent = b64Encode(JSON.stringify(updated, null, 2) + '\n');
+
+      setStatus('loading', '&#9679; Committing updated posts.json&hellip;');
+
+      // 3. PUT commit
+      const body = {
+        message: `Blog: add "${entry.title}"`,
+        content: newContent,
+        ...(sha ? { sha } : {})
+      };
+
+      const putRes = await fetch(apiUrl, {
+        method: 'PUT',
+        headers: { ...headers, 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+      });
+
+      if (!putRes.ok) {
+        const e = await putRes.json().catch(() => ({}));
+        throw new Error(e.message || `Commit failed: ${putRes.status}`);
+      }
+
+      setStatus('success',
+        '&#10003; <strong>Post published!</strong> The blog will update once GitHub Pages rebuilds ' +
+        '(usually under 60 seconds). <a href="index.html" style="color:#2e7d32;text-decoration:underline;">View blog &rarr;</a>');
+    }
+
+    /* ── Download fallback ────────────────────────────────── */
+
+    function downloadJSON(entry) {
+      // Fetch current posts.json, prepend entry, offer download
+      fetch('../blog/posts.json')
+        .then(r => r.ok ? r.json() : [])
+        .catch(() => [])
+        .then(existing => {
+          const updated = [entry, ...existing];
+          const blob = new Blob([JSON.stringify(updated, null, 2) + '\n'],
+                                { type: 'application/json' });
+          const url = URL.createObjectURL(blob);
+          const a   = document.createElement('a');
+          a.href     = url;
+          a.download = 'posts.json';
+          a.click();
+          URL.revokeObjectURL(url);
+          setStatus('success',
+            '&#8659; <strong>posts.json downloaded.</strong> Replace <code>blog/posts.json</code> ' +
+            'in the repository with this file and push to publish the post.');
+        });
+    }
+
+    /* ── Publish button ───────────────────────────────────── */
+
+    document.getElementById('publishBtn').addEventListener('click', async function () {
+      const entry = buildEntry();
+      if (!entry) return;
+
+      this.disabled = true;
+      this.textContent = 'Publishing…';
+      document.getElementById('publishStatus').style.display = 'none';
+
+      try {
+        await publishToGitHub(entry);
+      } catch (err) {
+        setStatus('error',
+          '&#10006; <strong>Publish failed:</strong> ' + err.message +
+          '<br><small>You can use the <em>Download JSON</em> button as a fallback.</small>');
+      } finally {
+        this.disabled = false;
+        this.innerHTML = '&#9654; Publish to Blog';
+      }
+    });
+
+    /* ── Download button ──────────────────────────────────── */
+
+    document.getElementById('downloadBtn').addEventListener('click', function () {
+      const entry = buildEntry();
+      if (!entry) return;
+      downloadJSON(entry);
+    });
+
+    /* ── Reset button ─────────────────────────────────────── */
+
+    document.getElementById('resetBtn').addEventListener('click', function () {
+      ['c-title','c-author','c-excerpt'].forEach(id => {
+        document.getElementById(id).value = '';
+      });
+      document.getElementById('c-date').value     = todayStr();
+      document.getElementById('c-category').value = '';
+      editor.innerHTML = '<p><br /></p>';
+      document.getElementById('composeError').style.display   = 'none';
+      document.getElementById('publishStatus').style.display  = 'none';
+    });
+
+    /* ── Init ─────────────────────────────────────────────── */
+
+    loadSettings();
+    document.getElementById('c-date').value = todayStr();
+
+  })();
+  </script>
+</body>
+</html>

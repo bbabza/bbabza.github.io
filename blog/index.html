@@ -4,8 +4,8 @@
   <meta charset="UTF-8" />
   <script>try{if(location.pathname.endsWith("index.html"))history.replaceState(null,"",location.pathname.slice(0,-10)||"./")}catch(e){}</script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Members Directory — The Bezwada Bar Association, Vijayawada." />
-  <title>Members Directory | The Bezwada Bar Association</title>
+  <meta name="description" content="Blog — The Bezwada Bar Association, Vijayawada. Legal updates, reports, and association news." />
+  <title>Blog | The Bezwada Bar Association</title>
   <link rel="icon" href="../images/logo.jpeg" type="image/jpeg" />
   <link rel="stylesheet" href="../css/styles.css" />
   <link rel="stylesheet" href="../css/fonts.css" />
@@ -38,9 +38,9 @@
           <li><a href="../index.html">Home</a></li>
           <li><a href="../about/index.html">About</a></li>
           <li><a href="../office-bearers/index.html">Office Bearers</a></li>
-          <li><a href="../members/index.html" aria-current="page">Members</a></li>
+          <li><a href="../members/index.html">Members</a></li>
           <li><a href="../news/index.html">News &amp; Events</a></li>
-          <li><a href="../blog/index.html">Blog</a></li>
+          <li><a href="../blog/index.html" aria-current="page">Blog</a></li>
           <li><a href="../gallery/index.html">Gallery</a></li>
           <li><a href="../tournament/index.html" style="color:var(--gold)!important;">&#127992; Tournament</a></li>
           <li><a href="../contact/index.html" class="btn-nav">Contact</a></li>
@@ -59,68 +59,37 @@
 
   <div class="page-hero">
     <div class="container">
-      <p class="page-hero-eyebrow">Fraternity</p>
-      <h2>Members Directory</h2>
+      <p class="page-hero-eyebrow">&#9997; Association Blog</p>
+      <h2>Blog</h2>
       <div class="breadcrumb">
         <a href="../index.html">Home</a>
         <span class="breadcrumb-sep">&#8250;</span>
-        <span>Members</span>
+        <span>Blog</span>
       </div>
     </div>
   </div>
 
   <section class="section section-light">
     <div class="container">
-      <p class="section-sub" style="margin-bottom:20px;">A partial listing of enrolled advocates. Full directory available at the Association office.</p>
-      <div class="members-controls">
-        <input type="text" id="memberSearch" placeholder="Search by name, enrollment no., or practice area..." class="search-input" />
-        <select id="memberFilter" class="filter-select">
-          <option value="">All Practice Areas</option>
-          <option>Civil</option>
-          <option>Criminal</option>
-          <option>Constitutional</option>
-          <option>Family</option>
-          <option>Labour</option>
-          <option>Revenue</option>
-          <option>Commercial</option>
-        </select>
+
+      <div class="section-header">
+        <span class="section-badge">Articles</span>
+        <h2 class="section-title">Posts &amp; Updates</h2>
+        <div class="divider"></div>
       </div>
-      <div class="table-wrapper">
-        <table class="members-table" id="membersTable">
-          <thead>
-            <tr>
-              <th>Enr. No.</th>
-              <th>Name</th>
-              <th>Practice Area</th>
-              <th>Enrolled</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr><td>AP/001/1985</td><td>Sri Alapati Subrahmanyam</td><td>Civil</td><td>1985</td><td><span class="badge badge-active">Active</span></td></tr>
-            <tr><td>AP/002/1990</td><td>Smt. Bhavani Devi Challa</td><td>Family</td><td>1990</td><td><span class="badge badge-active">Active</span></td></tr>
-            <tr><td>AP/003/1993</td><td>Sri Dasari Venkata Rao</td><td>Criminal</td><td>1993</td><td><span class="badge badge-active">Active</span></td></tr>
-            <tr><td>AP/004/1996</td><td>Sri Elanaga Srinivasa Rao</td><td>Revenue</td><td>1996</td><td><span class="badge badge-active">Active</span></td></tr>
-            <tr><td>AP/005/1998</td><td>Smt. Ganta Padmaja</td><td>Constitutional</td><td>1998</td><td><span class="badge badge-active">Active</span></td></tr>
-            <tr><td>AP/006/2000</td><td>Sri Harish Chandra Mouli</td><td>Commercial</td><td>2000</td><td><span class="badge badge-active">Active</span></td></tr>
-            <tr><td>AP/007/2003</td><td>Sri Indukuri Prasad</td><td>Labour</td><td>2003</td><td><span class="badge badge-active">Active</span></td></tr>
-            <tr><td>AP/008/2005</td><td>Smt. Jyothi Lakshmi Katari</td><td>Family</td><td>2005</td><td><span class="badge badge-active">Active</span></td></tr>
-            <tr><td>AP/009/2007</td><td>Sri Konduri Bala Krishna</td><td>Civil</td><td>2007</td><td><span class="badge badge-active">Active</span></td></tr>
-            <tr><td>AP/010/2009</td><td>Sri Lakshmi Narayan Pattnaik</td><td>Criminal</td><td>2009</td><td><span class="badge badge-active">Active</span></td></tr>
-            <tr><td>AP/011/2011</td><td>Smt. Mangala Devi Nalluri</td><td>Revenue</td><td>2011</td><td><span class="badge badge-active">Active</span></td></tr>
-            <tr><td>AP/012/2013</td><td>Sri Nanduri Kiran Kumar</td><td>Commercial</td><td>2013</td><td><span class="badge badge-active">Active</span></td></tr>
-            <tr><td>AP/013/2015</td><td>Sri Omkar Reddy Potluri</td><td>Constitutional</td><td>2015</td><td><span class="badge badge-active">Active</span></td></tr>
-            <tr><td>AP/014/2017</td><td>Smt. Pavani Yellampalli</td><td>Labour</td><td>2017</td><td><span class="badge badge-active">Active</span></td></tr>
-            <tr><td>AP/015/2019</td><td>Sri Ravi Teja Samudrala</td><td>Civil</td><td>2019</td><td><span class="badge badge-active">Active</span></td></tr>
-            <tr><td>AP/016/2020</td><td>Smt. Sailaja Kommineni</td><td>Family</td><td>2020</td><td><span class="badge badge-active">Active</span></td></tr>
-            <tr><td>AP/017/2021</td><td>Sri Tirumala Rao Maddala</td><td>Criminal</td><td>2021</td><td><span class="badge badge-active">Active</span></td></tr>
-            <tr><td>AP/018/2022</td><td>Smt. Uma Devi Venugopal</td><td>Revenue</td><td>2022</td><td><span class="badge badge-active">Active</span></td></tr>
-            <tr><td>AP/019/2023</td><td>Sri Vijay Krishna Tadepalli</td><td>Commercial</td><td>2023</td><td><span class="badge badge-active">Active</span></td></tr>
-            <tr><td>AP/020/2024</td><td>Smt. Yamini Priya Muddada</td><td>Constitutional</td><td>2024</td><td><span class="badge badge-active">Active</span></td></tr>
-          </tbody>
-        </table>
+
+      <div class="blog-filter-bar" id="blogFilterBar">
+        <button class="blog-filter-btn active" data-filter="all">All Posts</button>
       </div>
-      <p class="table-note">Showing 20 of 1,800+ members &mdash; Contact the Association office for the complete directory or enrollment inquiries.</p>
+
+      <div class="blog-grid" id="blogGrid">
+        <p style="text-align:center;color:var(--muted);grid-column:1/-1;">Loading posts&hellip;</p>
+      </div>
+
+      <div class="blog-admin-link">
+        <a href="compose.html">&#43; Publish a New Post</a>
+      </div>
+
     </div>
   </section>
 
@@ -173,5 +142,87 @@
 
   <button class="back-to-top" id="backToTop" aria-label="Back to top">&#8679;</button>
   <script src="../js/script.js"></script>
+  <script>
+  (function () {
+    'use strict';
+
+    const grid      = document.getElementById('blogGrid');
+    const filterBar = document.getElementById('blogFilterBar');
+    let allPosts    = [];
+    let activeFilter = 'all';
+
+    function renderPosts(posts) {
+      if (!posts.length) {
+        grid.innerHTML = '<p style="text-align:center;color:var(--muted);grid-column:1/-1;">No posts found in this category.</p>';
+        return;
+      }
+      grid.innerHTML = posts.map(post => `
+        <article class="blog-card" data-category="${post.category}">
+          <div class="blog-card-meta">
+            <span class="blog-cat">${post.category}</span>
+            <span class="blog-date">${post.date}</span>
+          </div>
+          <h3 class="blog-title">${post.title}</h3>
+          <p class="blog-author">By ${post.author}</p>
+          <p class="blog-excerpt">${post.excerpt}</p>
+          <button class="blog-expand-btn" aria-expanded="false">Read Full Post &#8594;</button>
+          <div class="blog-full-content" hidden>
+            ${post.content}
+            <button class="blog-collapse-btn">&#8593; Collapse</button>
+          </div>
+        </article>`).join('');
+
+      grid.querySelectorAll('.blog-expand-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const full = btn.nextElementSibling;
+          const open = btn.getAttribute('aria-expanded') === 'true';
+          btn.setAttribute('aria-expanded', !open);
+          btn.textContent = open ? 'Read Full Post →' : 'Close ↑';
+          full.hidden = open;
+        });
+      });
+
+      grid.querySelectorAll('.blog-collapse-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const full    = btn.closest('.blog-full-content');
+          const expBtn  = full.previousElementSibling;
+          full.hidden   = true;
+          expBtn.setAttribute('aria-expanded', 'false');
+          expBtn.textContent = 'Read Full Post →';
+          full.closest('.blog-card').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        });
+      });
+    }
+
+    function buildFilterButtons(posts) {
+      const cats = ['all', ...new Set(posts.map(p => p.category))];
+      filterBar.innerHTML = cats.map(c =>
+        `<button class="blog-filter-btn${c === 'all' ? ' active' : ''}" data-filter="${c}">${c === 'all' ? 'All Posts' : c}</button>`
+      ).join('');
+
+      filterBar.querySelectorAll('.blog-filter-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          filterBar.querySelectorAll('.blog-filter-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          activeFilter = btn.dataset.filter;
+          const filtered = activeFilter === 'all' ? allPosts : allPosts.filter(p => p.category === activeFilter);
+          renderPosts(filtered);
+        });
+      });
+    }
+
+    fetch('../blog/posts.json')
+      .then(r => { if (!r.ok) throw new Error(); return r.json(); })
+      .then(posts => {
+        allPosts = posts;
+        buildFilterButtons(posts);
+        renderPosts(posts);
+      })
+      .catch(() => {
+        grid.innerHTML = '<p style="text-align:center;color:var(--muted);grid-column:1/-1;">Unable to load posts. Please try again later.</p>';
+      });
+
+  })();
+  </script>
 </body>
 </html>
