@@ -1343,6 +1343,192 @@ a.logo-block:hover { opacity: .92; }
   line-height: 1.6;
 }
 
+/* UPI Payment panel (embedded in confirm-card) */
+.upi-pay-section {
+  margin-top: 28px;
+  border: 2px solid #cde8e5;
+  border-radius: 12px;
+  overflow: hidden;
+  text-align: left;
+}
+/* UPI Payment panel (standalone Step 3 section) */
+.upi-pay-standalone {
+  border: 2px solid #cde8e5;
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--white);
+  box-shadow: var(--shadow);
+}
+.upi-pay-hdr {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  background: var(--navy2);
+  color: var(--white);
+  padding: 14px 20px;
+  font-weight: 700;
+  font-size: 15px;
+}
+.upi-pay-deadline { font-size: 11.5px; color: var(--gold); font-weight: 600; }
+.upi-pay-grid {
+  display: grid;
+  grid-template-columns: 230px 1fr;
+}
+.upi-qr-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 22px 16px;
+  background: var(--light);
+  border-right: 1px solid #cde8e5;
+}
+.upi-qr-box {
+  width: 196px;
+  height: 196px;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(15,92,84,.1);
+}
+.upi-qr-caption {
+  font-size: 10.5px;
+  color: var(--muted);
+  text-align: center;
+  line-height: 1.5;
+}
+.upi-id-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  color: var(--text);
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.upi-copy-btn {
+  font-size: 11px;
+  padding: 3px 9px;
+  border-radius: 4px;
+  border: 1.5px solid var(--navy);
+  background: transparent;
+  color: var(--navy);
+  cursor: pointer;
+  font-family: var(--ff-sans);
+  font-weight: 600;
+  transition: background .15s, color .15s;
+}
+.upi-copy-btn:hover { background: var(--navy); color: var(--white); }
+.upi-mobile-link {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--navy);
+  text-decoration: none;
+  padding: 6px 16px;
+  border: 1.5px solid var(--navy);
+  border-radius: 20px;
+  transition: background .15s, color .15s;
+}
+.upi-mobile-link:hover { background: var(--navy); color: var(--white); }
+.upi-utr-col { padding: 22px 24px; }
+.upi-amount-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--light);
+  border: 1.5px solid #cde8e5;
+  border-radius: 8px;
+  padding: 10px 18px;
+  font-size: 13.5px;
+  color: var(--navy2);
+  margin-bottom: 14px;
+  font-weight: 600;
+}
+.upi-amount-chip strong {
+  font-size: 1.4rem;
+  font-family: var(--ff-serif);
+  color: var(--navy2);
+}
+.upi-instr {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.65;
+  margin-bottom: 16px;
+}
+.utr-hint {
+  display: block;
+  font-size: 11.5px;
+  color: var(--muted);
+  margin-top: 5px;
+}
+.utr-fail-btn {
+  font-size: 13px;
+  padding: 10px 14px;
+  background: transparent;
+  color: var(--muted);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-family: var(--ff-sans);
+  transition: color .15s, border-color .15s;
+}
+.utr-fail-btn:hover { color: #c62828; border-color: #c62828; }
+.utr-status {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 700;
+  font-size: 1.05rem;
+  padding: 13px 16px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+}
+.utr-status--ok   { background: #e8f5e9; color: #2e7d32; border: 1.5px solid #a5d6a7; }
+.utr-status--fail { background: #fdecea; color: #c62828; border: 1.5px solid #ef9a9a; }
+.utr-detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 9px 0;
+  border-bottom: 1px solid #eee;
+  font-size: 13.5px;
+  gap: 12px;
+}
+.utr-detail-row span { font-size: 12px; color: var(--muted); }
+.utr-success-note {
+  font-size: 12.5px;
+  color: #2e7d32;
+  background: #e8f5e9;
+  border-radius: 6px;
+  padding: 12px 14px;
+  margin-top: 14px;
+  line-height: 1.6;
+}
+.utr-fail-list {
+  padding-left: 18px;
+  font-size: 13px;
+  color: var(--text);
+  line-height: 1.85;
+}
+.confirm-utr-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 9px 0;
+  font-size: 13.5px;
+  gap: 12px;
+  color: var(--navy2);
+  font-weight: 700;
+  border-top: 2px solid var(--navy);
+  margin-top: 4px;
+}
+.confirm-utr-row span { font-size: 12px; color: var(--muted); font-weight: 400; }
+
 @media (max-width: 1024px) {
   .tourn-layout { grid-template-columns: 1fr; }
   .cart-panel { position: static; }
@@ -1351,6 +1537,8 @@ a.logo-block:hover { opacity: .92; }
   .categories-grid { grid-template-columns: 1fr; }
   .reg-form-grid { grid-template-columns: 1fr; }
   .tourn-info-item { min-width: 50%; }
+  .upi-pay-grid { grid-template-columns: 1fr; }
+  .upi-qr-col { border-right: none; border-bottom: 1px solid #cde8e5; }
   .tourn-prize-item { min-width: 50%; }
   .confirm-card { padding: 36px 20px; }
   .tourn-contacts-grid { grid-template-columns: 1fr 1fr; }

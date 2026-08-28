@@ -160,6 +160,11 @@
         <div class="tourn-step-connector" id="conn2"></div>
         <div class="tourn-step" id="step3">
           <div class="tourn-step-num">3</div>
+          <span>Payment</span>
+        </div>
+        <div class="tourn-step-connector" id="conn3"></div>
+        <div class="tourn-step" id="step4">
+          <div class="tourn-step-num">4</div>
           <span>Confirmation</span>
         </div>
       </div>
@@ -167,7 +172,7 @@
       <div class="tourn-layout" id="step1Panel">
         <!-- Categories -->
         <div class="categories-col">
-          <div class="section-badge" style="margin-bottom:12px;">Step 1 of 3</div>
+          <div class="section-badge" style="margin-bottom:12px;">Step 1 of 4</div>
           <h3 style="font-family:var(--ff-serif);font-size:1.5rem;color:var(--navy2);margin-bottom:6px;">Choose Your
             Events</h3>
           <p style="color:var(--muted);font-size:14px;margin-bottom:0;">Select one or more categories. You may enter
@@ -280,7 +285,11 @@
         </div>
         <div class="tourn-step-connector"></div>
         <div class="tourn-step">
-          <div class="tourn-step-num">3</div><span>Confirmation</span>
+          <div class="tourn-step-num">3</div><span>Payment</span>
+        </div>
+        <div class="tourn-step-connector"></div>
+        <div class="tourn-step">
+          <div class="tourn-step-num">4</div><span>Confirmation</span>
         </div>
       </div>
 
@@ -356,48 +365,137 @@
     </div>
   </section>
 
-  <!-- STEP 3: Confirmation -->
+  <!-- STEP 3: Payment -->
+  <section class="section section-white" id="paymentSection" style="display:none;">
+    <div class="container" style="max-width:900px;">
+
+      <div class="tourn-step-bar">
+        <div class="tourn-step done"><div class="tourn-step-num">&#10003;</div><span>Select Events</span></div>
+        <div class="tourn-step-connector done"></div>
+        <div class="tourn-step done"><div class="tourn-step-num">&#10003;</div><span>Your Details</span></div>
+        <div class="tourn-step-connector done"></div>
+        <div class="tourn-step active"><div class="tourn-step-num">3</div><span>Payment</span></div>
+        <div class="tourn-step-connector"></div>
+        <div class="tourn-step"><div class="tourn-step-num">4</div><span>Confirmation</span></div>
+      </div>
+
+      <!-- Registration summary bar -->
+      <div style="background:var(--light);border:1px solid #cde8e5;border-radius:10px;padding:14px 20px;margin-bottom:28px;">
+        <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--navy2);margin-bottom:6px;">Your Registration</div>
+        <div id="payStepName" style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:8px;"></div>
+        <div id="payStepEvents" style="display:flex;flex-wrap:wrap;gap:8px;"></div>
+        <a href="#" onclick="backToStep2(event)" style="font-size:12px;color:var(--navy);font-weight:700;margin-top:10px;display:inline-block;">&#8592; Change details</a>
+      </div>
+
+      <!-- UPI Payment panel -->
+      <div class="upi-pay-standalone">
+        <div class="upi-pay-hdr">
+          <span>&#128179; Pay via UPI</span>
+          <span class="upi-pay-deadline">&#9201; Last date: 20 September 2026</span>
+        </div>
+        <div class="upi-pay-grid">
+
+          <!-- QR code column -->
+          <div class="upi-qr-col">
+            <div id="upiQRCode" class="upi-qr-box"></div>
+            <p class="upi-qr-caption">Scan with GPay &bull; PhonePe &bull; Paytm &bull; any UPI app</p>
+            <div class="upi-id-row">
+              <span>UPI ID:</span>
+              <strong id="upiIdDisplay"></strong>
+              <button class="upi-copy-btn" id="upiCopyBtn" onclick="copyUPIId()">Copy</button>
+            </div>
+            <a class="upi-mobile-link" id="upiMobileLink" href="#">Open UPI App &#8599;</a>
+          </div>
+
+          <!-- UTR entry / failed -->
+          <div class="upi-utr-col">
+
+            <!-- Pending state -->
+            <div id="utrPending">
+              <div class="upi-amount-chip">
+                Amount &nbsp; <strong id="upiPayAmount">&#8377;0</strong>
+              </div>
+              <p class="upi-instr">After completing payment in your UPI app, enter the UPI Transaction ID below. This is recorded for reconciliation.</p>
+              <div class="form-group" style="margin-bottom:12px;">
+                <label for="utrInput" style="font-size:13px;font-weight:600;color:var(--navy2);">UPI Transaction ID / UTR *</label>
+                <input type="text" id="utrInput" placeholder="e.g. 326712345678" maxlength="22" style="margin-top:6px;" />
+                <span class="utr-hint">Find this in your UPI app &rarr; Passbook / Transaction History</span>
+              </div>
+              <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                <button class="btn btn-gold" style="flex:1;min-width:150px;" onclick="submitUTR()">&#10003; Confirm Payment</button>
+                <button class="utr-fail-btn" onclick="showPaymentFailed()">Payment Failed?</button>
+              </div>
+              <p id="utrError" style="color:#c0392b;font-size:13px;margin-top:8px;display:none;"></p>
+            </div>
+
+            <!-- Failed state -->
+            <div id="utrFailed" hidden>
+              <div class="utr-status utr-status--fail">&#10007; Payment Not Successful</div>
+              <p style="font-size:13.5px;color:var(--text);margin:12px 0 8px;">Your registration (Ref: <strong id="utrFailRef"></strong>) is saved. You may:</p>
+              <ul class="utr-fail-list">
+                <li>Retry payment using the QR code on this page</li>
+                <li>Pay in person at the Association office, Civil Courts Campus, Governorpet</li>
+                <li>Contact a coordinator using the numbers listed below</li>
+              </ul>
+              <button class="btn btn-gold" style="margin-top:16px;width:100%;" onclick="retryPayment()">&#8635; Retry Payment</button>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- STEP 4: Confirmation -->
   <section class="section section-light" id="confirmSection" style="display:none;">
     <div class="container">
+
+      <div class="tourn-step-bar">
+        <div class="tourn-step done"><div class="tourn-step-num">&#10003;</div><span>Select Events</span></div>
+        <div class="tourn-step-connector done"></div>
+        <div class="tourn-step done"><div class="tourn-step-num">&#10003;</div><span>Your Details</span></div>
+        <div class="tourn-step-connector done"></div>
+        <div class="tourn-step done"><div class="tourn-step-num">&#10003;</div><span>Payment</span></div>
+        <div class="tourn-step-connector done"></div>
+        <div class="tourn-step active"><div class="tourn-step-num">4</div><span>Confirmation</span></div>
+      </div>
+
       <div class="confirm-card">
         <div class="confirm-icon">&#127881;</div>
-        <h3>Registration Submitted!</h3>
-        <p style="color:var(--muted);font-size:14px;">Your registration has been received. Please note your reference
-          number:</p>
+        <h3>Registration Complete!</h3>
+        <p style="color:var(--muted);font-size:14px;">Your registration and payment details have been recorded. Please keep a copy of this page.</p>
         <div class="confirm-ref" id="confirmRef">BBA-TRN-2026-0000</div>
 
         <div style="text-align:left;margin:0 0 8px;">
-          <div
-            style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--navy2);margin-bottom:8px;">
-            Registered By</div>
+          <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--navy2);margin-bottom:8px;">Registered By</div>
           <div id="confirmName" style="font-size:15px;font-weight:600;color:var(--text);"></div>
           <div id="confirmEnr" style="font-size:13px;color:var(--muted);"></div>
         </div>
 
         <div style="text-align:left;">
-          <div
-            style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--navy2);margin:16px 0 8px;">
-            Events Registered</div>
+          <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--navy2);margin:16px 0 8px;">Events Registered</div>
           <ul class="confirm-events" id="confirmEvents"></ul>
           <div class="confirm-total">
-            <span>Total Amount Payable</span>
+            <span>Total Paid</span>
             <span id="confirmTotal"></span>
+          </div>
+          <div class="confirm-utr-row">
+            <span>UPI Transaction ID</span>
+            <strong id="confirmUTRVal">&mdash;</strong>
           </div>
         </div>
 
-        <div class="confirm-note">
-          &#9888;&#65039; <strong>Payment &amp; Verification:</strong> Please visit the Association office at Civil
-          Courts Campus, Governorpet with this reference number and your Bar ID card to complete payment and verify your
-          registration. Registration is confirmed only upon receipt of payment. Last date for payment: <strong>20
-            September 2026</strong>.
+        <div class="confirm-note" style="background:#e8f5e9;border-color:#a5d6a7;color:#1b5e20;">
+          &#10003; <strong>Payment submitted.</strong> A coordinator will verify your payment within 24 hours and confirm your registration via call or WhatsApp. Please <strong>screenshot or print this page</strong> for your records.
         </div>
 
         <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
           <button class="btn btn-gold" onclick="window.print()">&#128438; Print / Save</button>
-          <a href="../index.html" class="btn"
-            style="background:var(--light);color:var(--navy2);border:1.5px solid #cde8e5;">Back to Home</a>
+          <a href="../index.html" class="btn" style="background:var(--light);color:var(--navy2);border:1.5px solid #cde8e5;">Back to Home</a>
         </div>
       </div>
+
     </div>
   </section>
 
@@ -486,9 +584,15 @@
 
   <button class="back-to-top" id="backToTop" aria-label="Back to top">&#8679;</button>
   <script src="../js/script.js"></script>
+  <script src="../js/qrcode.min.js"></script>
   <script>
     (function () {
       'use strict';
+
+      // ── UPDATE before going live ─────────────────────────────
+      const UPI_ID   = 'bbabza@sbi';
+      const UPI_NAME = 'Bezwada Bar Assn';
+      // ────────────────────────────────────────────────────────
 
       const CATS = {
         'men-singles': { label: "Men's Singles", type: 'Singles', fee: 1000, doubles: false },
@@ -668,12 +772,124 @@
           li.innerHTML = `<span>${c.label}</span><span>&#8377;${c.fee}</span>`;
           evList.appendChild(li);
         });
-        document.getElementById('confirmTotal').textContent = '₹' + total;
+        document.getElementById('confirmTotal').textContent = '₹' + total.toLocaleString('en-IN');
+
+        // Populate payment step summary bar
+        document.getElementById('payStepName').textContent = name + ' · ' + enr;
+        const payEvWrap = document.getElementById('payStepEvents');
+        payEvWrap.innerHTML = '';
+        selected.forEach(id => {
+          const sp = document.createElement('span');
+          sp.className = 'section-badge';
+          sp.textContent = CATS[id].label;
+          payEvWrap.appendChild(sp);
+        });
+
+        // Update dynamic step bar (still visible in step1 if user navigates back)
+        document.getElementById('step2').classList.add('done');
+        document.getElementById('step2').querySelector('.tourn-step-num').textContent = '✓';
+        document.getElementById('conn2').classList.add('done');
+        document.getElementById('step3').classList.add('active');
 
         document.getElementById('regSection').style.display = 'none';
+        document.getElementById('paymentSection').style.display = 'block';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+
+        generateQR(ref, total);
+      });
+
+      function generateQR(ref, total) {
+        const upiUrl = `upi://pay?pa=${UPI_ID}&pn=${encodeURIComponent(UPI_NAME)}&am=${total}&cu=INR&tn=${encodeURIComponent(ref)}`;
+        document.getElementById('upiIdDisplay').textContent = UPI_ID;
+        document.getElementById('upiPayAmount').innerHTML = '&#8377;' + total.toLocaleString('en-IN');
+        document.getElementById('upiMobileLink').href = upiUrl;
+
+        const qrBox = document.getElementById('upiQRCode');
+        qrBox.innerHTML = '';
+        new QRCode(qrBox, {
+          text: upiUrl,
+          width: 196,
+          height: 196,
+          colorDark: '#0f5c54',
+          colorLight: '#ffffff',
+          correctLevel: QRCode.CorrectLevel.M
+        });
+      }
+
+      window.copyUPIId = function () {
+        const id = UPI_ID;
+        if (navigator.clipboard) {
+          navigator.clipboard.writeText(id).then(() => flashCopyBtn());
+        } else {
+          const ta = document.createElement('textarea');
+          ta.value = id; document.body.appendChild(ta); ta.select();
+          document.execCommand('copy'); document.body.removeChild(ta);
+          flashCopyBtn();
+        }
+      };
+      function flashCopyBtn() {
+        const btn = document.getElementById('upiCopyBtn');
+        btn.textContent = 'Copied!';
+        setTimeout(() => { btn.textContent = 'Copy'; }, 2000);
+      }
+
+      window.submitUTR = function () {
+        const utr = document.getElementById('utrInput').value.trim().toUpperCase();
+        const err = document.getElementById('utrError');
+        err.style.display = 'none';
+        if (utr.length < 8) {
+          err.textContent = 'Please enter a valid UPI Transaction ID (minimum 8 characters).';
+          err.style.display = 'block'; return;
+        }
+        if (!/^[A-Z0-9]+$/.test(utr)) {
+          err.textContent = 'Transaction ID should contain only letters and numbers.';
+          err.style.display = 'block'; return;
+        }
+
+        // Populate UTR in Step 4 confirmation
+        document.getElementById('confirmUTRVal').textContent = utr;
+
+        // Advance dynamic step bar
+        document.getElementById('step3').classList.remove('active');
+        document.getElementById('step3').classList.add('done');
+        document.getElementById('step3').querySelector('.tourn-step-num').textContent = '✓';
+        document.getElementById('conn3').classList.add('done');
+        document.getElementById('step4').classList.add('active');
+
+        document.getElementById('paymentSection').style.display = 'none';
         document.getElementById('confirmSection').style.display = 'block';
         window.scrollTo({ top: 0, behavior: 'smooth' });
-      });
+      };
+
+      window.showPaymentFailed = function () {
+        document.getElementById('utrFailRef').textContent = document.getElementById('confirmRef').textContent;
+        document.getElementById('utrPending').hidden = true;
+        document.getElementById('utrFailed').hidden  = false;
+      };
+
+      window.retryPayment = function () {
+        document.getElementById('utrFailed').hidden  = true;
+        document.getElementById('utrPending').hidden = false;
+        document.getElementById('utrInput').value   = '';
+        document.getElementById('utrError').style.display = 'none';
+      };
+
+      window.backToStep2 = function (e) {
+        e && e.preventDefault();
+        // Reset dynamic bar: undo step2→done, conn2→done, step3→active
+        document.getElementById('step2').classList.remove('done');
+        document.getElementById('step2').querySelector('.tourn-step-num').textContent = '2';
+        document.getElementById('conn2').classList.remove('done');
+        document.getElementById('step3').classList.remove('active');
+        // Reset UTR panel to pending
+        document.getElementById('utrFailed').hidden  = true;
+        document.getElementById('utrPending').hidden = false;
+        document.getElementById('utrInput').value   = '';
+        document.getElementById('utrError').style.display = 'none';
+        document.getElementById('paymentSection').style.display = 'none';
+        document.getElementById('regSection').style.display = 'block';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      };
 
     })();
   </script>
