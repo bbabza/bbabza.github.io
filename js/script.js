@@ -116,6 +116,7 @@
         localStorage.setItem(STORE_KEY, '1');
         hideModal();
         injectAdminNav();
+        injectAddMemberBtn();
       } else {
         errEl.textContent = 'Invalid username or password.';
         btn.disabled    = false;
@@ -127,6 +128,7 @@
       localStorage.removeItem(STORE_KEY);
       hideModal();
       removeAdminNav();
+      document.getElementById('addMemberBtn')?.remove();
     }
 
     function injectFooterTrigger() {
@@ -145,12 +147,137 @@
       quickLinksUl.appendChild(li);
     }
 
+    // ── Add Member (members page only) ───────────────────────
+    function injectAddMemberBtn() {
+      if (!document.getElementById('membersTable')) return;
+      if (document.getElementById('addMemberBtn')) return;
+      const controls = document.querySelector('.members-controls');
+      if (!controls) return;
+      const btn = document.createElement('button');
+      btn.id        = 'addMemberBtn';
+      btn.className = 'btn btn-gold add-member-btn';
+      btn.innerHTML = '&#43; Add Member';
+      btn.addEventListener('click', showAddMemberModal);
+      controls.after(btn);
+    }
+
+    function showAddMemberModal() {
+      const overlay = buildModal(`
+        <button class="admin-modal-close" aria-label="Close">&times;</button>
+        <div class="admin-modal-header">
+          <span class="admin-modal-icon">&#128100;</span>
+          <h3>Add New Member</h3>
+        </div>
+        <form id="addMemberForm" autocomplete="off">
+          <div class="admin-form-group">
+            <label for="m-enr">Enrollment No. *</label>
+            <input type="text" id="m-enr" required placeholder="e.g. AP/001/2025" />
+          </div>
+          <div class="admin-form-group">
+            <label for="m-name">Full Name *</label>
+            <input type="text" id="m-name" required placeholder="Sri / Smt. Full Name" />
+          </div>
+          <div class="admin-form-group">
+            <label for="m-area">Practice Area</label>
+            <select id="m-area">
+              <option value="">-- Select --</option>
+              <option>Civil</option>
+              <option>Criminal</option>
+              <option>Constitutional</option>
+              <option>Family</option>
+              <option>Labour</option>
+              <option>Revenue</option>
+              <option>Commercial</option>
+            </select>
+          </div>
+          <div class="admin-form-group">
+            <label for="m-year">Enrolled Year *</label>
+            <input type="number" id="m-year" required placeholder="e.g. 2024" min="1900" max="2099" />
+          </div>
+          <div class="admin-form-group">
+            <label for="m-status">Status</label>
+            <select id="m-status">
+              <option value="Active">Active</option>
+              <option value="Inactive">Inactive</option>
+            </select>
+          </div>
+          <p class="admin-error" id="memberError"></p>
+          <button type="submit" class="admin-submit-btn">Save Member</button>
+        </form>
+      `);
+      overlay.querySelector('.admin-modal').classList.add('admin-modal--wide');
+      overlay.querySelector('#addMemberForm').addEventListener('submit', handleAddMember);
+      overlay.querySelector('#m-enr').focus();
+    }
+
+    async function handleAddMember(e) {
+      e.preventDefault();
+      const enr    = document.getElementById('m-enr').value.trim();
+      const name   = document.getElementById('m-name').value.trim();
+      const area   = document.getElementById('m-area').value;
+      const year   = parseInt(document.getElementById('m-year').value);
+      const status = document.getElementById('m-status').value;
+      const errEl  = document.getElementById('memberError');
+      const btn    = e.target.querySelector('button[type="submit"]');
+
+      errEl.textContent = '';
+      if (!enr || !name || !year) {
+        errEl.textContent = 'Please fill in all required fields.';
+        return;
+      }
+
+      btn.disabled    = true;
+      btn.textContent = 'Saving…';
+
+      if (!window._supabase) {
+        errEl.textContent = 'Database not connected.';
+        btn.disabled = false; btn.textContent = 'Save Member';
+        return;
+      }
+
+      const { data, error } = await window._supabase
+        .from('members')
+        .insert({ enrollment_no: enr, name, practice_area: area || null, enrolled_year: year, status })
+        .select()
+        .single();
+
+      if (error) {
+        errEl.textContent = error.code === '23505'
+          ? 'Enrollment number already exists.'
+          : 'Save failed: ' + error.message;
+        btn.disabled = false; btn.textContent = 'Save Member';
+        return;
+      }
+
+      // Prepend new row to table
+      const tbody = document.querySelector('#membersTable tbody');
+      if (tbody) {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${data.enrollment_no}</td>
+          <td>${data.name}</td>
+          <td>${data.practice_area || ''}</td>
+          <td>${data.enrolled_year || ''}</td>
+          <td><span class="badge badge-${data.status === 'Active' ? 'active' : 'inactive'}">${data.status}</span></td>`;
+        tbody.insertBefore(tr, tbody.firstChild);
+        const count = tbody.querySelectorAll('tr').length;
+        const noteEl = document.querySelector('.table-note');
+        if (noteEl) noteEl.textContent =
+          `Showing ${count} member${count !== 1 ? 's' : ''} — Contact the Association office for enrollment inquiries.`;
+      }
+
+      hideModal();
+    }
+
     document.addEventListener('keydown', e => {
       if (e.key === 'Escape') hideModal();
     });
 
     injectFooterTrigger();
-    if (isLoggedIn()) injectAdminNav();
+    if (isLoggedIn()) {
+      injectAdminNav();
+      injectAddMemberBtn();
+    }
   })();
 
   // ── Scrolling news ticker ──────────────────────────────────

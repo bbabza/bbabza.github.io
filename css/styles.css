@@ -2157,3 +2157,24 @@ a.logo-block:hover { opacity: .92; }
 }
 .admin-panel-greeting strong { color: var(--gold); }
 .admin-nav-link { color: var(--gold) !important; }
+.admin-modal--wide { max-width: 480px; }
+.admin-form-group select {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px 14px;
+  background: rgba(255,255,255,.08);
+  border: 1px solid rgba(255,255,255,.18);
+  border-radius: 6px;
+  color: var(--white);
+  font-size: 14px;
+  outline: none;
+  transition: border-color .2s;
+  cursor: pointer;
+}
+.admin-form-group select:focus { border-color: var(--gold); }
+.admin-form-group select option { background: var(--navy2); color: var(--white); }
+.add-member-btn {
+  margin-bottom: 16px;
+  padding: 9px 20px;
+  font-size: 13.5px;
+}
