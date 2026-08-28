@@ -583,6 +583,8 @@
   </footer>
 
   <button class="back-to-top" id="backToTop" aria-label="Back to top">&#8679;</button>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <script src="../js/supabase-client.js"></script>
   <script src="../js/script.js"></script>
   <script src="../js/qrcode.min.js"></script>
   <script>
@@ -604,6 +606,39 @@
       };
 
       const selected = new Set();
+
+      function buildPartnersObj() {
+        const partners = {};
+        selected.forEach(id => {
+          if (!CATS[id].doubles) return;
+          partners[id] = {
+            name:           document.getElementById('p-name-' + id)?.value.trim(),
+            enrollment_no:  document.getElementById('p-enr-' + id)?.value.trim(),
+            bar_association: document.getElementById('p-bar-' + id)?.value.trim()
+          };
+        });
+        return partners;
+      }
+
+      async function saveRegistrationToDB(ref, name, enr, bar, mobile, total) {
+        if (!window._supabase) return;
+        const email = document.getElementById('r-email')?.value.trim() || null;
+        const events = [...selected].map(id => ({ id, label: CATS[id].label, fee: CATS[id].fee }));
+        const { error } = await window._supabase.from('tournament_registrations').insert({
+          ref, name, enrollment_no: enr, bar_association: bar, mobile, email,
+          events, partners: buildPartnersObj(), total_amount: total, payment_status: 'pending'
+        });
+        if (error) console.warn('Registration save failed:', error.message);
+      }
+
+      async function updateUTRInDB(ref, utr) {
+        if (!window._supabase) return;
+        const { error } = await window._supabase
+          .from('tournament_registrations')
+          .update({ utr_number: utr, payment_status: 'utr_submitted' })
+          .eq('ref', ref);
+        if (error) console.warn('UTR update failed:', error.message);
+      }
 
       window.toggleCategory = function (id) {
         if (selected.has(id)) selected.delete(id);
@@ -773,6 +808,7 @@
           evList.appendChild(li);
         });
         document.getElementById('confirmTotal').textContent = '₹' + total.toLocaleString('en-IN');
+        saveRegistrationToDB(ref, name, enr, bar, mobile, total);
 
         // Populate payment step summary bar
         document.getElementById('payStepName').textContent = name + ' · ' + enr;
@@ -848,6 +884,8 @@
 
         // Populate UTR in Step 4 confirmation
         document.getElementById('confirmUTRVal').textContent = utr;
+        const regRef = document.getElementById('confirmRef').textContent;
+        updateUTRInDB(regRef, utr);
 
         // Advance dynamic step bar
         document.getElementById('step3').classList.remove('active');

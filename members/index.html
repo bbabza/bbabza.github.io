@@ -170,6 +170,35 @@
   </footer>
 
   <button class="back-to-top" id="backToTop" aria-label="Back to top">&#8679;</button>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <script src="../js/supabase-client.js"></script>
   <script src="../js/script.js"></script>
+  <script>
+    (async function loadMembers() {
+      if (!window._supabase) return;
+      const tbody   = document.querySelector('#membersTable tbody');
+      const noteEl  = document.querySelector('.table-note');
+      if (!tbody) return;
+
+      const { data, error } = await window._supabase
+        .from('members')
+        .select('enrollment_no, name, practice_area, enrolled_year, status')
+        .order('enrollment_no');
+
+      if (error || !data || data.length === 0) return;
+
+      tbody.innerHTML = data.map(m => `
+        <tr>
+          <td>${m.enrollment_no || ''}</td>
+          <td>${m.name || ''}</td>
+          <td>${m.practice_area || ''}</td>
+          <td>${m.enrolled_year || ''}</td>
+          <td><span class="badge badge-${m.status === 'Active' ? 'active' : 'inactive'}">${m.status || 'Active'}</span></td>
+        </tr>`).join('');
+
+      if (noteEl) noteEl.textContent =
+        `Showing ${data.length} member${data.length !== 1 ? 's' : ''} — Contact the Association office for the complete directory or enrollment inquiries.`;
+    })();
+  </script>
 </body>
 </html>

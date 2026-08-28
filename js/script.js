@@ -6,6 +6,153 @@
   // Root path prefix — set via data-root on <body> for subfolder pages
   const ROOT = document.body.getAttribute('data-root') || '';
 
+  // ── Disable right-click ────────────────────────────────────
+  document.addEventListener('contextmenu', e => e.preventDefault());
+
+  // ── Admin authentication system ───────────────────────────
+  (function initAdmin() {
+    const ADMIN_USER = 'admin';
+    // SHA-256 of 'bbabza@admin2026'
+    const ADMIN_HASH = '5714adb1c5108de0f1f6e9aeb636733c4ac08874fc37ad9223cf8456d8513c19';
+    const STORE_KEY  = 'bba_admin';
+
+    function isLoggedIn() {
+      return localStorage.getItem(STORE_KEY) === '1';
+    }
+
+    async function sha256(str) {
+      const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+      return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+
+    function injectAdminNav() {
+      const navUl = document.querySelector('.main-nav ul');
+      if (!navUl || navUl.querySelector('.admin-nav-item')) return;
+      const contactLi = navUl.querySelector('li:last-child');
+      const li = document.createElement('li');
+      li.className = 'admin-nav-item';
+      li.innerHTML = '<a href="#" class="admin-nav-link" id="adminNavLink">&#128274; Admin</a>';
+      navUl.insertBefore(li, contactLi);
+      document.getElementById('adminNavLink').addEventListener('click', e => {
+        e.preventDefault();
+        showAdminPanel();
+      });
+    }
+
+    function removeAdminNav() {
+      document.querySelectorAll('.admin-nav-item').forEach(el => el.remove());
+    }
+
+    function buildModal(innerHtml) {
+      document.getElementById('adminModal')?.remove();
+      const overlay = document.createElement('div');
+      overlay.id = 'adminModal';
+      overlay.className = 'admin-modal-overlay';
+      overlay.innerHTML = `<div class="admin-modal">${innerHtml}</div>`;
+      document.body.appendChild(overlay);
+      overlay.addEventListener('click', e => { if (e.target === overlay) hideModal(); });
+      overlay.querySelector('.admin-modal-close')?.addEventListener('click', hideModal);
+      requestAnimationFrame(() => overlay.classList.add('open'));
+      return overlay;
+    }
+
+    function hideModal() {
+      const overlay = document.getElementById('adminModal');
+      overlay?.classList.remove('open');
+      setTimeout(() => overlay?.remove(), 280);
+    }
+
+    function showLoginModal() {
+      const overlay = buildModal(`
+        <button class="admin-modal-close" aria-label="Close">&times;</button>
+        <div class="admin-modal-header">
+          <span class="admin-modal-icon">&#128274;</span>
+          <h3>Admin Login</h3>
+        </div>
+        <form id="adminLoginForm" autocomplete="off">
+          <div class="admin-form-group">
+            <label for="adminUser">Username</label>
+            <input type="text" id="adminUser" autocomplete="username" placeholder="Username" />
+          </div>
+          <div class="admin-form-group">
+            <label for="adminPass">Password</label>
+            <input type="password" id="adminPass" autocomplete="current-password" placeholder="Password" />
+          </div>
+          <p class="admin-error" id="adminError"></p>
+          <button type="submit" class="admin-submit-btn">Login</button>
+        </form>
+      `);
+      overlay.querySelector('#adminLoginForm').addEventListener('submit', handleLogin);
+      overlay.querySelector('#adminUser').focus();
+    }
+
+    function showAdminPanel() {
+      const overlay = buildModal(`
+        <button class="admin-modal-close" aria-label="Close">&times;</button>
+        <div class="admin-modal-header">
+          <span class="admin-modal-icon">&#9989;</span>
+          <h3>Admin Panel</h3>
+        </div>
+        <p class="admin-panel-greeting">Logged in as <strong>Administrator</strong></p>
+        <button class="admin-submit-btn admin-logout-btn" id="adminLogoutBtn">Logout</button>
+      `);
+      overlay.querySelector('#adminLogoutBtn').addEventListener('click', handleLogout);
+    }
+
+    async function handleLogin(e) {
+      e.preventDefault();
+      const user  = document.getElementById('adminUser').value.trim();
+      const pass  = document.getElementById('adminPass').value;
+      const errEl = document.getElementById('adminError');
+      const btn   = e.target.querySelector('button[type="submit"]');
+
+      btn.disabled    = true;
+      btn.textContent = 'Verifying…';
+      errEl.textContent = '';
+
+      const hash = await sha256(pass);
+
+      if (user === ADMIN_USER && hash === ADMIN_HASH) {
+        localStorage.setItem(STORE_KEY, '1');
+        hideModal();
+        injectAdminNav();
+      } else {
+        errEl.textContent = 'Invalid username or password.';
+        btn.disabled    = false;
+        btn.textContent = 'Login';
+      }
+    }
+
+    function handleLogout() {
+      localStorage.removeItem(STORE_KEY);
+      hideModal();
+      removeAdminNav();
+    }
+
+    function injectFooterTrigger() {
+      const quickLinksUl = document.querySelector('.footer-links ul');
+      if (!quickLinksUl || document.getElementById('adminLoginTrigger')) return;
+      const li = document.createElement('li');
+      const a  = document.createElement('a');
+      a.id        = 'adminLoginTrigger';
+      a.href      = '#';
+      a.textContent = isLoggedIn() ? 'Admin Panel' : 'Admin Login';
+      a.addEventListener('click', e => {
+        e.preventDefault();
+        isLoggedIn() ? showAdminPanel() : showLoginModal();
+      });
+      li.appendChild(a);
+      quickLinksUl.appendChild(li);
+    }
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') hideModal();
+    });
+
+    injectFooterTrigger();
+    if (isLoggedIn()) injectAdminNav();
+  })();
+
   // ── Scrolling news ticker ──────────────────────────────────
   (function initTicker() {
     const track    = document.getElementById('tickerTrack');
@@ -139,11 +286,11 @@
   // ── Member search & filter ─────────────────────────────────
   const searchInput  = document.getElementById('memberSearch');
   const filterSelect = document.getElementById('memberFilter');
-  const tableRows    = document.querySelectorAll('#membersTable tbody tr');
 
   function filterMembers() {
-    const query  = (searchInput?.value || '').toLowerCase().trim();
-    const area   = (filterSelect?.value || '').toLowerCase();
+    const query    = (searchInput?.value || '').toLowerCase().trim();
+    const area     = (filterSelect?.value || '').toLowerCase();
+    const tableRows = document.querySelectorAll('#membersTable tbody tr');
 
     tableRows.forEach(row => {
       const text       = row.textContent.toLowerCase();
