@@ -1351,8 +1351,55 @@ a.logo-block:hover { opacity: .92; }
   .categories-grid { grid-template-columns: 1fr; }
   .reg-form-grid { grid-template-columns: 1fr; }
   .tourn-info-item { min-width: 50%; }
+  .tourn-prize-item { min-width: 50%; }
   .confirm-card { padding: 36px 20px; }
+  .tourn-contacts-grid { grid-template-columns: 1fr 1fr; }
 }
+
+.tourn-prize-strip {
+  background: linear-gradient(135deg, var(--navy2) 0%, var(--navy3) 100%);
+  border-bottom: 2px solid rgba(201,162,39,.5);
+  padding: 0;
+}
+.tourn-prize-strip .container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0;
+}
+.tourn-prize-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 18px 32px;
+  border-right: 1px solid rgba(255,255,255,.12);
+  flex: 1;
+  min-width: 160px;
+}
+.tourn-prize-item:last-child { border-right: none; }
+.tourn-prize-icon { font-size: 1.6rem; flex-shrink: 0; }
+.tourn-prize-label { font-size: 10px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: var(--gold); display: block; }
+.tourn-prize-val { font-size: 1.15rem; color: var(--white); font-weight: 700; font-family: var(--ff-serif); }
+
+.tourn-contacts-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-bottom: 24px;
+}
+.tourn-contact-card {
+  background: var(--light);
+  border: 1.5px solid #cde8e5;
+  border-radius: 10px;
+  padding: 20px 22px;
+  transition: box-shadow .2s, border-color .2s;
+}
+.tourn-contact-card:hover { box-shadow: var(--shadow); border-color: var(--navy); }
+.tourn-contact-name { font-family: var(--ff-serif); font-size: 1rem; font-weight: 700; color: var(--navy2); margin-bottom: 6px; }
+.tourn-contact-num { font-size: 14px; color: var(--navy); font-weight: 600; text-decoration: none; }
+.tourn-contact-num:hover { color: var(--gold); }
+.tourn-whatsapp-note { text-align: center; font-size: 14px; color: var(--muted); }
+.tourn-whatsapp-note a { color: var(--navy); font-weight: 700; text-decoration: none; }
+.tourn-whatsapp-note a:hover { color: var(--gold); }
 
 @media (max-width: 480px) {
   .section-cards-grid { grid-template-columns: 1fr; }
