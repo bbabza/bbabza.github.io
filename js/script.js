@@ -90,16 +90,9 @@
           <h3>Admin Panel</h3>
         </div>
         <p class="admin-panel-greeting">Logged in as <strong>Administrator</strong></p>
-        <div style="display:flex;flex-direction:column;gap:10px;margin-top:4px;">
-          <button class="admin-submit-btn" id="adminReportBtn">&#128202; Tournament Registrations Report</button>
-          <button class="admin-submit-btn admin-logout-btn" id="adminLogoutBtn">Logout</button>
-        </div>
+        <button class="admin-submit-btn admin-logout-btn" id="adminLogoutBtn" style="margin-top:4px;">Logout</button>
       `);
       overlay.querySelector('#adminLogoutBtn').addEventListener('click', handleLogout);
-      overlay.querySelector('#adminReportBtn').addEventListener('click', function () {
-        hideModal();
-        showTournamentReport();
-      });
     }
 
     // ── Lazy-load Supabase on pages that don't include it ─────
@@ -120,43 +113,48 @@
       });
     }
 
-    // ── Tournament report modal ────────────────────────────────
-    async function showTournamentReport() {
-      var overlay = buildModal(`
-        <button class="admin-modal-close" aria-label="Close">&times;</button>
-        <div class="admin-modal-header">
-          <span class="admin-modal-icon">&#128202;</span>
-          <h3>Tournament Registrations</h3>
-        </div>
-        <div id="reportContent" style="text-align:center;padding:32px 0;color:var(--muted);">
-          Loading&hellip;
-        </div>
-      `);
-      overlay.querySelector('.admin-modal').classList.add('admin-modal--report');
+    // ── Tournament report — inline on tournament page ──────────
+    async function injectTournamentReport() {
+      if (!document.getElementById('selectSection')) return; // not tournament page
+      if (document.getElementById('adminTournamentReport')) return; // already present
+
+      var section = document.createElement('section');
+      section.id = 'adminTournamentReport';
+      section.className = 'section section-light';
+      section.innerHTML =
+        '<div class="container">' +
+          '<div class="section-header">' +
+            '<span class="section-badge">Admin</span>' +
+            '<h2 class="section-title">Registrations Report</h2>' +
+            '<div class="divider"></div>' +
+          '</div>' +
+          '<div id="reportContent" style="text-align:center;padding:32px 0;color:var(--muted);">Loading&hellip;</div>' +
+        '</div>';
+
+      var footer = document.querySelector('.site-footer');
+      footer.parentNode.insertBefore(section, footer);
 
       var ready = await ensureSupabase();
+      var content = document.getElementById('reportContent');
       if (!ready) {
-        document.getElementById('reportContent').innerHTML =
-          '<p style="color:#c0392b">Could not connect to database. Please try from the Members or Tournament page.</p>';
+        content.innerHTML = '<p style="color:#c0392b">Could not connect to database.</p>';
         return;
       }
 
-      var _ref = await window._supabase
+      var _q = await window._supabase
         .from('tournament_registrations')
         .select('*')
         .order('ref', { ascending: false });
-      var data = _ref.data, error = _ref.error;
 
-      if (error) {
-        document.getElementById('reportContent').innerHTML =
-          '<p style="color:#c0392b">Error: ' + error.message + '</p>';
+      if (_q.error) {
+        content.innerHTML = '<p style="color:#c0392b">Error: ' + _q.error.message + '</p>';
         return;
       }
 
-      renderReport(data || []);
+      renderReport(_q.data || [], content);
     }
 
-    function renderReport(rows) {
+    function renderReport(rows, container) {
       var total     = rows.length;
       var submitted = rows.filter(function (r) { return r.payment_status === 'utr_submitted'; }).length;
       var pending   = rows.filter(function (r) { return r.payment_status === 'pending'; }).length;
@@ -164,7 +162,6 @@
         .filter(function (r) { return r.payment_status === 'utr_submitted'; })
         .reduce(function (s, r) { return s + (r.total_amount || 0); }, 0);
 
-      // Category counts
       var catCount = {};
       rows.forEach(function (r) {
         (r.events || []).forEach(function (ev) {
@@ -172,30 +169,45 @@
         });
       });
 
-      var catBadges = Object.entries(catCount).map(function (_ref2) {
-        var label = _ref2[0], count = _ref2[1];
-        return '<span class="report-cat-badge">' + label + ': ' + count + '</span>';
+      var catBadges = Object.entries(catCount).map(function (entry) {
+        return '<span class="report-cat-badge">' + entry[0] + ': ' + entry[1] + '</span>';
       }).join('');
 
       var tableRows = rows.map(function (r) {
-        var events    = (r.events || []).map(function (e) { return e.label; }).join(', ');
-        var badgeCls  = r.payment_status === 'utr_submitted' ? 'r-badge--submitted' : 'r-badge--pending';
-        var badgeTxt  = r.payment_status === 'utr_submitted' ? 'UTR Submitted' : 'Pending';
-        return '<tr data-status="' + r.payment_status + '" data-search="' +
-          [r.ref, r.name, r.enrollment_no, r.bar_association, r.mobile, events].join(' ').toLowerCase() + '">' +
+        var events   = (r.events || []).map(function (e) { return e.label; }).join(', ');
+        var badgeCls = r.payment_status === 'utr_submitted' ? 'r-badge--submitted' : 'r-badge--pending';
+        var badgeTxt = r.payment_status === 'utr_submitted' ? 'UTR Submitted' : 'Pending';
+
+        // Build partner cell — one line per doubles event
+        var partnerLines = Object.entries(r.partners || {}).map(function (entry) {
+          var evId = entry[0], p = entry[1];
+          if (!p || !p.name) return '';
+          var evObj = (r.events || []).find(function (e) { return e.id === evId; });
+          var prefix = evObj ? evObj.label : evId;
+          var detail = p.name + (p.enrollment_no ? ' (' + p.enrollment_no + ')' : '');
+          return '<span style="display:block;white-space:nowrap;">' + prefix + ':<br>&nbsp;&nbsp;' + detail + '</span>';
+        }).filter(Boolean);
+        var partnerCell = partnerLines.length ? partnerLines.join('') : '&mdash;';
+
+        var searchStr = [r.ref, r.name, r.enrollment_no, r.bar_association, r.mobile, events,
+          Object.values(r.partners || {}).map(function (p) { return (p.name || '') + ' ' + (p.enrollment_no || ''); }).join(' ')
+        ].join(' ').toLowerCase();
+
+        return '<tr data-status="' + r.payment_status + '" data-search="' + searchStr + '">' +
           '<td style="font-weight:600;white-space:nowrap;">' + (r.ref || '') + '</td>' +
           '<td>' + (r.name || '') + '</td>' +
           '<td style="white-space:nowrap;">' + (r.enrollment_no || '') + '</td>' +
           '<td>' + (r.bar_association || '') + '</td>' +
           '<td style="white-space:nowrap;">' + (r.mobile || '') + '</td>' +
           '<td style="font-size:12px;">' + events + '</td>' +
+          '<td style="font-size:12px;">' + partnerCell + '</td>' +
           '<td style="text-align:right;font-weight:600;">&#8377;' + (r.total_amount || 0).toLocaleString('en-IN') + '</td>' +
           '<td style="font-size:12px;color:var(--muted);">' + (r.utr_number || '&mdash;') + '</td>' +
           '<td><span class="r-badge ' + badgeCls + '">' + badgeTxt + '</span></td>' +
           '</tr>';
       }).join('');
 
-      document.getElementById('reportContent').innerHTML =
+      container.innerHTML =
         '<div class="report-stats">' +
           '<div class="report-stat"><div class="report-stat-num">' + total + '</div><div class="report-stat-label">Total Registrations</div></div>' +
           '<div class="report-stat"><div class="report-stat-num">' + submitted + '</div><div class="report-stat-label">UTR Submitted</div></div>' +
@@ -204,7 +216,7 @@
         '</div>' +
         (catBadges ? '<div class="report-cats">' + catBadges + '</div>' : '') +
         '<div class="report-toolbar">' +
-          '<input class="report-search" id="reportSearch" type="text" placeholder="Search name, ref, enrollment&hellip;" />' +
+          '<input class="report-search" id="reportSearch" type="text" placeholder="Search name, ref, enrollment, partner&hellip;" />' +
           '<select class="report-filter" id="reportFilter">' +
             '<option value="">All Statuses</option>' +
             '<option value="utr_submitted">UTR Submitted</option>' +
@@ -216,38 +228,37 @@
           '<table class="report-table">' +
             '<thead><tr>' +
               '<th>Ref No</th><th>Name</th><th>Enrollment No</th><th>Bar Association</th>' +
-              '<th>Mobile</th><th>Events</th><th>Amount</th><th>UTR No</th><th>Status</th>' +
+              '<th>Mobile</th><th>Events</th><th>Partner(s)</th><th>Amount</th><th>UTR No</th><th>Status</th>' +
             '</tr></thead>' +
-            '<tbody id="reportTbody">' + (tableRows || '<tr><td colspan="9" style="text-align:center;color:var(--muted);padding:24px;">No registrations yet.</td></tr>') + '</tbody>' +
+            '<tbody id="reportTbody">' + (tableRows || '<tr><td colspan="10" style="text-align:center;color:var(--muted);padding:24px;">No registrations yet.</td></tr>') + '</tbody>' +
           '</table>' +
         '</div>';
 
-      // Search & filter
-      var tbody = document.getElementById('reportTbody');
+      var tbody = container.querySelector('#reportTbody');
       function applyFilter() {
-        var q      = (document.getElementById('reportSearch').value || '').toLowerCase();
-        var status = document.getElementById('reportFilter').value;
+        var q      = (container.querySelector('#reportSearch').value || '').toLowerCase();
+        var status = container.querySelector('#reportFilter').value;
         tbody.querySelectorAll('tr').forEach(function (tr) {
           var matchQ = !q      || (tr.dataset.search || '').includes(q);
           var matchS = !status || tr.dataset.status === status;
           tr.style.display = (matchQ && matchS) ? '' : 'none';
         });
       }
-      document.getElementById('reportSearch').addEventListener('input', applyFilter);
-      document.getElementById('reportFilter').addEventListener('change', applyFilter);
-      document.getElementById('exportCsvBtn').addEventListener('click', function () { exportCSV(rows); });
+      container.querySelector('#reportSearch').addEventListener('input', applyFilter);
+      container.querySelector('#reportFilter').addEventListener('change', applyFilter);
+      container.querySelector('#exportCsvBtn').addEventListener('click', function () { exportCSV(rows); });
     }
 
     function exportCSV(rows) {
-      var headers = ['Ref No','Name','Enrollment No','Bar Association','Mobile','Email','Events','Partners','Total Amount','UTR Number','Payment Status'];
+      var headers = ['Ref No','Name','Enrollment No','Bar Association','Mobile','Email','Events','Partner Name','Partner Enrollment','Partner Bar Association','Total Amount','UTR Number','Payment Status'];
       var lines = rows.map(function (r) {
-        var events   = (r.events || []).map(function (e) { return e.label; }).join(' | ');
-        var partners = Object.entries(r.partners || {}).map(function (_ref3) {
-          var id = _ref3[0], p = _ref3[1];
-          return id + ': ' + (p.name || '');
-        }).join(' | ');
+        var events = (r.events || []).map(function (e) { return e.label; }).join(' | ');
+        var partnerEntries = Object.entries(r.partners || {});
+        var pName = partnerEntries.map(function (e) { return e[1].name || ''; }).filter(Boolean).join(' | ');
+        var pEnr  = partnerEntries.map(function (e) { return e[1].enrollment_no || ''; }).filter(Boolean).join(' | ');
+        var pBar  = partnerEntries.map(function (e) { return e[1].bar_association || ''; }).filter(Boolean).join(' | ');
         return [r.ref, r.name, r.enrollment_no, r.bar_association, r.mobile, r.email || '',
-          events, partners, r.total_amount, r.utr_number || '', r.payment_status]
+          events, pName, pEnr, pBar, r.total_amount, r.utr_number || '', r.payment_status]
           .map(function (v) { return '"' + String(v || '').replace(/"/g, '""') + '"'; }).join(',');
       });
       var csv  = [headers.join(',')].concat(lines).join('\n');
@@ -289,6 +300,7 @@
           hideModal();
           injectAdminNav();
           injectAddMemberBtn();
+          injectTournamentReport();
         } else {
           errEl.textContent = data.message || 'Invalid username or password.';
           btn.disabled    = false;
@@ -306,6 +318,7 @@
       hideModal();
       removeAdminNav();
       document.getElementById('addMemberBtn')?.remove();
+      document.getElementById('adminTournamentReport')?.remove();
     }
 
     function injectFooterTrigger() {
@@ -454,6 +467,7 @@
     if (isLoggedIn()) {
       injectAdminNav();
       injectAddMemberBtn();
+      injectTournamentReport();
     }
   })();
 
