@@ -87,9 +87,176 @@
           <h3>Admin Panel</h3>
         </div>
         <p class="admin-panel-greeting">Logged in as <strong>Administrator</strong></p>
-        <button class="admin-submit-btn admin-logout-btn" id="adminLogoutBtn">Logout</button>
+        <div style="display:flex;flex-direction:column;gap:10px;margin-top:4px;">
+          <button class="admin-submit-btn" id="adminReportBtn">&#128202; Tournament Registrations Report</button>
+          <button class="admin-submit-btn admin-logout-btn" id="adminLogoutBtn">Logout</button>
+        </div>
       `);
       overlay.querySelector('#adminLogoutBtn').addEventListener('click', handleLogout);
+      overlay.querySelector('#adminReportBtn').addEventListener('click', function () {
+        hideModal();
+        showTournamentReport();
+      });
+    }
+
+    // ── Lazy-load Supabase on pages that don't include it ─────
+    function ensureSupabase() {
+      if (window._supabase) return Promise.resolve(true);
+      return new Promise(function (resolve) {
+        var s1 = document.createElement('script');
+        s1.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js';
+        s1.onload = function () {
+          var s2 = document.createElement('script');
+          s2.src = ROOT + 'js/supabase-client.js';
+          s2.onload  = function () { resolve(!!window._supabase); };
+          s2.onerror = function () { resolve(false); };
+          document.head.appendChild(s2);
+        };
+        s1.onerror = function () { resolve(false); };
+        document.head.appendChild(s1);
+      });
+    }
+
+    // ── Tournament report modal ────────────────────────────────
+    async function showTournamentReport() {
+      var overlay = buildModal(`
+        <button class="admin-modal-close" aria-label="Close">&times;</button>
+        <div class="admin-modal-header">
+          <span class="admin-modal-icon">&#128202;</span>
+          <h3>Tournament Registrations</h3>
+        </div>
+        <div id="reportContent" style="text-align:center;padding:32px 0;color:var(--muted);">
+          Loading&hellip;
+        </div>
+      `);
+      overlay.querySelector('.admin-modal').classList.add('admin-modal--report');
+
+      var ready = await ensureSupabase();
+      if (!ready) {
+        document.getElementById('reportContent').innerHTML =
+          '<p style="color:#c0392b">Could not connect to database. Please try from the Members or Tournament page.</p>';
+        return;
+      }
+
+      var _ref = await window._supabase
+        .from('tournament_registrations')
+        .select('*')
+        .order('created_at', { ascending: false });
+      var data = _ref.data, error = _ref.error;
+
+      if (error) {
+        document.getElementById('reportContent').innerHTML =
+          '<p style="color:#c0392b">Error: ' + error.message + '</p>';
+        return;
+      }
+
+      renderReport(data || []);
+    }
+
+    function renderReport(rows) {
+      var total     = rows.length;
+      var submitted = rows.filter(function (r) { return r.payment_status === 'utr_submitted'; }).length;
+      var pending   = rows.filter(function (r) { return r.payment_status === 'pending'; }).length;
+      var totalAmt  = rows
+        .filter(function (r) { return r.payment_status === 'utr_submitted'; })
+        .reduce(function (s, r) { return s + (r.total_amount || 0); }, 0);
+
+      // Category counts
+      var catCount = {};
+      rows.forEach(function (r) {
+        (r.events || []).forEach(function (ev) {
+          catCount[ev.label] = (catCount[ev.label] || 0) + 1;
+        });
+      });
+
+      var catBadges = Object.entries(catCount).map(function (_ref2) {
+        var label = _ref2[0], count = _ref2[1];
+        return '<span class="report-cat-badge">' + label + ': ' + count + '</span>';
+      }).join('');
+
+      var tableRows = rows.map(function (r) {
+        var events    = (r.events || []).map(function (e) { return e.label; }).join(', ');
+        var badgeCls  = r.payment_status === 'utr_submitted' ? 'r-badge--submitted' : 'r-badge--pending';
+        var badgeTxt  = r.payment_status === 'utr_submitted' ? 'UTR Submitted' : 'Pending';
+        return '<tr data-status="' + r.payment_status + '" data-search="' +
+          [r.ref, r.name, r.enrollment_no, r.bar_association, r.mobile, events].join(' ').toLowerCase() + '">' +
+          '<td style="font-weight:600;white-space:nowrap;">' + (r.ref || '') + '</td>' +
+          '<td>' + (r.name || '') + '</td>' +
+          '<td style="white-space:nowrap;">' + (r.enrollment_no || '') + '</td>' +
+          '<td>' + (r.bar_association || '') + '</td>' +
+          '<td style="white-space:nowrap;">' + (r.mobile || '') + '</td>' +
+          '<td style="font-size:12px;">' + events + '</td>' +
+          '<td style="text-align:right;font-weight:600;">&#8377;' + (r.total_amount || 0).toLocaleString('en-IN') + '</td>' +
+          '<td style="font-size:12px;color:var(--muted);">' + (r.utr_number || '&mdash;') + '</td>' +
+          '<td><span class="r-badge ' + badgeCls + '">' + badgeTxt + '</span></td>' +
+          '</tr>';
+      }).join('');
+
+      document.getElementById('reportContent').innerHTML =
+        '<div class="report-stats">' +
+          '<div class="report-stat"><div class="report-stat-num">' + total + '</div><div class="report-stat-label">Total Registrations</div></div>' +
+          '<div class="report-stat"><div class="report-stat-num">' + submitted + '</div><div class="report-stat-label">UTR Submitted</div></div>' +
+          '<div class="report-stat"><div class="report-stat-num">' + pending + '</div><div class="report-stat-label">Pending Payment</div></div>' +
+          '<div class="report-stat"><div class="report-stat-num">&#8377;' + totalAmt.toLocaleString('en-IN') + '</div><div class="report-stat-label">Amount Collected</div></div>' +
+        '</div>' +
+        (catBadges ? '<div class="report-cats">' + catBadges + '</div>' : '') +
+        '<div class="report-toolbar">' +
+          '<input class="report-search" id="reportSearch" type="text" placeholder="Search name, ref, enrollment&hellip;" />' +
+          '<select class="report-filter" id="reportFilter">' +
+            '<option value="">All Statuses</option>' +
+            '<option value="utr_submitted">UTR Submitted</option>' +
+            '<option value="pending">Pending</option>' +
+          '</select>' +
+          '<button class="admin-submit-btn" id="exportCsvBtn" style="padding:8px 16px;font-size:13px;white-space:nowrap;">&#11015; Export CSV</button>' +
+        '</div>' +
+        '<div class="report-table-wrap">' +
+          '<table class="report-table">' +
+            '<thead><tr>' +
+              '<th>Ref No</th><th>Name</th><th>Enrollment No</th><th>Bar Association</th>' +
+              '<th>Mobile</th><th>Events</th><th>Amount</th><th>UTR No</th><th>Status</th>' +
+            '</tr></thead>' +
+            '<tbody id="reportTbody">' + (tableRows || '<tr><td colspan="9" style="text-align:center;color:var(--muted);padding:24px;">No registrations yet.</td></tr>') + '</tbody>' +
+          '</table>' +
+        '</div>';
+
+      // Search & filter
+      var tbody = document.getElementById('reportTbody');
+      function applyFilter() {
+        var q      = (document.getElementById('reportSearch').value || '').toLowerCase();
+        var status = document.getElementById('reportFilter').value;
+        tbody.querySelectorAll('tr').forEach(function (tr) {
+          var matchQ = !q      || (tr.dataset.search || '').includes(q);
+          var matchS = !status || tr.dataset.status === status;
+          tr.style.display = (matchQ && matchS) ? '' : 'none';
+        });
+      }
+      document.getElementById('reportSearch').addEventListener('input', applyFilter);
+      document.getElementById('reportFilter').addEventListener('change', applyFilter);
+      document.getElementById('exportCsvBtn').addEventListener('click', function () { exportCSV(rows); });
+    }
+
+    function exportCSV(rows) {
+      var headers = ['Ref No','Name','Enrollment No','Bar Association','Mobile','Email','Events','Partners','Total Amount','UTR Number','Payment Status'];
+      var lines = rows.map(function (r) {
+        var events   = (r.events || []).map(function (e) { return e.label; }).join(' | ');
+        var partners = Object.entries(r.partners || {}).map(function (_ref3) {
+          var id = _ref3[0], p = _ref3[1];
+          return id + ': ' + (p.name || '');
+        }).join(' | ');
+        return [r.ref, r.name, r.enrollment_no, r.bar_association, r.mobile, r.email || '',
+          events, partners, r.total_amount, r.utr_number || '', r.payment_status]
+          .map(function (v) { return '"' + String(v || '').replace(/"/g, '""') + '"'; }).join(',');
+      });
+      var csv  = [headers.join(',')].concat(lines).join('\n');
+      var blob = new Blob([csv], { type: 'text/csv' });
+      var url  = URL.createObjectURL(blob);
+      var a    = document.createElement('a');
+      a.href     = url;
+      a.download = 'tournament-registrations-' + new Date().toISOString().slice(0, 10) + '.csv';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
     }
 
     async function handleLogin(e) {

@@ -2157,7 +2157,120 @@ a.logo-block:hover { opacity: .92; }
 }
 .admin-panel-greeting strong { color: var(--gold); }
 .admin-nav-link { color: var(--gold) !important; }
-.admin-modal--wide { max-width: 480px; }
+.admin-modal--wide   { max-width: 480px; }
+.admin-modal--report { max-width: 1020px; width: 95vw; }
+
+/* ── Tournament Report ── */
+.report-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.report-stat {
+  background: var(--light);
+  border-radius: 10px;
+  padding: 14px 10px;
+  text-align: center;
+}
+.report-stat-num {
+  font-family: var(--ff-serif);
+  font-size: 1.7rem;
+  font-weight: 700;
+  color: var(--navy2);
+  line-height: 1;
+  margin-bottom: 5px;
+}
+.report-stat-label {
+  font-size: 10px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: .5px;
+}
+.report-cats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+.report-cat-badge {
+  background: var(--navy);
+  color: #fff;
+  border-radius: 20px;
+  padding: 4px 12px;
+  font-size: 12px;
+  font-weight: 600;
+}
+.report-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+.report-search {
+  flex: 1;
+  min-width: 180px;
+  padding: 8px 12px;
+  border: 1.5px solid #cde8e5;
+  border-radius: 8px;
+  font-size: 13px;
+  outline: none;
+}
+.report-search:focus { border-color: var(--navy); }
+.report-filter {
+  padding: 8px 12px;
+  border: 1.5px solid #cde8e5;
+  border-radius: 8px;
+  font-size: 13px;
+  background: #fff;
+  outline: none;
+  cursor: pointer;
+}
+.report-table-wrap {
+  overflow-x: auto;
+  border-radius: 8px;
+  border: 1px solid #cde8e5;
+  max-height: 420px;
+  overflow-y: auto;
+}
+.report-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12.5px;
+}
+.report-table thead th {
+  background: var(--navy2);
+  color: #fff;
+  padding: 10px 12px;
+  text-align: left;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  white-space: nowrap;
+  position: sticky;
+  top: 0;
+}
+.report-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid #e8f0ef;
+  vertical-align: top;
+  color: var(--text);
+}
+.report-table tr:last-child td { border-bottom: none; }
+.report-table tbody tr:hover td { background: var(--light); }
+.r-badge {
+  display: inline-block;
+  padding: 3px 9px;
+  border-radius: 20px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .4px;
+  white-space: nowrap;
+}
+.r-badge--pending   { background: #fff3cd; color: #856404; }
+.r-badge--submitted { background: #d4edda; color: #155724; }
 .admin-form-group select {
   width: 100%;
   box-sizing: border-box;
