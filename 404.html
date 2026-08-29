@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex" />
+  <title>Page Not Found | The Bezwada Bar Association</title>
+  <link rel="icon" href="images/logo.jpeg" type="image/jpeg" />
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/fonts.css" />
+  <style>
+    .error-section {
+      min-height: 68vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 20px;
+      background: var(--light);
+    }
+
+    .error-card {
+      background: #fff;
+      border-radius: 18px;
+      box-shadow: 0 8px 40px rgba(42, 157, 143, 0.13);
+      padding: 56px 48px 48px;
+      max-width: 560px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .error-code {
+      font-family: var(--ff-serif);
+      font-size: clamp(80px, 18vw, 140px);
+      font-weight: 700;
+      line-height: 1;
+      color: var(--navy);
+      letter-spacing: -4px;
+      margin-bottom: 4px;
+    }
+
+    .error-gavel {
+      font-size: 48px;
+      margin-bottom: 16px;
+      display: block;
+    }
+
+    .error-title {
+      font-family: var(--ff-serif);
+      font-size: 1.55rem;
+      color: var(--navy2);
+      margin: 0 0 12px;
+    }
+
+    .error-desc {
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.65;
+      margin: 0 0 32px;
+    }
+
+    .error-actions {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 32px;
+    }
+
+    .error-countdown {
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .error-countdown strong {
+      color: var(--navy2);
+      font-weight: 700;
+    }
+
+    .error-divider {
+      width: 48px;
+      height: 3px;
+      background: var(--gold);
+      border-radius: 2px;
+      margin: 20px auto 24px;
+    }
+
+    @media (max-width: 520px) {
+      .error-card {
+        padding: 40px 24px 36px;
+      }
+    }
+  </style>
+</head>
+
+<body data-root="">
+
+  <div class="topbar">
+    <div class="container">
+      <span>&#9742; 0866 &ndash; 2574321</span>
+      <span>&#9993; bbabza@gmail.com</span>
+      <span>&#128205; Civil Courts Campus, Governorpet, Vijayawada &ndash; 520 002</span>
+      <span>&#128197; Established 1906</span>
+    </div>
+  </div>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="index.html" class="logo-block">
+        <div class="emblem">
+          <img src="images/logo.jpeg" alt="The Bezwada Bar Association Logo" class="header-logo" />
+        </div>
+        <div class="logo-text">
+          <h1>The Bezwada Bar Association</h1>
+          <p class="tagline">Let Justice Prevail &mdash; Estd. 1906</p>
+        </div>
+      </a>
+      <button class="nav-toggle" id="navToggle"
+        aria-label="Toggle navigation"><span></span><span></span><span></span></button>
+      <nav class="main-nav" id="mainNav">
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="about/index.html">About</a></li>
+          <li><a href="office-bearers/index.html">Office Bearers</a></li>
+          <li><a href="members/index.html">Members</a></li>
+          <li><a href="blog/index.html">Blog</a></li>
+          <li><a href="gallery/index.html">Gallery</a></li>
+          <li><a href="tournament/index.html" style="color:var(--gold)!important;">&#127992; Tournament</a></li>
+          <li><a href="contact/index.html" class="btn-nav">Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <div class="news-ticker" id="newsTicker">
+    <div class="ticker-label"><span class="ticker-dot"></span>LATEST NEWS</div>
+    <div class="ticker-viewport">
+      <div class="ticker-track" id="tickerTrack">
+        <span class="ticker-placeholder">Loading latest news&hellip;</span>
+      </div>
+    </div>
+    <button class="ticker-pause" id="tickerPause" title="Pause / Resume">&#10074;&#10074;</button>
+  </div>
+
+  <section class="error-section">
+    <div class="error-card">
+      <span class="error-gavel">&#9878;</span>
+      <div class="error-code">404</div>
+      <div class="error-divider"></div>
+      <h2 class="error-title">Page Not Found</h2>
+      <p class="error-desc">
+        The page you are looking for does not exist, may have been moved,
+        or the address was entered incorrectly. Please check the URL or
+        return to our home page.
+      </p>
+      <div class="error-actions">
+        <a href="index.html" class="btn btn-gold">&#8962; Go to Home Page</a>
+        <a href="contact/index.html" class="btn btn-outline">Contact Us</a>
+      </div>
+      <p class="error-countdown">
+        Redirecting to home page in <strong id="countdownNum">10</strong> seconds&hellip;
+      </p>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <h3>The Bezwada Bar Association</h3>
+        <p>Upholding justice and serving the legal fraternity of Vijayawada since 1906.</p>
+        <p>Civil Courts Campus, Gopala Reddy Road,<br />Governorpet, Vijayawada &ndash; 520 002</p>
+        <p class="footer-tel">&#9742; 0866 &ndash; 2574321 &bull; &#9993; bbabza@gmail.com</p>
+      </div>
+      <div class="footer-links">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="about/index.html">About</a></li>
+          <li><a href="office-bearers/index.html">Office Bearers</a></li>
+          <li><a href="members/index.html">Members Directory</a></li>
+          <li><a href="news/index.html">News &amp; Events</a></li>
+          <li><a href="contact/index.html">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>Resources</h4>
+        <ul>
+          <li><a href="https://www.barcouncilofindia.org" target="_blank" rel="noopener">Bar Council of India</a></li>
+          <li><a href="https://hc.ap.nic.in" target="_blank" rel="noopener">AP High Court</a></li>
+          <li><a href="https://nalsa.gov.in" target="_blank" rel="noopener">NALSA &mdash; Legal Aid</a></li>
+          <li><a href="https://districts.ecourts.gov.in/krishna" target="_blank" rel="noopener">District Courts &mdash; Krishna</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>Affiliations</h4>
+        <ul>
+          <li>Bar Council of Andhra Pradesh</li>
+          <li>Bar Council of India</li>
+          <li>District Legal Services Authority</li>
+          <li>Krishna District Court</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="container">
+        <p>&copy; 2026 The Bezwada Bar Association. All rights reserved.</p>
+        <p>Governorpet &bull; Vijayawada &bull; Krishna District &bull; Andhra Pradesh</p>
+      </div>
+    </div>
+  </footer>
+
+  <button class="back-to-top" id="backToTop" aria-label="Back to top">&#8679;</button>
+  <script src="js/script.js"></script>
+  <script>
+    (function () {
+      var seconds = 10;
+      var display = document.getElementById('countdownNum');
+      var interval = setInterval(function () {
+        seconds -= 1;
+        display.textContent = seconds;
+        if (seconds <= 0) {
+          clearInterval(interval);
+          window.location.href = 'index.html';
+        }
+      }, 1000);
+
+      // Cancel auto-redirect if user clicks any link
+      document.querySelectorAll('a').forEach(function (a) {
+        a.addEventListener('click', function () { clearInterval(interval); });
+      });
+    })();
+  </script>
+</body>
+
+</html>
