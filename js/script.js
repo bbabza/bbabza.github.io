@@ -11,18 +11,11 @@
 
   // ── Admin authentication system ───────────────────────────
   (function initAdmin() {
-    const ADMIN_USER = 'admin';
-    // SHA-256 of 'bbabza@admin2026'
-    const ADMIN_HASH = '5714adb1c5108de0f1f6e9aeb636733c4ac08874fc37ad9223cf8456d8513c19';
     const STORE_KEY = 'bba_admin';
+    const AUTH_URL  = 'https://tiwazbntxvyvwfjzcwrv.supabase.co/functions/v1/admin-auth';
 
     function isLoggedIn() {
       return localStorage.getItem(STORE_KEY) === '1';
-    }
-
-    async function sha256(str) {
-      const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
-      return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
     }
 
     function injectAdminNav() {
@@ -101,25 +94,36 @@
 
     async function handleLogin(e) {
       e.preventDefault();
-      const user = document.getElementById('adminUser').value.trim();
-      const pass = document.getElementById('adminPass').value;
+      const user  = document.getElementById('adminUser').value.trim();
+      const pass  = document.getElementById('adminPass').value;
       const errEl = document.getElementById('adminError');
-      const btn = e.target.querySelector('button[type="submit"]');
+      const btn   = e.target.querySelector('button[type="submit"]');
 
-      btn.disabled = true;
+      btn.disabled    = true;
       btn.textContent = 'Verifying…';
       errEl.textContent = '';
 
-      const hash = await sha256(pass);
+      try {
+        const res  = await fetch(AUTH_URL, {
+          method:  'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body:    JSON.stringify({ username: user, password: pass }),
+        });
+        const data = await res.json();
 
-      if (user === ADMIN_USER && hash === ADMIN_HASH) {
-        localStorage.setItem(STORE_KEY, '1');
-        hideModal();
-        injectAdminNav();
-        injectAddMemberBtn();
-      } else {
-        errEl.textContent = 'Invalid username or password.';
-        btn.disabled = false;
+        if (data.success) {
+          localStorage.setItem(STORE_KEY, '1');
+          hideModal();
+          injectAdminNav();
+          injectAddMemberBtn();
+        } else {
+          errEl.textContent = data.message || 'Invalid username or password.';
+          btn.disabled    = false;
+          btn.textContent = 'Login';
+        }
+      } catch (_) {
+        errEl.textContent = 'Network error. Please try again.';
+        btn.disabled    = false;
         btn.textContent = 'Login';
       }
     }
@@ -452,42 +456,34 @@
     });
   });
 
-  // ── Contact form — Web3Forms ───────────────────────────────
-  const WEB3FORMS_KEY = '613ba491-83c4-4792-8e66-646cdd80468e';
+  // ── Contact form — proxied via Supabase Edge Function ──────
+  const CONTACT_URL = 'https://tiwazbntxvyvwfjzcwrv.supabase.co/functions/v1/contact-form';
 
   const contactForm = document.getElementById('contactForm');
-  const formMsg = document.getElementById('formMsg');
+  const formMsg     = document.getElementById('formMsg');
 
   contactForm?.addEventListener('submit', async function (e) {
     e.preventDefault();
     const btn = contactForm.querySelector('button[type="submit"]');
-    btn.disabled = true;
+    btn.disabled    = true;
     btn.textContent = 'Sending…';
     formMsg.textContent = '';
-    formMsg.style.color = '';
-
-    // Mirror email field into replyto so replies go back to sender
-    const emailVal = document.getElementById('femail')?.value.trim();
-    const replyTo = document.getElementById('replyToField');
-    if (replyTo && emailVal) replyTo.value = emailVal;
+    formMsg.style.color  = '';
 
     try {
-      const formData = new FormData(contactForm);
-      formData.set('access_key', WEB3FORMS_KEY);
-
-      const res = await fetch('https://api.web3forms.com/submit', {
-        method: 'POST',
+      const res  = await fetch(CONTACT_URL, {
+        method:  'POST',
         headers: { 'Accept': 'application/json' },
-        body: formData
+        body:    new FormData(contactForm),
       });
-      const json = await res.json();
+      const data = await res.json();
 
-      if (res.ok && json.success) {
+      if (res.ok && data.success) {
         formMsg.textContent = 'Thank you for your message. We will get back to you shortly.';
         formMsg.style.color = '#4caf50';
         contactForm.reset();
       } else {
-        formMsg.textContent = json.message || 'Something went wrong. Please try again or email us at bbabza@gmail.com.';
+        formMsg.textContent = data.message || 'Something went wrong. Please try again or email us at bbabza@gmail.com.';
         formMsg.style.color = '#c0392b';
       }
     } catch (_) {
@@ -495,7 +491,7 @@
       formMsg.style.color = '#c0392b';
     }
 
-    btn.disabled = false;
+    btn.disabled    = false;
     btn.textContent = 'Send Message';
   });
 
