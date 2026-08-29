@@ -14,7 +14,7 @@
     const ADMIN_USER = 'admin';
     // SHA-256 of 'bbabza@admin2026'
     const ADMIN_HASH = '5714adb1c5108de0f1f6e9aeb636733c4ac08874fc37ad9223cf8456d8513c19';
-    const STORE_KEY  = 'bba_admin';
+    const STORE_KEY = 'bba_admin';
 
     function isLoggedIn() {
       return localStorage.getItem(STORE_KEY) === '1';
@@ -101,12 +101,12 @@
 
     async function handleLogin(e) {
       e.preventDefault();
-      const user  = document.getElementById('adminUser').value.trim();
-      const pass  = document.getElementById('adminPass').value;
+      const user = document.getElementById('adminUser').value.trim();
+      const pass = document.getElementById('adminPass').value;
       const errEl = document.getElementById('adminError');
-      const btn   = e.target.querySelector('button[type="submit"]');
+      const btn = e.target.querySelector('button[type="submit"]');
 
-      btn.disabled    = true;
+      btn.disabled = true;
       btn.textContent = 'Verifying…';
       errEl.textContent = '';
 
@@ -119,7 +119,7 @@
         injectAddMemberBtn();
       } else {
         errEl.textContent = 'Invalid username or password.';
-        btn.disabled    = false;
+        btn.disabled = false;
         btn.textContent = 'Login';
       }
     }
@@ -135,9 +135,9 @@
       const quickLinksUl = document.querySelector('.footer-links ul');
       if (!quickLinksUl || document.getElementById('adminLoginTrigger')) return;
       const li = document.createElement('li');
-      const a  = document.createElement('a');
-      a.id        = 'adminLoginTrigger';
-      a.href      = '#';
+      const a = document.createElement('a');
+      a.id = 'adminLoginTrigger';
+      a.href = '#';
       a.textContent = isLoggedIn() ? 'Admin Panel' : 'Admin Login';
       a.addEventListener('click', e => {
         e.preventDefault();
@@ -154,7 +154,7 @@
       const controls = document.querySelector('.members-controls');
       if (!controls) return;
       const btn = document.createElement('button');
-      btn.id        = 'addMemberBtn';
+      btn.id = 'addMemberBtn';
       btn.className = 'btn btn-gold add-member-btn';
       btn.innerHTML = '&#43; Add Member';
       btn.addEventListener('click', showAddMemberModal);
@@ -212,13 +212,13 @@
 
     async function handleAddMember(e) {
       e.preventDefault();
-      const enr    = document.getElementById('m-enr').value.trim();
-      const name   = document.getElementById('m-name').value.trim();
-      const area   = document.getElementById('m-area').value;
-      const year   = parseInt(document.getElementById('m-year').value);
+      const enr = document.getElementById('m-enr').value.trim();
+      const name = document.getElementById('m-name').value.trim();
+      const area = document.getElementById('m-area').value;
+      const year = parseInt(document.getElementById('m-year').value);
       const status = document.getElementById('m-status').value;
-      const errEl  = document.getElementById('memberError');
-      const btn    = e.target.querySelector('button[type="submit"]');
+      const errEl = document.getElementById('memberError');
+      const btn = e.target.querySelector('button[type="submit"]');
 
       errEl.textContent = '';
       if (!enr || !name || !year) {
@@ -226,7 +226,7 @@
         return;
       }
 
-      btn.disabled    = true;
+      btn.disabled = true;
       btn.textContent = 'Saving…';
 
       if (!window._supabase) {
@@ -282,7 +282,7 @@
 
   // ── Scrolling news ticker ──────────────────────────────────
   (function initTicker() {
-    const track    = document.getElementById('tickerTrack');
+    const track = document.getElementById('tickerTrack');
     const pauseBtn = document.getElementById('tickerPause');
     if (!track) return;
 
@@ -323,7 +323,7 @@
     pauseBtn?.addEventListener('click', () => {
       isPaused = !isPaused;
       track.classList.toggle('paused', isPaused);
-      pauseBtn.textContent    = isPaused ? '▶' : '❚❚';
+      pauseBtn.textContent = isPaused ? '▶' : '❚❚';
       pauseBtn.style.fontSize = isPaused ? '13px' : '10px';
       pauseBtn.setAttribute('title', isPaused ? 'Resume' : 'Pause');
     });
@@ -355,7 +355,7 @@
 
   // ── Mobile nav toggle ──────────────────────────────────────
   const navToggle = document.getElementById('navToggle');
-  const mainNav   = document.getElementById('mainNav');
+  const mainNav = document.getElementById('mainNav');
 
   navToggle?.addEventListener('click', () => {
     mainNav.classList.toggle('open');
@@ -397,8 +397,8 @@
   }, { passive: true });
 
   // ── News / Events Tabs ─────────────────────────────────────
-  const tabBtns    = document.querySelectorAll('.tab-btn');
-  const tabPanels  = document.querySelectorAll('.tab-content');
+  const tabBtns = document.querySelectorAll('.tab-btn');
+  const tabPanels = document.querySelectorAll('.tab-content');
 
   tabBtns.forEach(btn => {
     btn.addEventListener('click', () => {
@@ -411,21 +411,21 @@
   });
 
   // ── Member search & filter ─────────────────────────────────
-  const searchInput  = document.getElementById('memberSearch');
+  const searchInput = document.getElementById('memberSearch');
   const filterSelect = document.getElementById('memberFilter');
 
   function filterMembers() {
-    const query    = (searchInput?.value || '').toLowerCase().trim();
-    const area     = (filterSelect?.value || '').toLowerCase();
+    const query = (searchInput?.value || '').toLowerCase().trim();
+    const area = (filterSelect?.value || '').toLowerCase();
     const tableRows = document.querySelectorAll('#membersTable tbody tr');
 
     tableRows.forEach(row => {
-      const text       = row.textContent.toLowerCase();
+      const text = row.textContent.toLowerCase();
       const practiceEl = row.cells[2];
-      const practice   = practiceEl ? practiceEl.textContent.toLowerCase() : '';
+      const practice = practiceEl ? practiceEl.textContent.toLowerCase() : '';
 
       const matchesQuery = !query || text.includes(query);
-      const matchesArea  = !area  || practice === area;
+      const matchesArea = !area || practice === area;
 
       row.classList.toggle('hidden', !(matchesQuery && matchesArea));
     });
@@ -452,24 +452,51 @@
     });
   });
 
-  // ── Contact form (static — shows confirmation message) ─────
-  const contactForm = document.getElementById('contactForm');
-  const formMsg     = document.getElementById('formMsg');
+  // ── Contact form — Web3Forms ───────────────────────────────
+  const WEB3FORMS_KEY = '613ba491-83c4-4792-8e66-646cdd80468e';
 
-  contactForm?.addEventListener('submit', e => {
+  const contactForm = document.getElementById('contactForm');
+  const formMsg = document.getElementById('formMsg');
+
+  contactForm?.addEventListener('submit', async function (e) {
     e.preventDefault();
     const btn = contactForm.querySelector('button[type="submit"]');
     btn.disabled = true;
     btn.textContent = 'Sending…';
+    formMsg.textContent = '';
+    formMsg.style.color = '';
 
-    // Simulate async submission
-    setTimeout(() => {
-      formMsg.textContent = 'Thank you for your message. We will get back to you shortly.';
-      formMsg.style.color = '#4caf50';
-      contactForm.reset();
-      btn.disabled = false;
-      btn.textContent = 'Send Message';
-    }, 1200);
+    // Mirror email field into replyto so replies go back to sender
+    const emailVal = document.getElementById('femail')?.value.trim();
+    const replyTo = document.getElementById('replyToField');
+    if (replyTo && emailVal) replyTo.value = emailVal;
+
+    try {
+      const formData = new FormData(contactForm);
+      formData.set('access_key', WEB3FORMS_KEY);
+
+      const res = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: { 'Accept': 'application/json' },
+        body: formData
+      });
+      const json = await res.json();
+
+      if (res.ok && json.success) {
+        formMsg.textContent = 'Thank you for your message. We will get back to you shortly.';
+        formMsg.style.color = '#4caf50';
+        contactForm.reset();
+      } else {
+        formMsg.textContent = json.message || 'Something went wrong. Please try again or email us at bbabza@gmail.com.';
+        formMsg.style.color = '#c0392b';
+      }
+    } catch (_) {
+      formMsg.textContent = 'Network error. Please check your connection and try again.';
+      formMsg.style.color = '#c0392b';
+    }
+
+    btn.disabled = false;
+    btn.textContent = 'Send Message';
   });
 
   // ── Scroll-reveal for cards ────────────────────────────────
@@ -480,7 +507,7 @@
   const revealObserver = new IntersectionObserver(entries => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
-        entry.target.style.opacity   = '1';
+        entry.target.style.opacity = '1';
         entry.target.style.transform = 'translateY(0)';
         revealObserver.unobserve(entry.target);
       }
@@ -488,7 +515,7 @@
   }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
 
   revealEls.forEach(el => {
-    el.style.opacity   = '0';
+    el.style.opacity = '0';
     el.style.transform = 'translateY(20px)';
     el.style.transition = 'opacity .45s ease, transform .45s ease';
     revealObserver.observe(el);
@@ -500,19 +527,19 @@
   const counterObserver = new IntersectionObserver(entries => {
     entries.forEach(entry => {
       if (!entry.isIntersecting) return;
-      const el  = entry.target;
+      const el = entry.target;
       const raw = el.textContent.replace(/[^0-9]/g, '');
       if (!raw) return;
 
-      const target   = parseInt(raw, 10);
-      const suffix   = el.textContent.replace(/[0-9]/g, '');
+      const target = parseInt(raw, 10);
+      const suffix = el.textContent.replace(/[0-9]/g, '');
       const duration = 1200;
-      const start    = performance.now();
+      const start = performance.now();
 
       function step(now) {
-        const elapsed  = now - start;
+        const elapsed = now - start;
         const progress = Math.min(elapsed / duration, 1);
-        const eased    = 1 - Math.pow(1 - progress, 3);
+        const eased = 1 - Math.pow(1 - progress, 3);
         el.textContent = Math.floor(eased * target).toLocaleString() + suffix;
         if (progress < 1) requestAnimationFrame(step);
       }
