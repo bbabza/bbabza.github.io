@@ -3,6 +3,7 @@
 
 <head>
   <meta charset="UTF-8" />
+  <base href="/" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="robots" content="noindex" />
   <title>Page Not Found | The Bezwada Bar Association</title>
@@ -220,7 +221,7 @@
         display.textContent = seconds;
         if (seconds <= 0) {
           clearInterval(interval);
-          window.location.href = 'index.html';
+          window.location.href = '/';
         }
       }, 1000);
 
