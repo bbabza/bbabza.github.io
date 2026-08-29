@@ -6,6 +6,9 @@
   // Root path prefix — set via data-root on <body> for subfolder pages
   const ROOT = document.body.getAttribute('data-root') || '';
 
+  // Supabase anon key — public by design, required as Bearer token for Edge Function calls
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRpd2F6Ym50eHZ5dndmanpjd3J2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc5MTUxOTYsImV4cCI6MjEwMzQ5MTE5Nn0.XQ-7AadKhw_b74fUxrfGlKMkASqkzbPUz8jrS12af6E';
+
   // ── Disable right-click ────────────────────────────────────
   document.addEventListener('contextmenu', e => e.preventDefault());
 
@@ -273,8 +276,11 @@
       try {
         const res  = await fetch(AUTH_URL, {
           method:  'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body:    JSON.stringify({ username: user, password: pass }),
+          headers: {
+            'Content-Type':  'application/json',
+            'Authorization': 'Bearer ' + SUPABASE_ANON_KEY,
+          },
+          body: JSON.stringify({ username: user, password: pass }),
         });
         const data = await res.json();
 
@@ -640,8 +646,11 @@
     try {
       const res  = await fetch(CONTACT_URL, {
         method:  'POST',
-        headers: { 'Accept': 'application/json' },
-        body:    new FormData(contactForm),
+        headers: {
+          'Accept':        'application/json',
+          'Authorization': 'Bearer ' + SUPABASE_ANON_KEY,
+        },
+        body: new FormData(contactForm),
       });
       const data = await res.json();
 
