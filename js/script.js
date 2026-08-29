@@ -144,7 +144,7 @@
       var _ref = await window._supabase
         .from('tournament_registrations')
         .select('*')
-        .order('created_at', { ascending: false });
+        .order('ref', { ascending: false });
       var data = _ref.data, error = _ref.error;
 
       if (error) {
