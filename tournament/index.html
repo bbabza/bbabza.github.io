@@ -596,6 +596,13 @@
       const UPI_NAME = 'Bezwada Bar Assn';
       // ────────────────────────────────────────────────────────
 
+      function scrollToSection(id) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        const top = el.getBoundingClientRect().top + window.scrollY - 72;
+        window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
+      }
+
       const CATS = {
         'men-singles': { label: "Men's Singles", type: 'Singles', fee: 1000, doubles: false },
         'women-singles': { label: "Women's Singles", type: 'Singles', fee: 1000, doubles: false },
@@ -732,7 +739,7 @@
 
         document.getElementById('selectSection').style.display = 'none';
         document.getElementById('regSection').style.display = 'block';
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        scrollToSection('regSection');
       };
 
       window.backToStep1 = function (e) {
@@ -745,7 +752,7 @@
         document.getElementById('step1').querySelector('.tourn-step-num').textContent = '1';
         document.getElementById('conn1').classList.remove('done');
         document.getElementById('step2').classList.remove('active');
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        scrollToSection('selectSection');
       };
 
       document.getElementById('tournamentForm').addEventListener('submit', function (e) {
@@ -829,7 +836,7 @@
 
         document.getElementById('regSection').style.display = 'none';
         document.getElementById('paymentSection').style.display = 'block';
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        scrollToSection('paymentSection');
 
         generateQR(ref, total);
       });
@@ -896,7 +903,7 @@
 
         document.getElementById('paymentSection').style.display = 'none';
         document.getElementById('confirmSection').style.display = 'block';
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        scrollToSection('confirmSection');
       };
 
       window.showPaymentFailed = function () {
@@ -926,7 +933,7 @@
         document.getElementById('utrError').style.display = 'none';
         document.getElementById('paymentSection').style.display = 'none';
         document.getElementById('regSection').style.display = 'block';
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        scrollToSection('regSection');
       };
 
     })();
