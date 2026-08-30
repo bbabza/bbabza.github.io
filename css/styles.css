@@ -1442,6 +1442,13 @@ a.logo-block:hover { opacity: .92; }
 }
 .upi-mobile-link:hover { background: var(--navy); color: var(--white); }
 .upi-utr-col { padding: 22px 24px; }
+.upi-utr-col .form-group input {
+  color: var(--text);
+  background: var(--white);
+  border-color: var(--border);
+}
+.upi-utr-col .form-group input::placeholder { color: #aaa; }
+.upi-utr-col .form-group label { color: var(--navy2); text-transform: none; letter-spacing: 0; }
 .upi-amount-chip {
   display: inline-flex;
   align-items: center;
