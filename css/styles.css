@@ -2233,8 +2233,10 @@ a.logo-block:hover { opacity: .92; }
   backdrop-filter: blur(4px);
   z-index: 9999;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
+  overflow-y: auto;
+  padding: 24px 16px;
   opacity: 0;
   visibility: hidden;
   transition: opacity .28s, visibility .28s;
@@ -2254,6 +2256,7 @@ a.logo-block:hover { opacity: .92; }
   box-shadow: 0 24px 60px rgba(0,0,0,.45);
   transform: translateY(-18px);
   transition: transform .28s;
+  margin: auto;
 }
 .admin-modal-overlay.open .admin-modal { transform: translateY(0); }
 .admin-modal-close {
@@ -2340,7 +2343,18 @@ a.logo-block:hover { opacity: .92; }
 }
 .admin-panel-greeting strong { color: var(--gold); }
 .admin-nav-link { color: var(--gold) !important; }
-.admin-modal--wide   { max-width: 480px; }
+.admin-modal--wide   { max-width: 580px; }
+.admin-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 16px;
+}
+.admin-form-grid .admin-form-group { margin-bottom: 14px; }
+.admin-form-grid .admin-form-group--full { grid-column: 1 / -1; }
+@media (max-width: 500px) {
+  .admin-form-grid { grid-template-columns: 1fr; }
+  .admin-modal--wide { padding: 28px 20px; }
+}
 .admin-modal--report { max-width: 1020px; width: 95vw; }
 
 /* ── Tournament Report ── */

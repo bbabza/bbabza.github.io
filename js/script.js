@@ -591,35 +591,45 @@
       modal.innerHTML =
         '<button class="admin-modal-close" aria-label="Close">&times;</button>' +
         '<div class="admin-modal-header"><span class="admin-modal-icon">&#9998;</span><h3>Edit Member</h3></div>' +
-        '<p style="font-size:12px;color:rgba(255,255,255,.6);margin-bottom:12px;">Enrollment: ' + enrollmentNo + '</p>' +
+        '<p style="font-size:12px;color:rgba(255,255,255,.6);margin-bottom:16px;">Enrollment: ' + enrollmentNo + '</p>' +
         '<form id="editMemberForm" autocomplete="off">' +
-        '<div class="admin-form-group"><label for="em-name">Full Name *</label>' +
+        '<div class="admin-form-grid">' +
+        // Row 1: Name (full width)
+        '<div class="admin-form-group admin-form-group--full"><label for="em-name">Full Name *</label>' +
         '<input type="text" id="em-name" value="' + esc(m.name) + '" required /></div>' +
+        // Row 2: Practice Area | Enrolled Year
         '<div class="admin-form-group"><label for="em-area">Practice Area</label>' +
         '<input type="text" id="em-area" value="' + esc(m.practice_area) + '" /></div>' +
         '<div class="admin-form-group"><label for="em-year">Enrolled Year *</label>' +
         '<input type="number" id="em-year" value="' + (m.enrolled_year || '') + '" min="1900" max="2099" required /></div>' +
+        // Row 3: Mobile | Status
+        '<div class="admin-form-group"><label for="em-mobile">Mobile</label>' +
+        '<input type="text" id="em-mobile" value="' + esc(m.mobile) + '" maxlength="15" /></div>' +
         '<div class="admin-form-group"><label for="em-status">Status</label>' +
         '<select id="em-status"><option value="Active"' + (m.status === 'Active' ? ' selected' : '') + '>Active</option>' +
         '<option value="Inactive"' + (m.status === 'Inactive' ? ' selected' : '') + '>Inactive</option></select></div>' +
-        '<div class="admin-form-group"><label for="em-mobile">Mobile</label>' +
-        '<input type="text" id="em-mobile" value="' + esc(m.mobile) + '" maxlength="15" /></div>' +
-        '<div class="admin-form-group"><label for="em-address">Address</label>' +
-        '<textarea id="em-address" rows="2">' + (m.address || '') + '</textarea></div>' +
-        '<div class="admin-form-group"><label for="em-desc">Description</label>' +
-        '<textarea id="em-desc" rows="2">' + (m.description || '') + '</textarea></div>' +
+        // Row 4: Bar Council | Office Bearer
         '<div class="admin-form-group"><label for="em-bc">Bar Council Member?</label>' +
         '<select id="em-bc"><option value="false"' + (!m.is_bar_council_member ? ' selected' : '') + '>No</option>' +
         '<option value="true"' + (m.is_bar_council_member ? ' selected' : '') + '>Yes</option></select></div>' +
         '<div class="admin-form-group"><label for="em-ob">Office Bearer?</label>' +
         '<select id="em-ob"><option value="false"' + (!m.is_office_bearer ? ' selected' : '') + '>No</option>' +
         '<option value="true"' + (m.is_office_bearer ? ' selected' : '') + '>Yes</option></select></div>' +
-        '<div class="admin-form-group" id="em-obp-group" style="' + (!m.is_office_bearer ? 'display:none;' : '') + '">' +
+        // Row 5: Office Bearer Position (full width, conditional)
+        '<div class="admin-form-group admin-form-group--full" id="em-obp-group" style="' + (!m.is_office_bearer ? 'display:none;' : '') + '">' +
         '<label for="em-obp">Office Bearer Position</label>' +
         '<input type="text" id="em-obp" value="' + esc(m.office_bearer_position) + '" placeholder="e.g. President, Secretary" /></div>' +
+        // Row 6: Address (full width)
+        '<div class="admin-form-group admin-form-group--full"><label for="em-address">Address</label>' +
+        '<textarea id="em-address" rows="2">' + (m.address || '') + '</textarea></div>' +
+        // Row 7: Description (full width)
+        '<div class="admin-form-group admin-form-group--full"><label for="em-desc">Description</label>' +
+        '<textarea id="em-desc" rows="2">' + (m.description || '') + '</textarea></div>' +
+        // Admin password if not in session
         (adminPass ? '' :
-          '<div class="admin-form-group"><label for="em-adminpass">Admin Password</label>' +
+          '<div class="admin-form-group admin-form-group--full"><label for="em-adminpass">Admin Password</label>' +
           '<input type="password" id="em-adminpass" placeholder="Required to save changes" /></div>') +
+        '</div>' +
         '<p class="admin-error" id="editMemberError"></p>' +
         '<button type="submit" class="admin-submit-btn">Save Changes</button>' +
         '</form>';
