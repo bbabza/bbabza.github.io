@@ -1,18 +1,18 @@
 /* ═══════════════════════════════════════════════════════════
    BEZWADA BAR ASSOCIATION — Stylesheet
-   Palette: Teal #2a9d8f | Gold #c9a227 | Cream #f9f5ec
+   Palette: Dark Cyan #008B8B | Gold #c9a227 | Cream #f9f5ec
    ═══════════════════════════════════════════════════════════ */
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --navy:   #2a9d8f;
-  --navy2:  #1e7a6e;
-  --navy3:  #0f5c54;
+  --navy:   #008B8B;
+  --navy2:  #006E6E;
+  --navy3:  #005252;
   --gold:   #c9a227;
   --gold2:  #a07d1a;
   --cream:  #f9f5ec;
-  --light:  #f0faf8;
+  --light:  #e6f7f7;
   --white:  #ffffff;
   --text:   #2d2d2d;
   --muted:  #667;
@@ -20,8 +20,8 @@
   --ff-serif: 'Libre Baskerville', Georgia, serif;
   --ff-sans:  'Inter', 'Segoe UI', sans-serif;
   --radius: 6px;
-  --shadow: 0 4px 24px rgba(15,92,84,.12);
-  --shadow-lg: 0 8px 40px rgba(15,92,84,.18);
+  --shadow: 0 4px 24px rgba(0,82,82,.12);
+  --shadow-lg: 0 8px 40px rgba(0,82,82,.18);
 }
 
 html { scroll-behavior: smooth; }
@@ -91,7 +91,7 @@ img { max-width: 100%; display: block; }
   position: sticky;
   top: 0;
   z-index: 1000;
-  box-shadow: 0 2px 16px rgba(15,92,84,.35);
+  box-shadow: 0 2px 16px rgba(0,82,82,.35);
 }
 .header-inner {
   display: flex;
