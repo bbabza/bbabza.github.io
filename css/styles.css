@@ -506,9 +506,67 @@ img { max-width: 100%; display: block; }
   font-weight: 700;
   letter-spacing: .5px;
 }
-.badge-active { background: #e6f4ea; color: #1a7a30; }
+.badge-active   { background: #e6f4ea; color: #1a7a30; }
+.badge-inactive { background: #fdecea; color: #c62828; }
 
 .table-note { margin-top: 14px; font-size: 13px; color: var(--muted); text-align: center; }
+
+/* ── Member avatar in table ──────────────────────────────── */
+.mem-photo-th { width: 48px; padding: 0 8px !important; }
+.mem-avatar {
+  width: 38px; height: 38px;
+  border-radius: 50%;
+  background: var(--light);
+  border: 1.5px solid #cde8e5;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; overflow: hidden; flex-shrink: 0;
+}
+.mem-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.mem-name { font-weight: 600; color: var(--text); }
+.mem-desc { font-size: 11.5px; color: var(--muted); margin-top: 2px; line-height: 1.4; }
+.mem-phone-link { color: var(--navy); font-size: 13px; white-space: nowrap; }
+.mem-address { font-size: 13px; color: var(--muted); max-width: 200px; }
+.set-pwd-btn {
+  background: transparent; border: 1.5px solid var(--border);
+  border-radius: 4px; padding: 3px 7px; cursor: pointer;
+  font-size: 13px; color: var(--muted); transition: color .15s, border-color .15s;
+}
+.set-pwd-btn:hover { color: var(--navy2); border-color: var(--navy2); }
+
+/* ── Member login nav link ───────────────────────────────── */
+.member-nav-link {
+  color: var(--white) !important;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: 20px;
+  border: 1.5px solid rgba(255,255,255,.5);
+  transition: background .15s;
+}
+.member-nav-link:hover { background: rgba(255,255,255,.15) !important; }
+
+/* ── Member profile modal extras ─────────────────────────── */
+.member-profile-photo-row {
+  display: flex; align-items: center; gap: 16px;
+  margin-bottom: 20px;
+}
+.member-avatar-lg {
+  width: 72px; height: 72px;
+  border-radius: 50%; overflow: hidden;
+  background: var(--light); border: 2px solid #cde8e5;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 36px; flex-shrink: 0;
+}
+.member-avatar-lg img { width: 100%; height: 100%; object-fit: cover; }
+.member-photo-label {
+  display: inline-block;
+  font-size: 12px; font-weight: 700;
+  color: var(--navy2); cursor: pointer;
+  padding: 6px 14px;
+  border: 1.5px solid var(--navy2);
+  border-radius: 20px;
+  transition: background .15s, color .15s;
+}
+.member-photo-label:hover { background: var(--navy2); color: var(--white); }
 
 /* ─── NEWS & EVENTS ───────────────────────────────────────── */
 .news-tabs { display: flex; gap: 4px; margin-bottom: 32px; border-bottom: 2px solid #e8e8e8; }
@@ -2133,7 +2191,17 @@ a.logo-block:hover { opacity: .92; }
   outline: none;
   transition: border-color .2s;
 }
-.admin-form-group input:focus { border-color: var(--gold); }
+.admin-form-group input:focus,
+.admin-form-group textarea:focus { border-color: var(--gold); }
+.admin-form-group textarea {
+  width: 100%; padding: 10px 14px; resize: vertical;
+  background: rgba(255,255,255,.08);
+  border: 1.5px solid rgba(255,255,255,.2);
+  border-radius: var(--radius);
+  color: var(--white); font-family: var(--ff-sans);
+  font-size: 14px; outline: none; transition: border-color .2s;
+  min-height: 64px;
+}
 .admin-error {
   color: #e05c5c;
   font-size: 13px;

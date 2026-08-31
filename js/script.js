@@ -300,6 +300,7 @@
           hideModal();
           injectAdminNav();
           injectAddMemberBtn();
+          injectSetPwdBtns();
           injectTournamentReport();
         } else {
           errEl.textContent = data.message || 'Invalid username or password.';
@@ -319,6 +320,8 @@
       removeAdminNav();
       document.getElementById('addMemberBtn')?.remove();
       document.getElementById('adminTournamentReport')?.remove();
+      document.querySelectorAll('.set-pwd-btn').forEach(function (b) { b.closest('td')?.remove(); });
+      document.querySelector('.pwd-th')?.remove();
     }
 
     function injectFooterTrigger() {
@@ -391,6 +394,18 @@
               <option value="Inactive">Inactive</option>
             </select>
           </div>
+          <div class="admin-form-group">
+            <label for="m-mobile">Mobile Number</label>
+            <input type="text" id="m-mobile" placeholder="10-digit mobile" maxlength="15" />
+          </div>
+          <div class="admin-form-group">
+            <label for="m-address">Address</label>
+            <textarea id="m-address" rows="2" placeholder="Office / home address"></textarea>
+          </div>
+          <div class="admin-form-group">
+            <label for="m-password">Initial Password</label>
+            <input type="password" id="m-password" placeholder="Set a login password for this member" />
+          </div>
           <p class="admin-error" id="memberError"></p>
           <button type="submit" class="admin-submit-btn">Save Member</button>
         </form>
@@ -407,6 +422,9 @@
       const area = document.getElementById('m-area').value;
       const year = parseInt(document.getElementById('m-year').value);
       const status = document.getElementById('m-status').value;
+      const mobile = document.getElementById('m-mobile')?.value.trim() || null;
+      const address = document.getElementById('m-address')?.value.trim() || null;
+      const password = document.getElementById('m-password')?.value || '';
       const errEl = document.getElementById('memberError');
       const btn = e.target.querySelector('button[type="submit"]');
 
@@ -425,9 +443,15 @@
         return;
       }
 
+      let password_hash = null;
+      if (password) {
+        const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(password));
+        password_hash = Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+      }
+
       const { data, error } = await window._supabase
         .from('members')
-        .insert({ enrollment_no: enr, name, practice_area: area || null, enrolled_year: year, status })
+        .insert({ enrollment_no: enr, name, practice_area: area || null, enrolled_year: year, status, mobile, address, password_hash })
         .select()
         .single();
 
@@ -443,12 +467,17 @@
       const tbody = document.querySelector('#membersTable tbody');
       if (tbody) {
         const tr = document.createElement('tr');
+        tr.dataset.enr = data.enrollment_no;
         tr.innerHTML = `
+          <td><div class="mem-avatar">&#128100;</div></td>
           <td>${data.enrollment_no}</td>
-          <td>${data.name}</td>
-          <td>${data.practice_area || ''}</td>
+          <td><div class="mem-name">${data.name}</div></td>
+          <td class="mem-practice">${data.practice_area || ''}</td>
           <td>${data.enrolled_year || ''}</td>
-          <td><span class="badge badge-${data.status === 'Active' ? 'active' : 'inactive'}">${data.status}</span></td>`;
+          <td><span class="badge badge-${data.status === 'Active' ? 'active' : 'inactive'}">${data.status}</span></td>
+          <td>${data.mobile ? `<a href="tel:${data.mobile}" class="mem-phone-link">${data.mobile}</a>` : ''}</td>
+          <td class="mem-address">${data.address || ''}</td>
+          <td><button class="set-pwd-btn" title="Set Password" onclick="window.showMemberSetPwd('${data.enrollment_no.replace(/'/g, "\\'")}')">&#128273;</button></td>`;
         tbody.insertBefore(tr, tbody.firstChild);
         const count = tbody.querySelectorAll('tr').length;
         const noteEl = document.querySelector('.table-note');
@@ -459,6 +488,74 @@
       hideModal();
     }
 
+    const MEMBER_ADMIN_OPS_URL = 'https://tiwazbntxvyvwfjzcwrv.supabase.co/functions/v1/member-admin-ops';
+
+    window.injectAdminMembersColHeader = function () {
+      const headerRow = document.querySelector('#membersTable thead tr');
+      if (headerRow && !headerRow.querySelector('.pwd-th')) {
+        const th = document.createElement('th');
+        th.className = 'pwd-th';
+        th.textContent = 'Pwd';
+        headerRow.appendChild(th);
+      }
+    };
+
+    function injectSetPwdBtns() {
+      if (!document.getElementById('membersTable')) return;
+      window.injectAdminMembersColHeader();
+      document.querySelectorAll('#membersTable tbody tr').forEach(function (tr) {
+        if (tr.querySelector('.set-pwd-btn')) return;
+        var enr = tr.dataset.enr || (tr.cells[1] && tr.cells[1].textContent.trim());
+        if (!enr) return;
+        var td = document.createElement('td');
+        td.innerHTML = '<button class="set-pwd-btn" title="Set Password" onclick="window.showMemberSetPwd(\'' + enr.replace(/'/g, "\\'") + '\')">&#128273;</button>';
+        tr.appendChild(td);
+      });
+    }
+
+    window.showMemberSetPwd = function (enrollmentNo) {
+      if (!isLoggedIn()) return;
+      var overlay = buildModal(
+        '<button class="admin-modal-close" aria-label="Close">&times;</button>' +
+        '<div class="admin-modal-header"><span class="admin-modal-icon">&#128273;</span><h3>Set Member Password</h3></div>' +
+        '<p style="font-size:13px;color:rgba(255,255,255,.7);margin-bottom:16px;">Member: <strong>' + enrollmentNo + '</strong></p>' +
+        '<form id="setPwdForm" autocomplete="off">' +
+        '<div class="admin-form-group"><label for="adminVerifyPass">Admin Password</label>' +
+        '<input type="password" id="adminVerifyPass" placeholder="Your admin password" /></div>' +
+        '<div class="admin-form-group"><label for="memberNewPass">New Password for Member</label>' +
+        '<input type="password" id="memberNewPass" placeholder="Min. 6 characters" /></div>' +
+        '<p class="admin-error" id="setPwdError"></p>' +
+        '<button type="submit" class="admin-submit-btn">Set Password</button>' +
+        '</form>'
+      );
+      overlay.querySelector('#setPwdForm').addEventListener('submit', async function (e) {
+        e.preventDefault();
+        var adminPass = document.getElementById('adminVerifyPass').value;
+        var newPass = document.getElementById('memberNewPass').value;
+        var errEl = document.getElementById('setPwdError');
+        var btn = e.target.querySelector('button[type="submit"]');
+        errEl.textContent = '';
+        if (!adminPass || !newPass || newPass.length < 6) {
+          errEl.textContent = 'Please fill in both fields. Password must be at least 6 characters.';
+          return;
+        }
+        btn.disabled = true; btn.textContent = 'Setting…';
+        try {
+          var res = await fetch(MEMBER_ADMIN_OPS_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY },
+            body: JSON.stringify({ admin_password: adminPass, operation: 'set_password', enrollment_no: enrollmentNo, new_password: newPass }),
+          });
+          var data = await res.json();
+          if (data.success) { hideModal(); }
+          else { errEl.textContent = data.message || 'Failed to set password.'; btn.disabled = false; btn.textContent = 'Set Password'; }
+        } catch (_) {
+          errEl.textContent = 'Network error. Please try again.'; btn.disabled = false; btn.textContent = 'Set Password';
+        }
+      });
+      document.getElementById('adminVerifyPass').focus();
+    };
+
     document.addEventListener('keydown', e => {
       if (e.key === 'Escape') hideModal();
     });
@@ -467,6 +564,7 @@
     if (isLoggedIn()) {
       injectAdminNav();
       injectAddMemberBtn();
+      injectSetPwdBtns();
       injectTournamentReport();
     }
   })();
@@ -612,7 +710,7 @@
 
     tableRows.forEach(row => {
       const text = row.textContent.toLowerCase();
-      const practiceEl = row.cells[2];
+      const practiceEl = row.querySelector('.mem-practice');
       const practice = practiceEl ? practiceEl.textContent.toLowerCase() : '';
 
       const matchesQuery = !query || text.includes(query);
@@ -736,5 +834,213 @@
   }, { threshold: 0.5 });
 
   counters.forEach(c => counterObserver.observe(c));
+
+  // ── Member login & profile ────────────────────────────────
+  (function initMemberAuth() {
+    const MEMBER_KEY        = 'bba_member';
+    const MEMBER_AUTH_URL   = 'https://tiwazbntxvyvwfjzcwrv.supabase.co/functions/v1/member-auth';
+    const MEMBER_UPDATE_URL = 'https://tiwazbntxvyvwfjzcwrv.supabase.co/functions/v1/member-update';
+
+    function getSession() {
+      try { return JSON.parse(localStorage.getItem(MEMBER_KEY) || 'null'); } catch { return null; }
+    }
+    function isMemberLoggedIn() { return !!getSession()?.token; }
+
+    function buildMemberModal(innerHtml) {
+      document.getElementById('memberModal')?.remove();
+      const overlay = document.createElement('div');
+      overlay.id = 'memberModal';
+      overlay.className = 'admin-modal-overlay';
+      overlay.innerHTML = '<div class="admin-modal">' + innerHtml + '</div>';
+      document.body.appendChild(overlay);
+      overlay.addEventListener('click', function (e) { if (e.target === overlay) hideMemberModal(); });
+      overlay.querySelector('.admin-modal-close')?.addEventListener('click', hideMemberModal);
+      requestAnimationFrame(function () { overlay.classList.add('open'); });
+      return overlay;
+    }
+
+    function hideMemberModal() {
+      const overlay = document.getElementById('memberModal');
+      overlay?.classList.remove('open');
+      setTimeout(function () { overlay?.remove(); }, 280);
+    }
+
+    function injectMemberNav() {
+      const navUl = document.querySelector('.main-nav ul');
+      if (!navUl || navUl.querySelector('.member-nav-item')) return;
+      const contactLi = navUl.querySelector('li:last-child');
+      const li = document.createElement('li');
+      li.className = 'member-nav-item';
+      const session = getSession();
+      li.innerHTML = session
+        ? '<a href="#" class="member-nav-link" id="memberNavLink">&#128100; ' + session.name.split(' ')[0] + '</a>'
+        : '<a href="#" class="member-nav-link" id="memberNavLink">Login</a>';
+      navUl.insertBefore(li, contactLi);
+      document.getElementById('memberNavLink').addEventListener('click', function (e) {
+        e.preventDefault();
+        isMemberLoggedIn() ? showProfileModal() : showLoginModal();
+      });
+    }
+
+    function removeMemberNav() {
+      document.querySelectorAll('.member-nav-item').forEach(function (el) { el.remove(); });
+    }
+
+    function showLoginModal() {
+      const overlay = buildMemberModal(
+        '<button class="admin-modal-close" aria-label="Close">&times;</button>' +
+        '<div class="admin-modal-header"><span class="admin-modal-icon">&#128100;</span><h3>Member Login</h3></div>' +
+        '<form id="memberLoginForm" autocomplete="off">' +
+        '<div class="admin-form-group"><label for="mLoginEnr">Bar Enrollment No.</label>' +
+        '<input type="text" id="mLoginEnr" placeholder="e.g. AP/001/2005" autocomplete="username" /></div>' +
+        '<div class="admin-form-group"><label for="mLoginPass">Password</label>' +
+        '<input type="password" id="mLoginPass" autocomplete="current-password" placeholder="Your password" /></div>' +
+        '<p class="admin-error" id="memberLoginError"></p>' +
+        '<button type="submit" class="admin-submit-btn">Login</button>' +
+        '</form>'
+      );
+      overlay.querySelector('#memberLoginForm').addEventListener('submit', handleMemberLogin);
+      document.getElementById('mLoginEnr').focus();
+    }
+
+    async function handleMemberLogin(e) {
+      e.preventDefault();
+      const enr   = document.getElementById('mLoginEnr').value.trim();
+      const pass  = document.getElementById('mLoginPass').value;
+      const errEl = document.getElementById('memberLoginError');
+      const btn   = e.target.querySelector('button[type="submit"]');
+      errEl.textContent = '';
+      btn.disabled = true; btn.textContent = 'Logging in…';
+      try {
+        const res  = await fetch(MEMBER_AUTH_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY },
+          body: JSON.stringify({ enrollment_no: enr, password: pass }),
+        });
+        const data = await res.json();
+        if (data.success) {
+          localStorage.setItem(MEMBER_KEY, JSON.stringify({ token: data.token, name: data.member.name, enrollment_no: data.member.enrollment_no, member: data.member }));
+          hideMemberModal();
+          removeMemberNav();
+          injectMemberNav();
+        } else {
+          errEl.textContent = data.message || 'Invalid enrollment number or password.';
+          btn.disabled = false; btn.textContent = 'Login';
+        }
+      } catch (_) {
+        errEl.textContent = 'Network error. Please try again.';
+        btn.disabled = false; btn.textContent = 'Login';
+      }
+    }
+
+    function showProfileModal() {
+      const session = getSession();
+      if (!session) return;
+      const m = session.member || {};
+      let pendingPhotoBase64 = null;
+
+      const overlay = buildMemberModal(
+        '<button class="admin-modal-close" aria-label="Close">&times;</button>' +
+        '<div class="admin-modal-header"><span class="admin-modal-icon">&#128100;</span><h3>My Profile</h3></div>' +
+        '<div class="member-profile-photo-row">' +
+        '<div class="member-avatar-lg" id="mProfAvatarPreview">' +
+        (m.photo_url ? '<img src="' + m.photo_url + '" alt="Photo" />' : '&#128100;') +
+        '</div>' +
+        '<label class="member-photo-label">Change Photo' +
+        '<input type="file" id="mProfPhotoInput" accept="image/*" style="display:none;" /></label>' +
+        '</div>' +
+        '<form id="memberProfileForm" autocomplete="off">' +
+        '<div class="admin-form-group"><label>Enrollment No.</label>' +
+        '<input type="text" value="' + (m.enrollment_no || '') + '" disabled style="opacity:.55;" /></div>' +
+        '<div class="admin-form-group"><label for="mProfName">Full Name</label>' +
+        '<input type="text" id="mProfName" value="' + (m.name || '') + '" required /></div>' +
+        '<div class="admin-form-group"><label for="mProfMobile">Mobile Number</label>' +
+        '<input type="text" id="mProfMobile" value="' + (m.mobile || '') + '" placeholder="10-digit mobile" maxlength="15" /></div>' +
+        '<div class="admin-form-group"><label for="mProfAddress">Address</label>' +
+        '<textarea id="mProfAddress" rows="2" placeholder="Office / home address">' + (m.address || '') + '</textarea></div>' +
+        '<div class="admin-form-group"><label for="mProfDesc">About / Description</label>' +
+        '<textarea id="mProfDesc" rows="2" placeholder="Brief bio or specialisation">' + (m.description || '') + '</textarea></div>' +
+        '<details style="margin-bottom:12px;"><summary style="font-size:13px;font-weight:700;color:rgba(255,255,255,.8);cursor:pointer;">Change Password</summary>' +
+        '<div style="padding-top:10px;">' +
+        '<div class="admin-form-group"><label for="mProfNewPass">New Password</label>' +
+        '<input type="password" id="mProfNewPass" placeholder="Leave blank to keep current" /></div>' +
+        '<div class="admin-form-group"><label for="mProfConfPass">Confirm Password</label>' +
+        '<input type="password" id="mProfConfPass" placeholder="Confirm new password" /></div>' +
+        '</div></details>' +
+        '<p class="admin-error" id="memberProfileError"></p>' +
+        '<div style="display:flex;gap:10px;">' +
+        '<button type="submit" class="admin-submit-btn" style="flex:1;">Save Changes</button>' +
+        '<button type="button" id="memberLogoutBtn" class="admin-submit-btn" style="background:rgba(255,255,255,.15);">Logout</button>' +
+        '</div></form>'
+      );
+      overlay.querySelector('.admin-modal').classList.add('admin-modal--wide');
+      overlay.querySelector('#memberProfileForm').addEventListener('submit', async function (e) {
+        e.preventDefault();
+        const errEl = document.getElementById('memberProfileError');
+        const btn   = e.target.querySelector('button[type="submit"]');
+        errEl.textContent = '';
+        const newPass  = document.getElementById('mProfNewPass').value;
+        const confPass = document.getElementById('mProfConfPass').value;
+        if (newPass && newPass !== confPass) { errEl.textContent = 'Passwords do not match.'; return; }
+        if (newPass && newPass.length < 6) { errEl.textContent = 'Password must be at least 6 characters.'; return; }
+        btn.disabled = true; btn.textContent = 'Saving…';
+        const updates = {
+          name:        document.getElementById('mProfName').value.trim(),
+          mobile:      document.getElementById('mProfMobile').value.trim(),
+          address:     document.getElementById('mProfAddress').value.trim(),
+          description: document.getElementById('mProfDesc').value.trim(),
+        };
+        if (pendingPhotoBase64) updates.photo_base64 = pendingPhotoBase64;
+        try {
+          const body = { token: session.token, updates };
+          if (newPass) body.new_password = newPass;
+          const res  = await fetch(MEMBER_UPDATE_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY },
+            body: JSON.stringify(body),
+          });
+          const data = await res.json();
+          if (data.success) {
+            const updated = Object.assign({}, session.member, updates);
+            if (data.photo_url) updated.photo_url = data.photo_url;
+            delete updated.photo_base64;
+            localStorage.setItem(MEMBER_KEY, JSON.stringify({ token: session.token, name: updates.name, enrollment_no: session.enrollment_no, member: updated }));
+            hideMemberModal();
+            removeMemberNav();
+            injectMemberNav();
+          } else {
+            errEl.textContent = data.message || 'Update failed. Please try again.';
+            btn.disabled = false; btn.textContent = 'Save Changes';
+          }
+        } catch (_) {
+          errEl.textContent = 'Network error. Please try again.';
+          btn.disabled = false; btn.textContent = 'Save Changes';
+        }
+      });
+      overlay.querySelector('#memberLogoutBtn').addEventListener('click', function () {
+        localStorage.removeItem(MEMBER_KEY);
+        hideMemberModal();
+        removeMemberNav();
+        injectMemberNav();
+      });
+      overlay.querySelector('#mProfPhotoInput').addEventListener('change', function () {
+        const file = this.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = function (ev) {
+          pendingPhotoBase64 = ev.target.result;
+          document.getElementById('mProfAvatarPreview').innerHTML = '<img src="' + ev.target.result + '" alt="Preview" />';
+        };
+        reader.readAsDataURL(file);
+      });
+      document.getElementById('mProfName').focus();
+    }
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') hideMemberModal();
+    });
+
+    injectMemberNav();
+  })();
 
 })();
