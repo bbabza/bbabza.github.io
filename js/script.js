@@ -15,7 +15,7 @@
   // ── Admin authentication system ───────────────────────────
   (function initAdmin() {
     const STORE_KEY = 'bba_admin';
-    const AUTH_URL  = 'https://tiwazbntxvyvwfjzcwrv.supabase.co/functions/v1/admin-auth';
+    const AUTH_URL = 'https://tiwazbntxvyvwfjzcwrv.supabase.co/functions/v1/admin-auth';
 
     function isLoggedIn() {
       return localStorage.getItem(STORE_KEY) === '1';
@@ -104,7 +104,7 @@
         s1.onload = function () {
           var s2 = document.createElement('script');
           s2.src = ROOT + 'js/supabase-client.js';
-          s2.onload  = function () { resolve(!!window._supabase); };
+          s2.onload = function () { resolve(!!window._supabase); };
           s2.onerror = function () { resolve(false); };
           document.head.appendChild(s2);
         };
@@ -123,12 +123,12 @@
       section.className = 'section section-light';
       section.innerHTML =
         '<div class="container">' +
-          '<div class="section-header">' +
-            '<span class="section-badge">Admin</span>' +
-            '<h2 class="section-title">Registrations Report</h2>' +
-            '<div class="divider"></div>' +
-          '</div>' +
-          '<div id="reportContent" style="text-align:center;padding:32px 0;color:var(--muted);">Loading&hellip;</div>' +
+        '<div class="section-header">' +
+        '<span class="section-badge">Admin</span>' +
+        '<h2 class="section-title">Registrations Report</h2>' +
+        '<div class="divider"></div>' +
+        '</div>' +
+        '<div id="reportContent" style="text-align:center;padding:32px 0;color:var(--muted);">Loading&hellip;</div>' +
         '</div>';
 
       var footer = document.querySelector('.site-footer');
@@ -155,10 +155,10 @@
     }
 
     function renderReport(rows, container) {
-      var total     = rows.length;
+      var total = rows.length;
       var submitted = rows.filter(function (r) { return r.payment_status === 'utr_submitted'; }).length;
-      var pending   = rows.filter(function (r) { return r.payment_status === 'pending'; }).length;
-      var totalAmt  = rows
+      var pending = rows.filter(function (r) { return r.payment_status === 'pending'; }).length;
+      var totalAmt = rows
         .filter(function (r) { return r.payment_status === 'utr_submitted'; })
         .reduce(function (s, r) { return s + (r.total_amount || 0); }, 0);
 
@@ -174,7 +174,7 @@
       }).join('');
 
       var tableRows = rows.map(function (r) {
-        var events   = (r.events || []).map(function (e) { return e.label; }).join(', ');
+        var events = (r.events || []).map(function (e) { return e.label; }).join(', ');
         var badgeCls = r.payment_status === 'utr_submitted' ? 'r-badge--submitted' : 'r-badge--pending';
         var badgeTxt = r.payment_status === 'utr_submitted' ? 'UTR Submitted' : 'Pending';
 
@@ -190,7 +190,7 @@
         var partnerCell = partnerLines.length ? partnerLines.join('') : '&mdash;';
 
         var searchStr = [r.ref, r.name, r.enrollment_no, r.bar_association, r.mobile, events,
-          Object.values(r.partners || {}).map(function (p) { return (p.name || '') + ' ' + (p.enrollment_no || ''); }).join(' ')
+        Object.values(r.partners || {}).map(function (p) { return (p.name || '') + ' ' + (p.enrollment_no || ''); }).join(' ')
         ].join(' ').toLowerCase();
 
         return '<tr data-status="' + r.payment_status + '" data-search="' + searchStr + '">' +
@@ -209,37 +209,37 @@
 
       container.innerHTML =
         '<div class="report-stats">' +
-          '<div class="report-stat"><div class="report-stat-num">' + total + '</div><div class="report-stat-label">Total Registrations</div></div>' +
-          '<div class="report-stat"><div class="report-stat-num">' + submitted + '</div><div class="report-stat-label">UTR Submitted</div></div>' +
-          '<div class="report-stat"><div class="report-stat-num">' + pending + '</div><div class="report-stat-label">Pending Payment</div></div>' +
-          '<div class="report-stat"><div class="report-stat-num">&#8377;' + totalAmt.toLocaleString('en-IN') + '</div><div class="report-stat-label">Amount Collected</div></div>' +
+        '<div class="report-stat"><div class="report-stat-num">' + total + '</div><div class="report-stat-label">Total Registrations</div></div>' +
+        '<div class="report-stat"><div class="report-stat-num">' + submitted + '</div><div class="report-stat-label">UTR Submitted</div></div>' +
+        '<div class="report-stat"><div class="report-stat-num">' + pending + '</div><div class="report-stat-label">Pending Payment</div></div>' +
+        '<div class="report-stat"><div class="report-stat-num">&#8377;' + totalAmt.toLocaleString('en-IN') + '</div><div class="report-stat-label">Amount Collected</div></div>' +
         '</div>' +
         (catBadges ? '<div class="report-cats">' + catBadges + '</div>' : '') +
         '<div class="report-toolbar">' +
-          '<input class="report-search" id="reportSearch" type="text" placeholder="Search name, ref, enrollment, partner&hellip;" />' +
-          '<select class="report-filter" id="reportFilter">' +
-            '<option value="">All Statuses</option>' +
-            '<option value="utr_submitted">UTR Submitted</option>' +
-            '<option value="pending">Pending</option>' +
-          '</select>' +
-          '<button class="admin-submit-btn" id="exportCsvBtn" style="padding:8px 16px;font-size:13px;white-space:nowrap;">&#11015; Export CSV</button>' +
+        '<input class="report-search" id="reportSearch" type="text" placeholder="Search name, ref, enrollment, partner&hellip;" />' +
+        '<select class="report-filter" id="reportFilter">' +
+        '<option value="">All Statuses</option>' +
+        '<option value="utr_submitted">UTR Submitted</option>' +
+        '<option value="pending">Pending</option>' +
+        '</select>' +
+        '<button class="admin-submit-btn" id="exportCsvBtn" style="padding:8px 16px;font-size:13px;white-space:nowrap;">&#11015; Export CSV</button>' +
         '</div>' +
         '<div class="report-table-wrap">' +
-          '<table class="report-table">' +
-            '<thead><tr>' +
-              '<th>Ref No</th><th>Name</th><th>Enrollment No</th><th>Bar Association</th>' +
-              '<th>Mobile</th><th>Events</th><th>Partner(s)</th><th>Amount</th><th>UTR No</th><th>Status</th>' +
-            '</tr></thead>' +
-            '<tbody id="reportTbody">' + (tableRows || '<tr><td colspan="10" style="text-align:center;color:var(--muted);padding:24px;">No registrations yet.</td></tr>') + '</tbody>' +
-          '</table>' +
+        '<table class="report-table">' +
+        '<thead><tr>' +
+        '<th>Ref No</th><th>Name</th><th>Enrollment No</th><th>Bar Association</th>' +
+        '<th>Mobile</th><th>Events</th><th>Partner(s)</th><th>Amount</th><th>UTR No</th><th>Status</th>' +
+        '</tr></thead>' +
+        '<tbody id="reportTbody">' + (tableRows || '<tr><td colspan="10" style="text-align:center;color:var(--muted);padding:24px;">No registrations yet.</td></tr>') + '</tbody>' +
+        '</table>' +
         '</div>';
 
       var tbody = container.querySelector('#reportTbody');
       function applyFilter() {
-        var q      = (container.querySelector('#reportSearch').value || '').toLowerCase();
+        var q = (container.querySelector('#reportSearch').value || '').toLowerCase();
         var status = container.querySelector('#reportFilter').value;
         tbody.querySelectorAll('tr').forEach(function (tr) {
-          var matchQ = !q      || (tr.dataset.search || '').includes(q);
+          var matchQ = !q || (tr.dataset.search || '').includes(q);
           var matchS = !status || tr.dataset.status === status;
           tr.style.display = (matchQ && matchS) ? '' : 'none';
         });
@@ -250,22 +250,22 @@
     }
 
     function exportCSV(rows) {
-      var headers = ['Ref No','Name','Enrollment No','Bar Association','Mobile','Email','Events','Partner Name','Partner Enrollment','Partner Bar Association','Total Amount','UTR Number','Payment Status'];
+      var headers = ['Ref No', 'Name', 'Enrollment No', 'Bar Association', 'Mobile', 'Email', 'Events', 'Partner Name', 'Partner Enrollment', 'Partner Bar Association', 'Total Amount', 'UTR Number', 'Payment Status'];
       var lines = rows.map(function (r) {
         var events = (r.events || []).map(function (e) { return e.label; }).join(' | ');
         var partnerEntries = Object.entries(r.partners || {});
         var pName = partnerEntries.map(function (e) { return e[1].name || ''; }).filter(Boolean).join(' | ');
-        var pEnr  = partnerEntries.map(function (e) { return e[1].enrollment_no || ''; }).filter(Boolean).join(' | ');
-        var pBar  = partnerEntries.map(function (e) { return e[1].bar_association || ''; }).filter(Boolean).join(' | ');
+        var pEnr = partnerEntries.map(function (e) { return e[1].enrollment_no || ''; }).filter(Boolean).join(' | ');
+        var pBar = partnerEntries.map(function (e) { return e[1].bar_association || ''; }).filter(Boolean).join(' | ');
         return [r.ref, r.name, r.enrollment_no, r.bar_association, r.mobile, r.email || '',
           events, pName, pEnr, pBar, r.total_amount, r.utr_number || '', r.payment_status]
           .map(function (v) { return '"' + String(v || '').replace(/"/g, '""') + '"'; }).join(',');
       });
-      var csv  = [headers.join(',')].concat(lines).join('\n');
+      var csv = [headers.join(',')].concat(lines).join('\n');
       var blob = new Blob([csv], { type: 'text/csv' });
-      var url  = URL.createObjectURL(blob);
-      var a    = document.createElement('a');
-      a.href     = url;
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement('a');
+      a.href = url;
       a.download = 'tournament-registrations-' + new Date().toISOString().slice(0, 10) + '.csv';
       document.body.appendChild(a);
       a.click();
@@ -275,20 +275,20 @@
 
     async function handleLogin(e) {
       e.preventDefault();
-      const user  = document.getElementById('adminUser').value.trim();
-      const pass  = document.getElementById('adminPass').value;
+      const user = document.getElementById('adminUser').value.trim();
+      const pass = document.getElementById('adminPass').value;
       const errEl = document.getElementById('adminError');
-      const btn   = e.target.querySelector('button[type="submit"]');
+      const btn = e.target.querySelector('button[type="submit"]');
 
-      btn.disabled    = true;
+      btn.disabled = true;
       btn.textContent = 'Verifying…';
       errEl.textContent = '';
 
       try {
-        const res  = await fetch(AUTH_URL, {
-          method:  'POST',
+        const res = await fetch(AUTH_URL, {
+          method: 'POST',
           headers: {
-            'Content-Type':  'application/json',
+            'Content-Type': 'application/json',
             'Authorization': 'Bearer ' + SUPABASE_ANON_KEY,
           },
           body: JSON.stringify({ username: user, password: pass }),
@@ -304,12 +304,12 @@
           injectTournamentReport();
         } else {
           errEl.textContent = data.message || 'Invalid username or password.';
-          btn.disabled    = false;
+          btn.disabled = false;
           btn.textContent = 'Login';
         }
       } catch (_) {
         errEl.textContent = 'Network error. Please try again.';
-        btn.disabled    = false;
+        btn.disabled = false;
         btn.textContent = 'Login';
       }
     }
@@ -745,21 +745,21 @@
   const CONTACT_URL = 'https://tiwazbntxvyvwfjzcwrv.supabase.co/functions/v1/contact-form';
 
   const contactForm = document.getElementById('contactForm');
-  const formMsg     = document.getElementById('formMsg');
+  const formMsg = document.getElementById('formMsg');
 
   contactForm?.addEventListener('submit', async function (e) {
     e.preventDefault();
     const btn = contactForm.querySelector('button[type="submit"]');
-    btn.disabled    = true;
+    btn.disabled = true;
     btn.textContent = 'Sending…';
     formMsg.textContent = '';
-    formMsg.style.color  = '';
+    formMsg.style.color = '';
 
     try {
-      const res  = await fetch(CONTACT_URL, {
-        method:  'POST',
+      const res = await fetch(CONTACT_URL, {
+        method: 'POST',
         headers: {
-          'Accept':        'application/json',
+          'Accept': 'application/json',
           'Authorization': 'Bearer ' + SUPABASE_ANON_KEY,
         },
         body: new FormData(contactForm),
@@ -779,7 +779,7 @@
       formMsg.style.color = '#c0392b';
     }
 
-    btn.disabled    = false;
+    btn.disabled = false;
     btn.textContent = 'Send Message';
   });
 
@@ -837,9 +837,27 @@
 
   // ── Member login & profile ────────────────────────────────
   (function initMemberAuth() {
-    const MEMBER_KEY        = 'bba_member';
-    const MEMBER_AUTH_URL   = 'https://tiwazbntxvyvwfjzcwrv.supabase.co/functions/v1/member-auth';
+    const MEMBER_KEY = 'bba_member';
+    const MEMBER_AUTH_URL = 'https://tiwazbntxvyvwfjzcwrv.supabase.co/functions/v1/member-auth';
     const MEMBER_UPDATE_URL = 'https://tiwazbntxvyvwfjzcwrv.supabase.co/functions/v1/member-update';
+    const MEMBER_RESET_URL = 'https://tiwazbntxvyvwfjzcwrv.supabase.co/functions/v1/member-reset-password';
+
+    // ── Fill in your Firebase project config ──────────────────
+    const FIREBASE_CONFIG = {
+      apiKey: "AIzaSyDukICqIkHk9vjs5bXqsXdHvhnd3dvJuh4",
+      authDomain: "bbabza-a26f8.firebaseapp.com",
+      projectId: "bbabza-a26f8",
+      storageBucket: "bbabza-a26f8.firebasestorage.app",
+      messagingSenderId: "375899370376",
+      appId: "1:375899370376:web:87f756905fa053da89803d",
+      measurementId: "G-FTM49QZTC7"
+    };
+    const COUNTRY_CODE = '+91'; // India — change if needed
+
+    let _firebaseLoaded = false;
+    let _confirmationResult = null;
+    let _verifiedIdToken = null;
+    let _appVerifier = null;
 
     function getSession() {
       try { return JSON.parse(localStorage.getItem(MEMBER_KEY) || 'null'); } catch { return null; }
@@ -865,6 +883,20 @@
       setTimeout(function () { overlay?.remove(); }, 280);
     }
 
+    const PERSON_ICON = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="20" height="20" aria-hidden="true"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg>';
+
+    function getInitials(name) {
+      const parts = (name || '').trim().split(/\s+/);
+      return (parts[0]?.[0] || '') + (parts[1]?.[0] || '');
+    }
+
+    function avatarHtml(session) {
+      if (!session) return PERSON_ICON;
+      const m = session.member || {};
+      if (m.photo_url) return '<img src="' + m.photo_url + '" alt="' + (m.name || '') + '" />';
+      return '<span class="mem-nav-initials">' + getInitials(m.name) + '</span>';
+    }
+
     function injectMemberNav() {
       const navUl = document.querySelector('.main-nav ul');
       if (!navUl || navUl.querySelector('.member-nav-item')) return;
@@ -872,9 +904,8 @@
       const li = document.createElement('li');
       li.className = 'member-nav-item';
       const session = getSession();
-      li.innerHTML = session
-        ? '<a href="#" class="member-nav-link" id="memberNavLink">&#128100; ' + session.name.split(' ')[0] + '</a>'
-        : '<a href="#" class="member-nav-link" id="memberNavLink">Login</a>';
+      const title = session ? 'My Profile — ' + (session.name || '') : 'Member Login';
+      li.innerHTML = '<a href="#" class="member-nav-link" id="memberNavLink" title="' + title + '"><div class="member-nav-avatar">' + avatarHtml(session) + '</div></a>';
       navUl.insertBefore(li, contactLi);
       document.getElementById('memberNavLink').addEventListener('click', function (e) {
         e.preventDefault();
@@ -897,22 +928,24 @@
         '<input type="password" id="mLoginPass" autocomplete="current-password" placeholder="Your password" /></div>' +
         '<p class="admin-error" id="memberLoginError"></p>' +
         '<button type="submit" class="admin-submit-btn">Login</button>' +
+        '<p style="text-align:center;margin-top:12px;"><a href="#" id="forgotPwdLink" class="forgot-pwd-link">Forgot Password?</a></p>' +
         '</form>'
       );
       overlay.querySelector('#memberLoginForm').addEventListener('submit', handleMemberLogin);
+      overlay.querySelector('#forgotPwdLink').addEventListener('click', function (e) { e.preventDefault(); showForgotStep1(); });
       document.getElementById('mLoginEnr').focus();
     }
 
     async function handleMemberLogin(e) {
       e.preventDefault();
-      const enr   = document.getElementById('mLoginEnr').value.trim();
-      const pass  = document.getElementById('mLoginPass').value;
+      const enr = document.getElementById('mLoginEnr').value.trim();
+      const pass = document.getElementById('mLoginPass').value;
       const errEl = document.getElementById('memberLoginError');
-      const btn   = e.target.querySelector('button[type="submit"]');
+      const btn = e.target.querySelector('button[type="submit"]');
       errEl.textContent = '';
       btn.disabled = true; btn.textContent = 'Logging in…';
       try {
-        const res  = await fetch(MEMBER_AUTH_URL, {
+        const res = await fetch(MEMBER_AUTH_URL, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY },
           body: JSON.stringify({ enrollment_no: enr, password: pass }),
@@ -977,24 +1010,24 @@
       overlay.querySelector('#memberProfileForm').addEventListener('submit', async function (e) {
         e.preventDefault();
         const errEl = document.getElementById('memberProfileError');
-        const btn   = e.target.querySelector('button[type="submit"]');
+        const btn = e.target.querySelector('button[type="submit"]');
         errEl.textContent = '';
-        const newPass  = document.getElementById('mProfNewPass').value;
+        const newPass = document.getElementById('mProfNewPass').value;
         const confPass = document.getElementById('mProfConfPass').value;
         if (newPass && newPass !== confPass) { errEl.textContent = 'Passwords do not match.'; return; }
         if (newPass && newPass.length < 6) { errEl.textContent = 'Password must be at least 6 characters.'; return; }
         btn.disabled = true; btn.textContent = 'Saving…';
         const updates = {
-          name:        document.getElementById('mProfName').value.trim(),
-          mobile:      document.getElementById('mProfMobile').value.trim(),
-          address:     document.getElementById('mProfAddress').value.trim(),
+          name: document.getElementById('mProfName').value.trim(),
+          mobile: document.getElementById('mProfMobile').value.trim(),
+          address: document.getElementById('mProfAddress').value.trim(),
           description: document.getElementById('mProfDesc').value.trim(),
         };
         if (pendingPhotoBase64) updates.photo_base64 = pendingPhotoBase64;
         try {
           const body = { token: session.token, updates };
           if (newPass) body.new_password = newPass;
-          const res  = await fetch(MEMBER_UPDATE_URL, {
+          const res = await fetch(MEMBER_UPDATE_URL, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY },
             body: JSON.stringify(body),
@@ -1034,6 +1067,186 @@
         reader.readAsDataURL(file);
       });
       document.getElementById('mProfName').focus();
+    }
+
+    // ── Forgot Password flow ──────────────────────────────────
+
+    function updateMemberModalContent(html) {
+      const modal = document.querySelector('#memberModal .admin-modal');
+      if (!modal) return;
+      modal.innerHTML = html;
+      modal.querySelector('.admin-modal-close')?.addEventListener('click', hideMemberModal);
+    }
+
+    function loadFirebaseSDK() {
+      if (_firebaseLoaded) return Promise.resolve();
+      return new Promise(function (resolve, reject) {
+        function loadScript(src) {
+          return new Promise(function (res, rej) {
+            const s = document.createElement('script');
+            s.src = src; s.onload = res; s.onerror = rej;
+            document.head.appendChild(s);
+          });
+        }
+        loadScript('https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js')
+          .then(function () { return loadScript('https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js'); })
+          .then(function () {
+            if (!firebase.apps.length) firebase.initializeApp(FIREBASE_CONFIG);
+            _firebaseLoaded = true;
+            resolve();
+          })
+          .catch(reject);
+      });
+    }
+
+    function showForgotStep1() {
+      updateMemberModalContent(
+        '<button class="admin-modal-close" aria-label="Close">&times;</button>' +
+        '<div class="admin-modal-header"><span class="admin-modal-icon">&#128272;</span><h3>Reset Password</h3></div>' +
+        '<p style="font-size:13px;color:rgba(255,255,255,.75);margin-bottom:16px;">Enter your registered mobile number. An OTP will be sent to your phone.</p>' +
+        '<div class="admin-form-group"><label for="mForgotMobile">Registered Mobile Number</label>' +
+        '<input type="tel" id="mForgotMobile" placeholder="10-digit mobile number" maxlength="10" inputmode="numeric" /></div>' +
+        '<div id="recaptcha-container"></div>' +
+        '<p class="admin-error" id="forgotStep1Error"></p>' +
+        '<button id="forgotSendOtpBtn" class="admin-submit-btn" style="width:100%;">Send OTP</button>' +
+        '<p style="text-align:center;margin-top:12px;"><a href="#" id="backToLoginLink" class="forgot-pwd-link">← Back to Login</a></p>'
+      );
+      document.getElementById('forgotSendOtpBtn').addEventListener('click', handleSendOtp);
+      document.getElementById('backToLoginLink').addEventListener('click', function (e) { e.preventDefault(); showLoginModal(); });
+      document.getElementById('mForgotMobile').focus();
+    }
+
+    async function handleSendOtp() {
+      const mobileInput = document.getElementById('mForgotMobile');
+      const errEl = document.getElementById('forgotStep1Error');
+      const btn = document.getElementById('forgotSendOtpBtn');
+      const mobile = (mobileInput?.value || '').replace(/\D/g, '').slice(-10);
+      errEl.textContent = '';
+      if (mobile.length !== 10) { errEl.textContent = 'Please enter a valid 10-digit mobile number.'; return; }
+
+      btn.disabled = true; btn.textContent = 'Checking…';
+      try {
+        const chkRes = await fetch(MEMBER_RESET_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ operation: 'check_mobile', mobile }),
+        });
+        const chkData = await chkRes.json();
+        if (!chkData.success || !chkData.exists) {
+          errEl.textContent = 'This mobile number is not registered. Please contact the association.';
+          btn.disabled = false; btn.textContent = 'Send OTP';
+          return;
+        }
+
+        btn.textContent = 'Loading…';
+        await loadFirebaseSDK();
+
+        const phoneE164 = COUNTRY_CODE + mobile;
+        if (!_appVerifier) {
+          _appVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
+            size: 'invisible',
+            callback: function () { },
+          });
+        }
+        _confirmationResult = await firebase.auth().signInWithPhoneNumber(phoneE164, _appVerifier);
+        showForgotStep2(mobile);
+      } catch (err) {
+        errEl.textContent = 'Failed to send OTP: ' + (err.message || 'Please try again.');
+        btn.disabled = false; btn.textContent = 'Send OTP';
+        if (_appVerifier) { try { _appVerifier.clear(); } catch (_e) { } _appVerifier = null; }
+      }
+    }
+
+    function showForgotStep2(mobile) {
+      updateMemberModalContent(
+        '<button class="admin-modal-close" aria-label="Close">&times;</button>' +
+        '<div class="admin-modal-header"><span class="admin-modal-icon">&#128273;</span><h3>Enter OTP</h3></div>' +
+        '<p style="font-size:13px;color:rgba(255,255,255,.75);margin-bottom:16px;">OTP sent to ' + COUNTRY_CODE + mobile + '. Enter the 6-digit code below.</p>' +
+        '<div class="admin-form-group"><label for="mForgotOtp">OTP Code</label>' +
+        '<input type="text" id="mForgotOtp" placeholder="6-digit OTP" maxlength="6" inputmode="numeric" /></div>' +
+        '<p class="admin-error" id="forgotStep2Error"></p>' +
+        '<button id="forgotVerifyOtpBtn" class="admin-submit-btn" style="width:100%;">Verify OTP</button>' +
+        '<p style="text-align:center;margin-top:12px;"><a href="#" id="resendOtpLink" class="forgot-pwd-link">Resend OTP</a></p>'
+      );
+      document.getElementById('forgotVerifyOtpBtn').addEventListener('click', handleVerifyOtp);
+      document.getElementById('resendOtpLink').addEventListener('click', function (e) {
+        e.preventDefault();
+        _confirmationResult = null;
+        if (_appVerifier) { try { _appVerifier.clear(); } catch (_e) { } _appVerifier = null; }
+        showForgotStep1();
+      });
+      document.getElementById('mForgotOtp').focus();
+    }
+
+    async function handleVerifyOtp() {
+      const otpInput = document.getElementById('mForgotOtp');
+      const errEl = document.getElementById('forgotStep2Error');
+      const btn = document.getElementById('forgotVerifyOtpBtn');
+      const code = (otpInput?.value || '').trim();
+      errEl.textContent = '';
+      if (!code || code.length < 4) { errEl.textContent = 'Please enter the OTP.'; return; }
+      if (!_confirmationResult) { errEl.textContent = 'Session expired. Please start again.'; return; }
+
+      btn.disabled = true; btn.textContent = 'Verifying…';
+      try {
+        const result = await _confirmationResult.confirm(code);
+        _verifiedIdToken = await result.user.getIdToken();
+        showForgotStep3();
+      } catch (_err) {
+        errEl.textContent = 'Invalid OTP. Please check and try again.';
+        btn.disabled = false; btn.textContent = 'Verify OTP';
+      }
+    }
+
+    function showForgotStep3() {
+      updateMemberModalContent(
+        '<button class="admin-modal-close" aria-label="Close">&times;</button>' +
+        '<div class="admin-modal-header"><span class="admin-modal-icon">&#128274;</span><h3>Set New Password</h3></div>' +
+        '<p style="font-size:13px;color:rgba(255,255,255,.75);margin-bottom:16px;">OTP verified. Enter your new password below.</p>' +
+        '<div class="admin-form-group"><label for="mNewPassword">New Password</label>' +
+        '<input type="password" id="mNewPassword" placeholder="Minimum 6 characters" /></div>' +
+        '<div class="admin-form-group"><label for="mNewPasswordConf">Confirm Password</label>' +
+        '<input type="password" id="mNewPasswordConf" placeholder="Repeat new password" /></div>' +
+        '<p class="admin-error" id="forgotStep3Error"></p>' +
+        '<button id="forgotResetBtn" class="admin-submit-btn" style="width:100%;">Reset Password</button>'
+      );
+      document.getElementById('forgotResetBtn').addEventListener('click', handleResetPassword);
+      document.getElementById('mNewPassword').focus();
+    }
+
+    async function handleResetPassword() {
+      const errEl = document.getElementById('forgotStep3Error');
+      const btn = document.getElementById('forgotResetBtn');
+      const newPass = document.getElementById('mNewPassword').value;
+      const confPass = document.getElementById('mNewPasswordConf').value;
+      errEl.textContent = '';
+      if (newPass.length < 6) { errEl.textContent = 'Password must be at least 6 characters.'; return; }
+      if (newPass !== confPass) { errEl.textContent = 'Passwords do not match.'; return; }
+      if (!_verifiedIdToken) { errEl.textContent = 'Verification expired. Please start again.'; return; }
+
+      btn.disabled = true; btn.textContent = 'Resetting…';
+      try {
+        const res = await fetch(MEMBER_RESET_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ operation: 'reset', firebase_id_token: _verifiedIdToken, new_password: newPass }),
+        });
+        const data = await res.json();
+        if (data.success) {
+          localStorage.setItem(MEMBER_KEY, JSON.stringify({ token: data.token, name: data.member.name, enrollment_no: data.member.enrollment_no, member: data.member }));
+          _verifiedIdToken = null;
+          _confirmationResult = null;
+          hideMemberModal();
+          removeMemberNav();
+          injectMemberNav();
+        } else {
+          errEl.textContent = data.message || 'Reset failed. Please try again.';
+          btn.disabled = false; btn.textContent = 'Reset Password';
+        }
+      } catch (_) {
+        errEl.textContent = 'Network error. Please try again.';
+        btn.disabled = false; btn.textContent = 'Reset Password';
+      }
     }
 
     document.addEventListener('keydown', function (e) {
