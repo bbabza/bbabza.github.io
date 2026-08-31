@@ -297,6 +297,7 @@
 
         if (data.success) {
           localStorage.setItem(STORE_KEY, '1');
+          sessionStorage.setItem('bba_admin_pass', pass);
           hideModal();
           injectAdminNav();
           injectAddMemberBtn();
@@ -316,12 +317,13 @@
 
     function handleLogout() {
       localStorage.removeItem(STORE_KEY);
+      sessionStorage.removeItem('bba_admin_pass');
       hideModal();
       removeAdminNav();
       document.getElementById('addMemberBtn')?.remove();
       document.getElementById('adminTournamentReport')?.remove();
-      document.querySelectorAll('.set-pwd-btn').forEach(function (b) { b.closest('td')?.remove(); });
-      document.querySelector('.pwd-th')?.remove();
+      document.querySelectorAll('.member-admin-actions-td').forEach(function (td) { td.remove(); });
+      document.querySelector('.admin-actions-th')?.remove();
     }
 
     function injectFooterTrigger() {
@@ -475,9 +477,11 @@
           <td class="mem-practice">${data.practice_area || ''}</td>
           <td>${data.enrolled_year || ''}</td>
           <td><span class="badge badge-${data.status === 'Active' ? 'active' : 'inactive'}">${data.status}</span></td>
+          <td></td>
+          <td></td>
           <td>${data.mobile ? `<a href="tel:${data.mobile}" class="mem-phone-link">${data.mobile}</a>` : ''}</td>
           <td class="mem-address">${data.address || ''}</td>
-          <td><button class="set-pwd-btn" title="Set Password" onclick="window.showMemberSetPwd('${data.enrollment_no.replace(/'/g, "\\'")}')">&#128273;</button></td>`;
+          <td class="member-admin-actions-td"><button class="set-pwd-btn" title="Set Password" onclick="window.showMemberSetPwd('${data.enrollment_no.replace(/'/g, "\\'")}')">&#128273;</button> <button class="edit-member-btn" title="Edit Member" onclick="window.showMemberEditModal('${data.enrollment_no.replace(/'/g, "\\'")}')">&#9998;</button></td>`;
         tbody.insertBefore(tr, tbody.firstChild);
         const count = tbody.querySelectorAll('tr').length;
         const noteEl = document.querySelector('.table-note');
@@ -492,10 +496,10 @@
 
     window.injectAdminMembersColHeader = function () {
       const headerRow = document.querySelector('#membersTable thead tr');
-      if (headerRow && !headerRow.querySelector('.pwd-th')) {
+      if (headerRow && !headerRow.querySelector('.admin-actions-th')) {
         const th = document.createElement('th');
-        th.className = 'pwd-th';
-        th.textContent = 'Pwd';
+        th.className = 'admin-actions-th';
+        th.textContent = 'Actions';
         headerRow.appendChild(th);
       }
     };
@@ -504,11 +508,13 @@
       if (!document.getElementById('membersTable')) return;
       window.injectAdminMembersColHeader();
       document.querySelectorAll('#membersTable tbody tr').forEach(function (tr) {
-        if (tr.querySelector('.set-pwd-btn')) return;
+        if (tr.querySelector('.member-admin-actions-td')) return;
         var enr = tr.dataset.enr || (tr.cells[1] && tr.cells[1].textContent.trim());
         if (!enr) return;
         var td = document.createElement('td');
-        td.innerHTML = '<button class="set-pwd-btn" title="Set Password" onclick="window.showMemberSetPwd(\'' + enr.replace(/'/g, "\\'") + '\')">&#128273;</button>';
+        td.className = 'member-admin-actions-td';
+        td.innerHTML = '<button class="set-pwd-btn" title="Set Password" onclick="window.showMemberSetPwd(\'' + enr.replace(/'/g, "\\'") + '\')">&#128273;</button>' +
+          ' <button class="edit-member-btn" title="Edit Member" onclick="window.showMemberEditModal(\'' + enr.replace(/'/g, "\\'") + '\')">&#9998;</button>';
         tr.appendChild(td);
       });
     }
@@ -554,6 +560,131 @@
         }
       });
       document.getElementById('adminVerifyPass').focus();
+    };
+
+    window.showMemberEditModal = async function (enrollmentNo) {
+      if (!isLoggedIn()) return;
+      var overlay = buildModal(
+        '<button class="admin-modal-close" aria-label="Close">&times;</button>' +
+        '<div class="admin-modal-header"><span class="admin-modal-icon">&#9998;</span><h3>Edit Member</h3></div>' +
+        '<p style="text-align:center;padding:20px;color:rgba(255,255,255,.7);">Loading&hellip;</p>'
+      );
+
+      var m = null;
+      if (window._supabase) {
+        var result = await window._supabase
+          .from('members')
+          .select('enrollment_no, name, practice_area, enrolled_year, status, mobile, address, description, is_bar_council_member, is_office_bearer, office_bearer_position')
+          .eq('enrollment_no', enrollmentNo)
+          .single();
+        m = result.data;
+      }
+
+      var modal = overlay.querySelector('.admin-modal');
+      if (!m) {
+        modal.innerHTML = '<button class="admin-modal-close" aria-label="Close">&times;</button>' +
+          '<div class="admin-modal-header"><span class="admin-modal-icon">&#9888;</span><h3>Error</h3></div>' +
+          '<p style="color:rgba(255,255,255,.7);padding:12px 0;">Could not load member data.</p>';
+        modal.querySelector('.admin-modal-close').addEventListener('click', hideModal);
+        return;
+      }
+
+      var adminPass = sessionStorage.getItem('bba_admin_pass') || '';
+      var esc = function (s) { return (s || '').replace(/"/g, '&quot;'); };
+
+      modal.innerHTML =
+        '<button class="admin-modal-close" aria-label="Close">&times;</button>' +
+        '<div class="admin-modal-header"><span class="admin-modal-icon">&#9998;</span><h3>Edit Member</h3></div>' +
+        '<p style="font-size:12px;color:rgba(255,255,255,.6);margin-bottom:12px;">Enrollment: ' + enrollmentNo + '</p>' +
+        '<form id="editMemberForm" autocomplete="off">' +
+        '<div class="admin-form-group"><label for="em-name">Full Name *</label>' +
+        '<input type="text" id="em-name" value="' + esc(m.name) + '" required /></div>' +
+        '<div class="admin-form-group"><label for="em-area">Practice Area</label>' +
+        '<input type="text" id="em-area" value="' + esc(m.practice_area) + '" /></div>' +
+        '<div class="admin-form-group"><label for="em-year">Enrolled Year *</label>' +
+        '<input type="number" id="em-year" value="' + (m.enrolled_year || '') + '" min="1900" max="2099" required /></div>' +
+        '<div class="admin-form-group"><label for="em-status">Status</label>' +
+        '<select id="em-status"><option value="Active"' + (m.status === 'Active' ? ' selected' : '') + '>Active</option>' +
+        '<option value="Inactive"' + (m.status === 'Inactive' ? ' selected' : '') + '>Inactive</option></select></div>' +
+        '<div class="admin-form-group"><label for="em-mobile">Mobile</label>' +
+        '<input type="text" id="em-mobile" value="' + esc(m.mobile) + '" maxlength="15" /></div>' +
+        '<div class="admin-form-group"><label for="em-address">Address</label>' +
+        '<textarea id="em-address" rows="2">' + (m.address || '') + '</textarea></div>' +
+        '<div class="admin-form-group"><label for="em-desc">Description</label>' +
+        '<textarea id="em-desc" rows="2">' + (m.description || '') + '</textarea></div>' +
+        '<div class="admin-form-group"><label for="em-bc">Bar Council Member?</label>' +
+        '<select id="em-bc"><option value="false"' + (!m.is_bar_council_member ? ' selected' : '') + '>No</option>' +
+        '<option value="true"' + (m.is_bar_council_member ? ' selected' : '') + '>Yes</option></select></div>' +
+        '<div class="admin-form-group"><label for="em-ob">Office Bearer?</label>' +
+        '<select id="em-ob"><option value="false"' + (!m.is_office_bearer ? ' selected' : '') + '>No</option>' +
+        '<option value="true"' + (m.is_office_bearer ? ' selected' : '') + '>Yes</option></select></div>' +
+        '<div class="admin-form-group" id="em-obp-group" style="' + (!m.is_office_bearer ? 'display:none;' : '') + '">' +
+        '<label for="em-obp">Office Bearer Position</label>' +
+        '<input type="text" id="em-obp" value="' + esc(m.office_bearer_position) + '" placeholder="e.g. President, Secretary" /></div>' +
+        (adminPass ? '' :
+          '<div class="admin-form-group"><label for="em-adminpass">Admin Password</label>' +
+          '<input type="password" id="em-adminpass" placeholder="Required to save changes" /></div>') +
+        '<p class="admin-error" id="editMemberError"></p>' +
+        '<button type="submit" class="admin-submit-btn">Save Changes</button>' +
+        '</form>';
+
+      modal.querySelector('.admin-modal-close').addEventListener('click', hideModal);
+      modal.classList.add('admin-modal--wide');
+
+      document.getElementById('em-ob').addEventListener('change', function () {
+        document.getElementById('em-obp-group').style.display = this.value === 'true' ? '' : 'none';
+      });
+
+      document.getElementById('editMemberForm').addEventListener('submit', async function (e) {
+        e.preventDefault();
+        var errEl = document.getElementById('editMemberError');
+        var btn = e.target.querySelector('button[type="submit"]');
+        errEl.textContent = '';
+        var pass = adminPass || (document.getElementById('em-adminpass')?.value || '');
+        if (!pass) { errEl.textContent = 'Admin password is required.'; return; }
+        btn.disabled = true; btn.textContent = 'Saving…';
+        var isOB = document.getElementById('em-ob').value === 'true';
+        var updates = {
+          name:                   document.getElementById('em-name').value.trim(),
+          practice_area:          document.getElementById('em-area').value.trim() || null,
+          enrolled_year:          parseInt(document.getElementById('em-year').value) || null,
+          status:                 document.getElementById('em-status').value,
+          mobile:                 document.getElementById('em-mobile').value.trim() || null,
+          address:                document.getElementById('em-address').value.trim() || null,
+          description:            document.getElementById('em-desc').value.trim() || null,
+          is_bar_council_member:  document.getElementById('em-bc').value === 'true',
+          is_office_bearer:       isOB,
+          office_bearer_position: isOB ? (document.getElementById('em-obp').value.trim() || null) : null,
+        };
+        try {
+          var res = await fetch(MEMBER_ADMIN_OPS_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY },
+            body: JSON.stringify({ admin_password: pass, operation: 'update_member', enrollment_no: enrollmentNo, updates }),
+          });
+          var data = await res.json();
+          if (data.success) {
+            var tr = document.querySelector('#membersTable tbody tr[data-enr="' + enrollmentNo + '"]');
+            if (tr) {
+              tr.cells[2].querySelector('.mem-name').textContent = updates.name;
+              tr.querySelector('.mem-practice').textContent = updates.practice_area || '';
+              tr.cells[4].textContent = updates.enrolled_year || '';
+              tr.cells[5].innerHTML = '<span class="badge badge-' + (updates.status === 'Active' ? 'active' : 'inactive') + '">' + updates.status + '</span>';
+              tr.cells[6].innerHTML = updates.is_bar_council_member ? '&#10003;' : '';
+              tr.cells[7].textContent = updates.is_office_bearer ? (updates.office_bearer_position || 'Yes') : '';
+              tr.cells[8].innerHTML = updates.mobile ? '<a href="tel:' + updates.mobile + '" class="mem-phone-link">' + updates.mobile + '</a>' : '';
+              tr.cells[9].textContent = updates.address || '';
+            }
+            hideModal();
+          } else {
+            errEl.textContent = data.message || 'Update failed.';
+            btn.disabled = false; btn.textContent = 'Save Changes';
+          }
+        } catch (_) {
+          errEl.textContent = 'Network error. Please try again.';
+          btn.disabled = false; btn.textContent = 'Save Changes';
+        }
+      });
     };
 
     document.addEventListener('keydown', e => {
@@ -906,7 +1037,7 @@
       const session = getSession();
       const title = session ? 'My Profile — ' + (session.name || '') : 'Member Login';
       li.innerHTML = '<a href="#" class="member-nav-link" id="memberNavLink" title="' + title + '"><div class="member-nav-avatar">' + avatarHtml(session) + '</div></a>';
-      navUl.insertBefore(li, contactLi);
+      navUl.appendChild(li);
       document.getElementById('memberNavLink').addEventListener('click', function (e) {
         e.preventDefault();
         isMemberLoggedIn() ? showProfileModal() : showLoginModal();

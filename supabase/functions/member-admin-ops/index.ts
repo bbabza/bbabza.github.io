@@ -31,9 +31,9 @@ serve(async (req: Request) => {
   if (req.method === 'OPTIONS') return new Response(null, { headers: corsHeaders(req) });
   if (req.method !== 'POST') return json({ success: false, message: 'Method not allowed' }, 405, req);
 
-  let admin_password: string, operation: string, enrollment_no: string, new_password: string;
+  let admin_password: string, operation: string, enrollment_no: string, new_password: string, updates: Record<string, unknown>;
   try {
-    ({ admin_password, operation, enrollment_no, new_password } = await req.json());
+    ({ admin_password, operation, enrollment_no, new_password, updates } = await req.json());
   } catch {
     return json({ success: false, message: 'Invalid request body' }, 400, req);
   }
@@ -58,6 +58,23 @@ serve(async (req: Request) => {
       .update({ password_hash })
       .eq('enrollment_no', enrollment_no.trim());
 
+    if (error) return json({ success: false, message: 'Update failed: ' + error.message }, 500, req);
+    return json({ success: true }, 200, req);
+  }
+
+  if (operation === 'update_member') {
+    if (!enrollment_no?.trim()) {
+      return json({ success: false, message: 'Enrollment number required.' }, 400, req);
+    }
+    const allowed = ['name', 'practice_area', 'enrolled_year', 'status', 'mobile', 'address', 'description', 'is_bar_council_member', 'is_office_bearer', 'office_bearer_position'];
+    const safe: Record<string, unknown> = {};
+    for (const key of allowed) {
+      if (updates && key in updates) safe[key] = updates[key];
+    }
+    if (Object.keys(safe).length === 0) {
+      return json({ success: false, message: 'No valid fields to update.' }, 400, req);
+    }
+    const { error } = await supabase.from('members').update(safe).eq('enrollment_no', enrollment_no.trim());
     if (error) return json({ success: false, message: 'Update failed: ' + error.message }, 500, req);
     return json({ success: true }, 200, req);
   }

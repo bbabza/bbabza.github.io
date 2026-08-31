@@ -181,6 +181,20 @@
     </div>
   </section>
 
+  <section class="section section-light">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-badge">Legal</span>
+        <h2 class="section-title">Bar Council Members</h2>
+        <div class="divider"></div>
+        <p class="section-sub">Members enrolled with the Bar Council of Andhra Pradesh</p>
+      </div>
+      <div class="bearers-grid" id="barCouncilGrid">
+        <p style="text-align:center;color:var(--muted);padding:32px 0;grid-column:1/-1;">Loading&hellip;</p>
+      </div>
+    </div>
+  </section>
+
   <footer class="site-footer">
     <div class="container footer-inner">
       <div class="footer-brand">
@@ -228,6 +242,41 @@
   </footer>
 
   <button class="back-to-top" id="backToTop" aria-label="Back to top">&#8679;</button>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <script src="../js/supabase-client.js"></script>
   <script src="../js/script.js"></script>
+  <script>
+    (async function loadBarCouncilMembers() {
+      if (!window._supabase) return;
+      const grid = document.getElementById('barCouncilGrid');
+      if (!grid) return;
+
+      const { data, error } = await window._supabase
+        .from('members')
+        .select('enrollment_no, name, practice_area, mobile, photo_url')
+        .eq('is_bar_council_member', true)
+        .order('name');
+
+      const avatarSvg = '<svg viewBox="0 0 100 100" width="64" height="64"><circle cx="50" cy="38" r="22" fill="#c9a227" opacity="0.25"/><ellipse cx="50" cy="82" rx="32" ry="22" fill="#c9a227" opacity="0.12"/></svg>';
+
+      if (error || !data || data.length === 0) {
+        grid.innerHTML = '<p style="text-align:center;color:var(--muted);padding:32px 0;grid-column:1/-1;">No bar council members found.</p>';
+        return;
+      }
+
+      grid.innerHTML = data.map(function (m) {
+        var avatar = m.photo_url
+          ? '<img src="' + m.photo_url + '" alt="' + m.name + '" style="width:64px;height:64px;border-radius:50%;object-fit:cover;" />'
+          : avatarSvg;
+        return '<div class="bearer-card">' +
+          '<div class="bearer-avatar" aria-hidden="true">' + avatar + '</div>' +
+          '<div class="bearer-info">' +
+          (m.practice_area ? '<p class="bearer-role">' + m.practice_area + '</p>' : '') +
+          '<h3>' + m.name + '</h3>' +
+          (m.mobile ? '<p class="bearer-phone">&#9742; ' + m.mobile + '</p>' : '') +
+          '</div></div>';
+      }).join('');
+    })();
+  </script>
 </body>
 </html>
