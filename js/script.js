@@ -474,13 +474,9 @@
           <td><div class="mem-avatar">&#128100;</div></td>
           <td>${data.enrollment_no}</td>
           <td><div class="mem-name">${data.name}</div></td>
-          <td class="mem-practice">${data.practice_area || ''}</td>
-          <td>${data.enrolled_year || ''}</td>
-          <td><span class="badge badge-${data.status === 'Active' ? 'active' : 'inactive'}">${data.status}</span></td>
-          <td></td>
-          <td></td>
           <td>${data.mobile ? `<a href="tel:${data.mobile}" class="mem-phone-link">${data.mobile}</a>` : ''}</td>
           <td class="mem-address">${data.address || ''}</td>
+          <td><span class="badge badge-${data.status === 'Active' ? 'active' : 'inactive'}">${data.status}</span></td>
           <td class="member-admin-actions-td"><button class="set-pwd-btn" title="Set Password" onclick="window.showMemberSetPwd('${data.enrollment_no.replace(/'/g, "\\'")}')">&#128273;</button> <button class="edit-member-btn" title="Edit Member" onclick="window.showMemberEditModal('${data.enrollment_no.replace(/'/g, "\\'")}')">&#9998;</button></td>`;
         tbody.insertBefore(tr, tbody.firstChild);
         const count = tbody.querySelectorAll('tr').length;
@@ -667,13 +663,9 @@
             var tr = document.querySelector('#membersTable tbody tr[data-enr="' + enrollmentNo + '"]');
             if (tr) {
               tr.cells[2].querySelector('.mem-name').textContent = updates.name;
-              tr.querySelector('.mem-practice').textContent = updates.practice_area || '';
-              tr.cells[4].textContent = updates.enrolled_year || '';
+              tr.cells[3].innerHTML = updates.mobile ? '<a href="tel:' + updates.mobile + '" class="mem-phone-link">' + updates.mobile + '</a>' : '';
+              tr.cells[4].textContent = updates.address || '';
               tr.cells[5].innerHTML = '<span class="badge badge-' + (updates.status === 'Active' ? 'active' : 'inactive') + '">' + updates.status + '</span>';
-              tr.cells[6].innerHTML = updates.is_bar_council_member ? '&#10003;' : '';
-              tr.cells[7].textContent = updates.is_office_bearer ? (updates.office_bearer_position || 'Yes') : '';
-              tr.cells[8].innerHTML = updates.mobile ? '<a href="tel:' + updates.mobile + '" class="mem-phone-link">' + updates.mobile + '</a>' : '';
-              tr.cells[9].textContent = updates.address || '';
             }
             hideModal();
           } else {
@@ -836,23 +828,13 @@
 
   function filterMembers() {
     const query = (searchInput?.value || '').toLowerCase().trim();
-    const area = (filterSelect?.value || '').toLowerCase();
-    const tableRows = document.querySelectorAll('#membersTable tbody tr');
-
-    tableRows.forEach(row => {
+    document.querySelectorAll('#membersTable tbody tr').forEach(row => {
       const text = row.textContent.toLowerCase();
-      const practiceEl = row.querySelector('.mem-practice');
-      const practice = practiceEl ? practiceEl.textContent.toLowerCase() : '';
-
-      const matchesQuery = !query || text.includes(query);
-      const matchesArea = !area || practice === area;
-
-      row.classList.toggle('hidden', !(matchesQuery && matchesArea));
+      row.classList.toggle('hidden', !(!query || text.includes(query)));
     });
   }
 
   searchInput?.addEventListener('input', filterMembers);
-  filterSelect?.addEventListener('change', filterMembers);
 
   // ── Gallery filter ─────────────────────────────────────────
   const gFilterBtns = document.querySelectorAll('.gfilter-btn');

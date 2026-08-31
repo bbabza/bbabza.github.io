@@ -77,18 +77,8 @@
       <p class="section-sub" style="margin-bottom:20px;">A partial listing of enrolled advocates. Full directory
         available at the Association office.</p>
       <div class="members-controls">
-        <input type="text" id="memberSearch" placeholder="Search by name, enrollment no., or practice area..."
+        <input type="text" id="memberSearch" placeholder="Search by name or enrollment no.&hellip;"
           class="search-input" />
-        <select id="memberFilter" class="filter-select">
-          <option value="">All Practice Areas</option>
-          <option>Civil</option>
-          <option>Criminal</option>
-          <option>Constitutional</option>
-          <option>Family</option>
-          <option>Labour</option>
-          <option>Revenue</option>
-          <option>Commercial</option>
-        </select>
       </div>
       <div class="table-wrapper">
         <table class="members-table" id="membersTable">
@@ -97,64 +87,15 @@
               <th class="mem-photo-th"></th>
               <th>Enr. No.</th>
               <th>Name</th>
-              <th>Practice Area</th>
-              <th>Enrolled</th>
-              <th>Status</th>
-              <th>Bar Council</th>
-              <th>Office Bearer</th>
               <th>Mobile</th>
               <th>Address</th>
+              <th>Status</th>
             </tr>
           </thead>
           <tbody>
-            <tr data-enr="AP/018/2022">
-              <td>
-                <div class="mem-avatar">&#128100;</div>
-              </td>
-              <td>AP/018/2022</td>
-              <td>
-                <div class="mem-name">Smt. Uma Devi Venugopal</div>
-              </td>
-              <td class="mem-practice">Revenue</td>
-              <td>2022</td>
-              <td><span class="badge badge-active">Active</span></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-            </tr>
-            <tr data-enr="AP/019/2023">
-              <td>
-                <div class="mem-avatar">&#128100;</div>
-              </td>
-              <td>AP/019/2023</td>
-              <td>
-                <div class="mem-name">Sri Vijay Krishna Tadepalli</div>
-              </td>
-              <td class="mem-practice">Commercial</td>
-              <td>2023</td>
-              <td><span class="badge badge-active">Active</span></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-            </tr>
-            <tr data-enr="AP/020/2024">
-              <td>
-                <div class="mem-avatar">&#128100;</div>
-              </td>
-              <td>AP/020/2024</td>
-              <td>
-                <div class="mem-name">Smt. Yamini Priya Muddada</div>
-              </td>
-              <td class="mem-practice">Constitutional</td>
-              <td>2024</td>
-              <td><span class="badge badge-active">Active</span></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-            </tr>
+            <tr data-enr="AP/018/2022"><td><div class="mem-avatar">&#128100;</div></td><td>AP/018/2022</td><td><div class="mem-name">Smt. Uma Devi Venugopal</div></td><td></td><td></td><td><span class="badge badge-active">Active</span></td></tr>
+            <tr data-enr="AP/019/2023"><td><div class="mem-avatar">&#128100;</div></td><td>AP/019/2023</td><td><div class="mem-name">Sri Vijay Krishna Tadepalli</div></td><td></td><td></td><td><span class="badge badge-active">Active</span></td></tr>
+            <tr data-enr="AP/020/2024"><td><div class="mem-avatar">&#128100;</div></td><td>AP/020/2024</td><td><div class="mem-name">Smt. Yamini Priya Muddada</div></td><td></td><td></td><td><span class="badge badge-active">Active</span></td></tr>
           </tbody>
         </table>
       </div>
@@ -231,20 +172,16 @@
       const isAdmin = localStorage.getItem('bba_admin') === '1';
 
       tbody.innerHTML = data.map(m => `
-        <tr data-enr="${m.enrollment_no || ''}">
+        <tr data-enr="${m.enrollment_no || ''}" data-practice="${(m.practice_area || '').toLowerCase()}">
           <td><div class="mem-avatar">${m.photo_url ? `<img src="${m.photo_url}" alt="" loading="lazy" />` : '&#128100;'}</div></td>
           <td>${m.enrollment_no || ''}</td>
           <td>
             <div class="mem-name">${m.name || ''}</div>
             ${m.description ? `<div class="mem-desc">${m.description}</div>` : ''}
           </td>
-          <td class="mem-practice">${m.practice_area || ''}</td>
-          <td>${m.enrolled_year || ''}</td>
-          <td><span class="badge badge-${m.status === 'Active' ? 'active' : 'inactive'}">${m.status || 'Active'}</span></td>
-          <td style="text-align:center;">${m.is_bar_council_member ? '&#10003;' : ''}</td>
-          <td>${m.is_office_bearer ? (m.office_bearer_position || 'Yes') : ''}</td>
           <td>${m.mobile ? `<a href="tel:${m.mobile}" class="mem-phone-link">${m.mobile}</a>` : ''}</td>
           <td class="mem-address">${m.address || ''}</td>
+          <td><span class="badge badge-${m.status === 'Active' ? 'active' : 'inactive'}">${m.status || 'Active'}</span></td>
           ${isAdmin ? `<td class="member-admin-actions-td"><button class="set-pwd-btn" title="Set Password" onclick="window.showMemberSetPwd('${(m.enrollment_no || '').replace(/'/g, "\\'")}')">&#128273;</button> <button class="edit-member-btn" title="Edit Member" onclick="window.showMemberEditModal('${(m.enrollment_no || '').replace(/'/g, "\\'")}')">&#9998;</button></td>` : ''}
         </tr>`).join('');
 
