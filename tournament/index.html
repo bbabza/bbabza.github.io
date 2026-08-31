@@ -387,60 +387,38 @@
         <a href="#" onclick="backToStep2(event)" style="font-size:12px;color:var(--navy);font-weight:700;margin-top:10px;display:inline-block;">&#8592; Change details</a>
       </div>
 
-      <!-- UPI Payment panel -->
-      <div class="upi-pay-standalone">
-        <div class="upi-pay-hdr">
-          <span>&#128179; Pay via UPI</span>
-          <span class="upi-pay-deadline">&#9201; Last date: 20 September 2026</span>
+      <!-- Razorpay Payment Panel -->
+      <div class="rzp-pay-panel">
+        <div class="rzp-pay-body">
+
+          <!-- Order Summary -->
+          <div class="rzp-card">
+            <div class="rzp-card-title">Order Summary</div>
+            <div id="rzpOrderLines" class="rzp-order-lines"></div>
+            <div class="rzp-summary-total">
+              <span>Total</span>
+              <strong id="rzpTotalDisplay">&#8377;0</strong>
+            </div>
+          </div>
+
+          <!-- Registrant -->
+          <div class="rzp-card">
+            <div class="rzp-card-title">Registrant</div>
+            <div class="rzp-reg-row"><span>Name</span><strong id="rzpRegName"></strong></div>
+            <div class="rzp-reg-row"><span>Enrollment</span><strong id="rzpRegEnr"></strong></div>
+            <div class="rzp-reg-row"><span>Mobile</span><strong id="rzpRegMobile"></strong></div>
+          </div>
+
         </div>
-        <div class="upi-pay-grid">
 
-          <!-- QR code column -->
-          <div class="upi-qr-col">
-            <div id="upiQRCode" class="upi-qr-box"></div>
-            <p class="upi-qr-caption">Scan with GPay &bull; PhonePe &bull; Paytm &bull; any UPI app</p>
-            <div class="upi-id-row">
-              <span>UPI ID:</span>
-              <strong id="upiIdDisplay"></strong>
-              <button class="upi-copy-btn" id="upiCopyBtn" onclick="copyUPIId()">Copy</button>
-            </div>
-            <a class="upi-mobile-link" id="upiMobileLink" href="#">Open UPI App &#8599;</a>
-          </div>
+        <p id="rzpError" class="rzp-error" style="display:none;"></p>
 
-          <!-- UTR entry / failed -->
-          <div class="upi-utr-col">
+        <button class="rzp-pay-btn" id="rzpPayBtn" onclick="openRazorpay()">
+          &#128274; &nbsp;Pay <span id="rzpBtnAmount">&#8377;0</span> Securely
+        </button>
 
-            <!-- Pending state -->
-            <div id="utrPending">
-              <div class="upi-amount-chip">
-                Amount &nbsp; <strong id="upiPayAmount">&#8377;0</strong>
-              </div>
-              <p class="upi-instr">After completing payment in your UPI app, enter the UPI Transaction ID below. This is recorded for reconciliation.</p>
-              <div class="form-group" style="margin-bottom:12px;">
-                <label for="utrInput" style="font-size:13px;font-weight:600;color:var(--navy2);">UPI Transaction ID / UTR *</label>
-                <input type="text" id="utrInput" placeholder="e.g. 326712345678" maxlength="22" style="margin-top:6px;" />
-                <span class="utr-hint">Find this in your UPI app &rarr; Passbook / Transaction History</span>
-              </div>
-              <div style="display:flex;gap:10px;flex-wrap:wrap;">
-                <button class="btn btn-gold" style="flex:1;min-width:150px;" onclick="submitUTR()">&#10003; Confirm Payment</button>
-                <button class="utr-fail-btn" onclick="showPaymentFailed()">Payment Failed?</button>
-              </div>
-              <p id="utrError" style="color:#c0392b;font-size:13px;margin-top:8px;display:none;"></p>
-            </div>
-
-            <!-- Failed state -->
-            <div id="utrFailed" hidden>
-              <div class="utr-status utr-status--fail">&#10007; Payment Not Successful</div>
-              <p style="font-size:13.5px;color:var(--text);margin:12px 0 8px;">Your registration (Ref: <strong id="utrFailRef"></strong>) is saved. You may:</p>
-              <ul class="utr-fail-list">
-                <li>Retry payment using the QR code on this page</li>
-                <li>Pay in person at the Association office, Civil Courts Campus, Governorpet</li>
-                <li>Contact a coordinator using the numbers listed below</li>
-              </ul>
-              <button class="btn btn-gold" style="margin-top:16px;width:100%;" onclick="retryPayment()">&#8635; Retry Payment</button>
-            </div>
-
-          </div>
+        <div class="rzp-powered-row">
+          Secured by <strong>Razorpay</strong> &nbsp;&bull;&nbsp; SSL Encrypted &nbsp;&bull;&nbsp; PCI DSS Compliant
         </div>
       </div>
 
@@ -481,13 +459,13 @@
             <span id="confirmTotal"></span>
           </div>
           <div class="confirm-utr-row">
-            <span>UPI Transaction ID</span>
-            <strong id="confirmUTRVal">&mdash;</strong>
+            <span>Payment ID</span>
+            <strong id="confirmPaymentId">&mdash;</strong>
           </div>
         </div>
 
         <div class="confirm-note" style="background:#e8f5e9;border-color:#a5d6a7;color:#1b5e20;">
-          &#10003; <strong>Payment submitted.</strong> A coordinator will verify your payment within 24 hours and confirm your registration via call or WhatsApp. Please <strong>screenshot or print this page</strong> for your records.
+          &#10003; <strong>Payment confirmed.</strong> Your registration is complete. Please <strong>screenshot or print this page</strong> for your records.
         </div>
 
         <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
@@ -586,15 +564,14 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
   <script src="../js/supabase-client.js"></script>
   <script src="../js/script.js"></script>
-  <script src="../js/qrcode.min.js"></script>
   <script>
     (function () {
       'use strict';
 
-      // ── UPDATE before going live ─────────────────────────────
-      const UPI_ID   = 'bbabza@sbi';
-      const UPI_NAME = 'Bezwada Bar Assn';
-      // ────────────────────────────────────────────────────────
+      // Public Supabase anon key — safe to expose in client code
+      const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRpd2F6Ym50eHZ5dndmanpjd3J2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc5MTUxOTYsImV4cCI6MjEwMzQ5MTE5Nn0.XQ-7AadKhw_b74fUxrfGlKMkASqkzbPUz8jrS12af6E';
+      const CREATE_ORDER_URL  = 'https://tiwazbntxvyvwfjzcwrv.supabase.co/functions/v1/tournament-create-order';
+      const VERIFY_PAY_URL    = 'https://tiwazbntxvyvwfjzcwrv.supabase.co/functions/v1/tournament-verify-payment';
 
       function scrollToSection(id) {
         const el = document.getElementById(id);
@@ -817,6 +794,8 @@
         document.getElementById('confirmTotal').textContent = '₹' + total.toLocaleString('en-IN');
         saveRegistrationToDB(ref, name, enr, bar, mobile, total);
 
+        prepareRazorpayStep(ref, name, enr, mobile, total);
+
         // Populate payment step summary bar
         document.getElementById('payStepName').textContent = name + ' · ' + enr;
         const payEvWrap = document.getElementById('payStepEvents');
@@ -837,100 +816,158 @@
         document.getElementById('regSection').style.display = 'none';
         document.getElementById('paymentSection').style.display = 'block';
         scrollToSection('paymentSection');
-
-        generateQR(ref, total);
       });
 
-      function generateQR(ref, total) {
-        const upiUrl = `upi://pay?pa=${UPI_ID}&pn=${encodeURIComponent(UPI_NAME)}&am=${total}&cu=INR&tn=${encodeURIComponent(ref)}`;
-        document.getElementById('upiIdDisplay').textContent = UPI_ID;
-        document.getElementById('upiPayAmount').innerHTML = '&#8377;' + total.toLocaleString('en-IN');
-        document.getElementById('upiMobileLink').href = upiUrl;
+      // ── Razorpay state ───────────────────────────────────────
+      let _rzpRef = null, _rzpTotal = 0, _rzpName = null, _rzpEnr = null, _rzpMobile = null;
 
-        const qrBox = document.getElementById('upiQRCode');
-        qrBox.innerHTML = '';
-        new QRCode(qrBox, {
-          text: upiUrl,
-          width: 196,
-          height: 196,
-          colorDark: '#0f5c54',
-          colorLight: '#ffffff',
-          correctLevel: QRCode.CorrectLevel.M
+      function prepareRazorpayStep(ref, name, enr, mobile, total) {
+        _rzpRef    = ref;
+        _rzpTotal  = total;
+        _rzpName   = name;
+        _rzpEnr    = enr;
+        _rzpMobile = mobile;
+
+        // Order summary lines
+        const lines = document.getElementById('rzpOrderLines');
+        lines.innerHTML = '';
+        selected.forEach(id => {
+          const c = CATS[id];
+          const div = document.createElement('div');
+          div.className = 'rzp-order-line';
+          div.innerHTML = '<span>' + c.label + '</span><span>&#8377;' + c.fee.toLocaleString('en-IN') + '</span>';
+          lines.appendChild(div);
+        });
+
+        document.getElementById('rzpTotalDisplay').innerHTML = '&#8377;' + total.toLocaleString('en-IN');
+        document.getElementById('rzpBtnAmount').innerHTML    = '&#8377;' + total.toLocaleString('en-IN');
+        document.getElementById('rzpRegName').textContent    = name;
+        document.getElementById('rzpRegEnr').textContent     = enr;
+        document.getElementById('rzpRegMobile').textContent  = mobile;
+
+        const btn   = document.getElementById('rzpPayBtn');
+        const errEl = document.getElementById('rzpError');
+        btn.disabled = false;
+        btn.innerHTML = '&#128274; &nbsp;Pay &#8377;' + total.toLocaleString('en-IN') + ' Securely';
+        errEl.style.display = 'none';
+      }
+
+      // Lazy-load Razorpay checkout.js on first payment attempt
+      function loadRazorpaySdk() {
+        if (window.Razorpay) return Promise.resolve();
+        return new Promise(function (resolve, reject) {
+          const s = document.createElement('script');
+          s.src = 'https://checkout.razorpay.com/v1/checkout.js';
+          s.onload = resolve;
+          s.onerror = reject;
+          document.head.appendChild(s);
         });
       }
 
-      window.copyUPIId = function () {
-        const id = UPI_ID;
-        if (navigator.clipboard) {
-          navigator.clipboard.writeText(id).then(() => flashCopyBtn());
-        } else {
-          const ta = document.createElement('textarea');
-          ta.value = id; document.body.appendChild(ta); ta.select();
-          document.execCommand('copy'); document.body.removeChild(ta);
-          flashCopyBtn();
+      window.openRazorpay = async function () {
+        const btn   = document.getElementById('rzpPayBtn');
+        const errEl = document.getElementById('rzpError');
+        errEl.style.display = 'none';
+        btn.disabled = true;
+        btn.textContent = 'Creating order…';
+
+        try {
+          await loadRazorpaySdk();
+
+          const res = await fetch(CREATE_ORDER_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY },
+            body: JSON.stringify({ ref: _rzpRef, amount: _rzpTotal, name: _rzpName, mobile: _rzpMobile }),
+          });
+          const data = await res.json();
+          if (!data.success) throw new Error(data.message || 'Order creation failed.');
+
+          const options = {
+            key:         data.key_id,
+            amount:      _rzpTotal * 100,
+            currency:    'INR',
+            name:        'Bezwada Bar Association',
+            description: 'Tournament Registration — ' + _rzpRef,
+            image:       '../images/logo.jpeg',
+            order_id:    data.order_id,
+            handler: async function (response) {
+              btn.disabled = true;
+              btn.textContent = 'Verifying…';
+              await handlePaymentSuccess(response);
+            },
+            prefill:  { name: _rzpName, contact: _rzpMobile },
+            theme:    { color: '#008B8B' },
+            modal: {
+              ondismiss: function () {
+                btn.disabled = false;
+                btn.innerHTML = '&#128274; &nbsp;Pay &#8377;' + _rzpTotal.toLocaleString('en-IN') + ' Securely';
+              },
+            },
+          };
+
+          const rzp = new window.Razorpay(options);
+          rzp.on('payment.failed', function (resp) {
+            errEl.textContent = 'Payment failed: ' + (resp.error.description || 'Please try again.');
+            errEl.style.display = 'block';
+            btn.disabled = false;
+            btn.innerHTML = '&#128274; &nbsp;Pay &#8377;' + _rzpTotal.toLocaleString('en-IN') + ' Securely';
+          });
+          rzp.open();
+
+        } catch (err) {
+          errEl.textContent = err.message || 'Something went wrong. Please try again.';
+          errEl.style.display = 'block';
+          btn.disabled = false;
+          btn.innerHTML = '&#128274; &nbsp;Pay &#8377;' + _rzpTotal.toLocaleString('en-IN') + ' Securely';
         }
       };
-      function flashCopyBtn() {
-        const btn = document.getElementById('upiCopyBtn');
-        btn.textContent = 'Copied!';
-        setTimeout(() => { btn.textContent = 'Copy'; }, 2000);
+
+      async function handlePaymentSuccess(response) {
+        const btn   = document.getElementById('rzpPayBtn');
+        const errEl = document.getElementById('rzpError');
+        try {
+          const res = await fetch(VERIFY_PAY_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY },
+            body: JSON.stringify({
+              ref:                  _rzpRef,
+              razorpay_payment_id:  response.razorpay_payment_id,
+              razorpay_order_id:    response.razorpay_order_id,
+              razorpay_signature:   response.razorpay_signature,
+            }),
+          });
+          const data = await res.json();
+          if (!data.success) throw new Error(data.message || 'Verification failed.');
+
+          // Populate confirmation step 4
+          document.getElementById('confirmPaymentId').textContent = response.razorpay_payment_id;
+
+          // Advance step bar
+          document.getElementById('step3').classList.remove('active');
+          document.getElementById('step3').classList.add('done');
+          document.getElementById('step3').querySelector('.tourn-step-num').textContent = '✓';
+          document.getElementById('conn3').classList.add('done');
+          document.getElementById('step4').classList.add('active');
+
+          document.getElementById('paymentSection').style.display = 'none';
+          document.getElementById('confirmSection').style.display = 'block';
+          scrollToSection('confirmSection');
+
+        } catch (err) {
+          errEl.textContent = 'Payment received but verification failed. Please contact a coordinator and quote Payment ID: ' + response.razorpay_payment_id;
+          errEl.style.display = 'block';
+          btn.disabled = false;
+          btn.innerHTML = '&#128274; &nbsp;Pay &#8377;' + _rzpTotal.toLocaleString('en-IN') + ' Securely';
+        }
       }
-
-      window.submitUTR = function () {
-        const utr = document.getElementById('utrInput').value.trim().toUpperCase();
-        const err = document.getElementById('utrError');
-        err.style.display = 'none';
-        if (utr.length < 8) {
-          err.textContent = 'Please enter a valid UPI Transaction ID (minimum 8 characters).';
-          err.style.display = 'block'; return;
-        }
-        if (!/^[A-Z0-9]+$/.test(utr)) {
-          err.textContent = 'Transaction ID should contain only letters and numbers.';
-          err.style.display = 'block'; return;
-        }
-
-        // Populate UTR in Step 4 confirmation
-        document.getElementById('confirmUTRVal').textContent = utr;
-        const regRef = document.getElementById('confirmRef').textContent;
-        updateUTRInDB(regRef, utr);
-
-        // Advance dynamic step bar
-        document.getElementById('step3').classList.remove('active');
-        document.getElementById('step3').classList.add('done');
-        document.getElementById('step3').querySelector('.tourn-step-num').textContent = '✓';
-        document.getElementById('conn3').classList.add('done');
-        document.getElementById('step4').classList.add('active');
-
-        document.getElementById('paymentSection').style.display = 'none';
-        document.getElementById('confirmSection').style.display = 'block';
-        scrollToSection('confirmSection');
-      };
-
-      window.showPaymentFailed = function () {
-        document.getElementById('utrFailRef').textContent = document.getElementById('confirmRef').textContent;
-        document.getElementById('utrPending').hidden = true;
-        document.getElementById('utrFailed').hidden  = false;
-      };
-
-      window.retryPayment = function () {
-        document.getElementById('utrFailed').hidden  = true;
-        document.getElementById('utrPending').hidden = false;
-        document.getElementById('utrInput').value   = '';
-        document.getElementById('utrError').style.display = 'none';
-      };
 
       window.backToStep2 = function (e) {
         e && e.preventDefault();
-        // Reset dynamic bar: undo step2→done, conn2→done, step3→active
         document.getElementById('step2').classList.remove('done');
         document.getElementById('step2').querySelector('.tourn-step-num').textContent = '2';
         document.getElementById('conn2').classList.remove('done');
         document.getElementById('step3').classList.remove('active');
-        // Reset UTR panel to pending
-        document.getElementById('utrFailed').hidden  = true;
-        document.getElementById('utrPending').hidden = false;
-        document.getElementById('utrInput').value   = '';
-        document.getElementById('utrError').style.display = 'none';
+        document.getElementById('rzpError').style.display = 'none';
         document.getElementById('paymentSection').style.display = 'none';
         document.getElementById('regSection').style.display = 'block';
         scrollToSection('regSection');

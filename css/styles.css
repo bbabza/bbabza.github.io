@@ -2134,6 +2134,97 @@ a.logo-block:hover { opacity: .92; }
   .editor-btn           { min-width: 28px; height: 26px; font-size: 12px; padding: 0 7px; }
 }
 
+/* ─── RAZORPAY PAYMENT PANEL ─────────────────────────────── */
+.rzp-pay-panel {
+  max-width: 580px;
+  margin: 0 auto;
+}
+.rzp-pay-body {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+@media (max-width: 540px) {
+  .rzp-pay-body { grid-template-columns: 1fr; }
+}
+.rzp-card {
+  background: #fff;
+  border: 1.5px solid #cde8e5;
+  border-radius: 12px;
+  padding: 18px 20px;
+}
+.rzp-card-title {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .8px;
+  color: var(--navy2);
+  margin-bottom: 12px;
+}
+.rzp-order-lines { margin-bottom: 12px; }
+.rzp-order-line {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13.5px;
+  color: var(--text);
+  padding: 4px 0;
+  gap: 8px;
+}
+.rzp-summary-total {
+  display: flex;
+  justify-content: space-between;
+  border-top: 1.5px solid #cde8e5;
+  padding-top: 10px;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--navy2);
+}
+.rzp-reg-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  padding: 5px 0;
+  gap: 8px;
+  border-bottom: 1px solid #eef6f5;
+}
+.rzp-reg-row:last-child { border-bottom: none; }
+.rzp-reg-row span { color: var(--muted); white-space: nowrap; }
+.rzp-reg-row strong { text-align: right; word-break: break-word; color: var(--text); }
+.rzp-pay-btn {
+  display: block;
+  width: 100%;
+  padding: 15px 24px;
+  font-size: 16px;
+  font-weight: 700;
+  background: var(--gold);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  letter-spacing: .3px;
+  transition: background .2s, transform .1s;
+  margin-bottom: 14px;
+}
+.rzp-pay-btn:hover:not(:disabled) { background: var(--gold2); }
+.rzp-pay-btn:active:not(:disabled) { transform: scale(.98); }
+.rzp-pay-btn:disabled { opacity: .6; cursor: not-allowed; }
+.rzp-error {
+  color: #c0392b;
+  font-size: 13.5px;
+  background: #fdf0f0;
+  border: 1px solid #f5c6c6;
+  border-radius: 8px;
+  padding: 10px 14px;
+  margin-bottom: 14px;
+}
+.rzp-powered-row {
+  text-align: center;
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 4px;
+}
+
 /* ─── ADMIN MODAL & AUTH ──────────────────────────────────── */
 .admin-modal-overlay {
   position: fixed;

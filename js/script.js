@@ -156,10 +156,10 @@
 
     function renderReport(rows, container) {
       var total = rows.length;
-      var submitted = rows.filter(function (r) { return r.payment_status === 'utr_submitted'; }).length;
+      var submitted = rows.filter(function (r) { return r.payment_status === 'paid'; }).length;
       var pending = rows.filter(function (r) { return r.payment_status === 'pending'; }).length;
       var totalAmt = rows
-        .filter(function (r) { return r.payment_status === 'utr_submitted'; })
+        .filter(function (r) { return r.payment_status === 'paid'; })
         .reduce(function (s, r) { return s + (r.total_amount || 0); }, 0);
 
       var catCount = {};
@@ -175,8 +175,8 @@
 
       var tableRows = rows.map(function (r) {
         var events = (r.events || []).map(function (e) { return e.label; }).join(', ');
-        var badgeCls = r.payment_status === 'utr_submitted' ? 'r-badge--submitted' : 'r-badge--pending';
-        var badgeTxt = r.payment_status === 'utr_submitted' ? 'UTR Submitted' : 'Pending';
+        var badgeCls = r.payment_status === 'paid' ? 'r-badge--submitted' : 'r-badge--pending';
+        var badgeTxt = r.payment_status === 'paid' ? 'Paid' : 'Pending';
 
         // Build partner cell — one line per doubles event
         var partnerLines = Object.entries(r.partners || {}).map(function (entry) {
@@ -202,7 +202,7 @@
           '<td style="font-size:12px;">' + events + '</td>' +
           '<td style="font-size:12px;">' + partnerCell + '</td>' +
           '<td style="text-align:right;font-weight:600;">&#8377;' + (r.total_amount || 0).toLocaleString('en-IN') + '</td>' +
-          '<td style="font-size:12px;color:var(--muted);">' + (r.utr_number || '&mdash;') + '</td>' +
+          '<td style="font-size:12px;color:var(--muted);">' + (r.razorpay_payment_id || '&mdash;') + '</td>' +
           '<td><span class="r-badge ' + badgeCls + '">' + badgeTxt + '</span></td>' +
           '</tr>';
       }).join('');
@@ -210,7 +210,7 @@
       container.innerHTML =
         '<div class="report-stats">' +
         '<div class="report-stat"><div class="report-stat-num">' + total + '</div><div class="report-stat-label">Total Registrations</div></div>' +
-        '<div class="report-stat"><div class="report-stat-num">' + submitted + '</div><div class="report-stat-label">UTR Submitted</div></div>' +
+        '<div class="report-stat"><div class="report-stat-num">' + submitted + '</div><div class="report-stat-label">Paid</div></div>' +
         '<div class="report-stat"><div class="report-stat-num">' + pending + '</div><div class="report-stat-label">Pending Payment</div></div>' +
         '<div class="report-stat"><div class="report-stat-num">&#8377;' + totalAmt.toLocaleString('en-IN') + '</div><div class="report-stat-label">Amount Collected</div></div>' +
         '</div>' +
@@ -219,7 +219,7 @@
         '<input class="report-search" id="reportSearch" type="text" placeholder="Search name, ref, enrollment, partner&hellip;" />' +
         '<select class="report-filter" id="reportFilter">' +
         '<option value="">All Statuses</option>' +
-        '<option value="utr_submitted">UTR Submitted</option>' +
+        '<option value="paid">Paid</option>' +
         '<option value="pending">Pending</option>' +
         '</select>' +
         '<button class="admin-submit-btn" id="exportCsvBtn" style="padding:8px 16px;font-size:13px;white-space:nowrap;">&#11015; Export CSV</button>' +
@@ -228,7 +228,7 @@
         '<table class="report-table">' +
         '<thead><tr>' +
         '<th>Ref No</th><th>Name</th><th>Enrollment No</th><th>Bar Association</th>' +
-        '<th>Mobile</th><th>Events</th><th>Partner(s)</th><th>Amount</th><th>UTR No</th><th>Status</th>' +
+        '<th>Mobile</th><th>Events</th><th>Partner(s)</th><th>Amount</th><th>Payment ID</th><th>Status</th>' +
         '</tr></thead>' +
         '<tbody id="reportTbody">' + (tableRows || '<tr><td colspan="10" style="text-align:center;color:var(--muted);padding:24px;">No registrations yet.</td></tr>') + '</tbody>' +
         '</table>' +
@@ -250,7 +250,7 @@
     }
 
     function exportCSV(rows) {
-      var headers = ['Ref No', 'Name', 'Enrollment No', 'Bar Association', 'Mobile', 'Email', 'Events', 'Partner Name', 'Partner Enrollment', 'Partner Bar Association', 'Total Amount', 'UTR Number', 'Payment Status'];
+      var headers = ['Ref No', 'Name', 'Enrollment No', 'Bar Association', 'Mobile', 'Email', 'Events', 'Partner Name', 'Partner Enrollment', 'Partner Bar Association', 'Total Amount', 'Payment ID', 'Payment Status'];
       var lines = rows.map(function (r) {
         var events = (r.events || []).map(function (e) { return e.label; }).join(' | ');
         var partnerEntries = Object.entries(r.partners || {});
@@ -258,7 +258,7 @@
         var pEnr = partnerEntries.map(function (e) { return e[1].enrollment_no || ''; }).filter(Boolean).join(' | ');
         var pBar = partnerEntries.map(function (e) { return e[1].bar_association || ''; }).filter(Boolean).join(' | ');
         return [r.ref, r.name, r.enrollment_no, r.bar_association, r.mobile, r.email || '',
-          events, pName, pEnr, pBar, r.total_amount, r.utr_number || '', r.payment_status]
+          events, pName, pEnr, pBar, r.total_amount, r.razorpay_payment_id || '', r.payment_status]
           .map(function (v) { return '"' + String(v || '').replace(/"/g, '""') + '"'; }).join(',');
       });
       var csv = [headers.join(',')].concat(lines).join('\n');
