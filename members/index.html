@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
-  <script>try{if(location.pathname.endsWith("index.html"))history.replaceState(null,"",location.pathname.slice(0,-10)||"./")}catch(e){}</script>
+  <script>try { if (location.pathname.endsWith("index.html")) history.replaceState(null, "", location.pathname.slice(0, -10) || "./") } catch (e) { }</script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="Members Directory — The Bezwada Bar Association, Vijayawada." />
   <title>Members Directory | The Bezwada Bar Association</title>
@@ -10,6 +11,7 @@
   <link rel="stylesheet" href="../css/styles.css" />
   <link rel="stylesheet" href="../css/fonts.css" />
 </head>
+
 <body data-root="../">
 
   <div class="topbar">
@@ -32,7 +34,8 @@
           <p class="tagline">Let Justice Prevail &mdash; Estd. 1906</p>
         </div>
       </a>
-      <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation"><span></span><span></span><span></span></button>
+      <button class="nav-toggle" id="navToggle"
+        aria-label="Toggle navigation"><span></span><span></span><span></span></button>
       <nav class="main-nav" id="mainNav">
         <ul>
           <li><a href="../index.html">Home</a></li>
@@ -51,7 +54,8 @@
   <div class="news-ticker" id="newsTicker">
     <div class="ticker-label"><span class="ticker-dot"></span>LATEST NEWS</div>
     <div class="ticker-viewport">
-      <div class="ticker-track" id="tickerTrack"><span class="ticker-placeholder">Loading latest news&hellip;</span></div>
+      <div class="ticker-track" id="tickerTrack"><span class="ticker-placeholder">Loading latest news&hellip;</span>
+      </div>
     </div>
     <button class="ticker-pause" id="tickerPause" title="Pause / Resume">&#10074;&#10074;</button>
   </div>
@@ -70,9 +74,11 @@
 
   <section class="section section-light">
     <div class="container">
-      <p class="section-sub" style="margin-bottom:20px;">A partial listing of enrolled advocates. Full directory available at the Association office.</p>
+      <p class="section-sub" style="margin-bottom:20px;">A partial listing of enrolled advocates. Full directory
+        available at the Association office.</p>
       <div class="members-controls">
-        <input type="text" id="memberSearch" placeholder="Search by name, enrollment no., or practice area..." class="search-input" />
+        <input type="text" id="memberSearch" placeholder="Search by name, enrollment no., or practice area..."
+          class="search-input" />
         <select id="memberFilter" class="filter-select">
           <option value="">All Practice Areas</option>
           <option>Civil</option>
@@ -101,30 +107,59 @@
             </tr>
           </thead>
           <tbody>
-            <tr data-enr="AP/001/1985"><td><div class="mem-avatar">&#128100;</div></td><td>AP/001/1985</td><td><div class="mem-name">Sri Alapati Subrahmanyam</div></td><td class="mem-practice">Civil</td><td>1985</td><td><span class="badge badge-active">Active</span></td><td></td><td></td><td></td><td></td></tr>
-            <tr data-enr="AP/002/1990"><td><div class="mem-avatar">&#128100;</div></td><td>AP/002/1990</td><td><div class="mem-name">Smt. Bhavani Devi Challa</div></td><td class="mem-practice">Family</td><td>1990</td><td><span class="badge badge-active">Active</span></td><td></td><td></td><td></td><td></td></tr>
-            <tr data-enr="AP/003/1993"><td><div class="mem-avatar">&#128100;</div></td><td>AP/003/1993</td><td><div class="mem-name">Sri Dasari Venkata Rao</div></td><td class="mem-practice">Criminal</td><td>1993</td><td><span class="badge badge-active">Active</span></td><td></td><td></td><td></td><td></td></tr>
-            <tr data-enr="AP/004/1996"><td><div class="mem-avatar">&#128100;</div></td><td>AP/004/1996</td><td><div class="mem-name">Sri Elanaga Srinivasa Rao</div></td><td class="mem-practice">Revenue</td><td>1996</td><td><span class="badge badge-active">Active</span></td><td></td><td></td><td></td><td></td></tr>
-            <tr data-enr="AP/005/1998"><td><div class="mem-avatar">&#128100;</div></td><td>AP/005/1998</td><td><div class="mem-name">Smt. Ganta Padmaja</div></td><td class="mem-practice">Constitutional</td><td>1998</td><td><span class="badge badge-active">Active</span></td><td></td><td></td><td></td><td></td></tr>
-            <tr data-enr="AP/006/2000"><td><div class="mem-avatar">&#128100;</div></td><td>AP/006/2000</td><td><div class="mem-name">Sri Harish Chandra Mouli</div></td><td class="mem-practice">Commercial</td><td>2000</td><td><span class="badge badge-active">Active</span></td><td></td><td></td><td></td><td></td></tr>
-            <tr data-enr="AP/007/2003"><td><div class="mem-avatar">&#128100;</div></td><td>AP/007/2003</td><td><div class="mem-name">Sri Indukuri Prasad</div></td><td class="mem-practice">Labour</td><td>2003</td><td><span class="badge badge-active">Active</span></td><td></td><td></td><td></td><td></td></tr>
-            <tr data-enr="AP/008/2005"><td><div class="mem-avatar">&#128100;</div></td><td>AP/008/2005</td><td><div class="mem-name">Smt. Jyothi Lakshmi Katari</div></td><td class="mem-practice">Family</td><td>2005</td><td><span class="badge badge-active">Active</span></td><td></td><td></td><td></td><td></td></tr>
-            <tr data-enr="AP/009/2007"><td><div class="mem-avatar">&#128100;</div></td><td>AP/009/2007</td><td><div class="mem-name">Sri Konduri Bala Krishna</div></td><td class="mem-practice">Civil</td><td>2007</td><td><span class="badge badge-active">Active</span></td><td></td><td></td><td></td><td></td></tr>
-            <tr data-enr="AP/010/2009"><td><div class="mem-avatar">&#128100;</div></td><td>AP/010/2009</td><td><div class="mem-name">Sri Lakshmi Narayan Pattnaik</div></td><td class="mem-practice">Criminal</td><td>2009</td><td><span class="badge badge-active">Active</span></td><td></td><td></td><td></td><td></td></tr>
-            <tr data-enr="AP/011/2011"><td><div class="mem-avatar">&#128100;</div></td><td>AP/011/2011</td><td><div class="mem-name">Smt. Mangala Devi Nalluri</div></td><td class="mem-practice">Revenue</td><td>2011</td><td><span class="badge badge-active">Active</span></td><td></td><td></td><td></td><td></td></tr>
-            <tr data-enr="AP/012/2013"><td><div class="mem-avatar">&#128100;</div></td><td>AP/012/2013</td><td><div class="mem-name">Sri Nanduri Kiran Kumar</div></td><td class="mem-practice">Commercial</td><td>2013</td><td><span class="badge badge-active">Active</span></td><td></td><td></td><td></td><td></td></tr>
-            <tr data-enr="AP/013/2015"><td><div class="mem-avatar">&#128100;</div></td><td>AP/013/2015</td><td><div class="mem-name">Sri Omkar Reddy Potluri</div></td><td class="mem-practice">Constitutional</td><td>2015</td><td><span class="badge badge-active">Active</span></td><td></td><td></td><td></td><td></td></tr>
-            <tr data-enr="AP/014/2017"><td><div class="mem-avatar">&#128100;</div></td><td>AP/014/2017</td><td><div class="mem-name">Smt. Pavani Yellampalli</div></td><td class="mem-practice">Labour</td><td>2017</td><td><span class="badge badge-active">Active</span></td><td></td><td></td><td></td><td></td></tr>
-            <tr data-enr="AP/015/2019"><td><div class="mem-avatar">&#128100;</div></td><td>AP/015/2019</td><td><div class="mem-name">Sri Ravi Teja Samudrala</div></td><td class="mem-practice">Civil</td><td>2019</td><td><span class="badge badge-active">Active</span></td><td></td><td></td><td></td><td></td></tr>
-            <tr data-enr="AP/016/2020"><td><div class="mem-avatar">&#128100;</div></td><td>AP/016/2020</td><td><div class="mem-name">Smt. Sailaja Kommineni</div></td><td class="mem-practice">Family</td><td>2020</td><td><span class="badge badge-active">Active</span></td><td></td><td></td><td></td><td></td></tr>
-            <tr data-enr="AP/017/2021"><td><div class="mem-avatar">&#128100;</div></td><td>AP/017/2021</td><td><div class="mem-name">Sri Tirumala Rao Maddala</div></td><td class="mem-practice">Criminal</td><td>2021</td><td><span class="badge badge-active">Active</span></td><td></td><td></td><td></td><td></td></tr>
-            <tr data-enr="AP/018/2022"><td><div class="mem-avatar">&#128100;</div></td><td>AP/018/2022</td><td><div class="mem-name">Smt. Uma Devi Venugopal</div></td><td class="mem-practice">Revenue</td><td>2022</td><td><span class="badge badge-active">Active</span></td><td></td><td></td><td></td><td></td></tr>
-            <tr data-enr="AP/019/2023"><td><div class="mem-avatar">&#128100;</div></td><td>AP/019/2023</td><td><div class="mem-name">Sri Vijay Krishna Tadepalli</div></td><td class="mem-practice">Commercial</td><td>2023</td><td><span class="badge badge-active">Active</span></td><td></td><td></td><td></td><td></td></tr>
-            <tr data-enr="AP/020/2024"><td><div class="mem-avatar">&#128100;</div></td><td>AP/020/2024</td><td><div class="mem-name">Smt. Yamini Priya Muddada</div></td><td class="mem-practice">Constitutional</td><td>2024</td><td><span class="badge badge-active">Active</span></td><td></td><td></td><td></td><td></td></tr>
+            <tr data-enr="AP/018/2022">
+              <td>
+                <div class="mem-avatar">&#128100;</div>
+              </td>
+              <td>AP/018/2022</td>
+              <td>
+                <div class="mem-name">Smt. Uma Devi Venugopal</div>
+              </td>
+              <td class="mem-practice">Revenue</td>
+              <td>2022</td>
+              <td><span class="badge badge-active">Active</span></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr data-enr="AP/019/2023">
+              <td>
+                <div class="mem-avatar">&#128100;</div>
+              </td>
+              <td>AP/019/2023</td>
+              <td>
+                <div class="mem-name">Sri Vijay Krishna Tadepalli</div>
+              </td>
+              <td class="mem-practice">Commercial</td>
+              <td>2023</td>
+              <td><span class="badge badge-active">Active</span></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr data-enr="AP/020/2024">
+              <td>
+                <div class="mem-avatar">&#128100;</div>
+              </td>
+              <td>AP/020/2024</td>
+              <td>
+                <div class="mem-name">Smt. Yamini Priya Muddada</div>
+              </td>
+              <td class="mem-practice">Constitutional</td>
+              <td>2024</td>
+              <td><span class="badge badge-active">Active</span></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
           </tbody>
         </table>
       </div>
-      <p class="table-note">Showing 20 of 1,800+ members &mdash; Contact the Association office for the complete directory or enrollment inquiries.</p>
+      <p class="table-note">Showing 20 of 1,800+ members &mdash; Contact the Association office for the complete
+        directory or enrollment inquiries.</p>
     </div>
   </section>
 
@@ -133,7 +168,7 @@
       <div class="footer-brand">
         <h3>The Bezwada Bar Association</h3>
         <p>Upholding justice and serving the legal fraternity of Vijayawada since 1906.</p>
-        <p>Civil Courts Campus, Gopala Reddy Road,<br/>Governorpet, Vijayawada &ndash; 520 002</p>
+        <p>Civil Courts Campus, Gopala Reddy Road,<br />Governorpet, Vijayawada &ndash; 520 002</p>
         <p class="footer-tel">&#9742; 0866 &ndash; 2574321 &bull; &#9993; bbabza@gmail.com</p>
       </div>
       <div class="footer-links">
@@ -153,7 +188,8 @@
           <li><a href="https://www.barcouncilofindia.org" target="_blank" rel="noopener">Bar Council of India</a></li>
           <li><a href="https://hc.ap.nic.in" target="_blank" rel="noopener">AP High Court</a></li>
           <li><a href="https://nalsa.gov.in" target="_blank" rel="noopener">NALSA &mdash; Legal Aid</a></li>
-          <li><a href="https://districts.ecourts.gov.in/krishna" target="_blank" rel="noopener">District Courts &mdash; Krishna</a></li>
+          <li><a href="https://districts.ecourts.gov.in/krishna" target="_blank" rel="noopener">District Courts &mdash;
+              Krishna</a></li>
         </ul>
       </div>
       <div class="footer-links">
@@ -181,7 +217,7 @@
   <script>
     (async function loadMembers() {
       if (!window._supabase) return;
-      const tbody  = document.querySelector('#membersTable tbody');
+      const tbody = document.querySelector('#membersTable tbody');
       const noteEl = document.querySelector('.table-note');
       if (!tbody) return;
 
@@ -221,4 +257,5 @@
     })();
   </script>
 </body>
+
 </html>
