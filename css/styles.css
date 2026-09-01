@@ -7,8 +7,8 @@
 
 :root {
   --navy:   #008B8B;
-  --navy2:  #006E6E;
-  --navy3:  #005252;
+  --navy2:  #007575;
+  --navy3:  #006060;
   --gold:   #c9a227;
   --gold2:  #a07d1a;
   --cream:  #f9f5ec;
@@ -20,8 +20,8 @@
   --ff-serif: 'Libre Baskerville', Georgia, serif;
   --ff-sans:  'Inter', 'Segoe UI', sans-serif;
   --radius: 6px;
-  --shadow: 0 4px 24px rgba(0,82,82,.12);
-  --shadow-lg: 0 8px 40px rgba(0,82,82,.18);
+  --shadow: 0 4px 24px rgba(0,96,96,.12);
+  --shadow-lg: 0 8px 40px rgba(0,96,96,.18);
 }
 
 html { scroll-behavior: smooth; }
@@ -91,7 +91,7 @@ img { max-width: 100%; display: block; }
   position: sticky;
   top: 0;
   z-index: 1000;
-  box-shadow: 0 2px 16px rgba(0,82,82,.35);
+  box-shadow: 0 2px 16px rgba(0,96,96,.35);
 }
 .header-inner {
   display: flex;
@@ -170,7 +170,7 @@ img { max-width: 100%; display: block; }
 /* ─── HERO ────────────────────────────────────────────────── */
 .hero {
   position: relative;
-  background: linear-gradient(135deg, var(--navy2) 0%, #0d5a52 50%, var(--navy) 100%);
+  background: linear-gradient(135deg, var(--navy2) 0%, #006868 50%, var(--navy) 100%);
   min-height: 520px;
   display: flex;
   flex-direction: column;

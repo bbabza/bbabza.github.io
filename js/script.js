@@ -570,7 +570,7 @@
       if (window._supabase) {
         var result = await window._supabase
           .from('members')
-          .select('enrollment_no, name, practice_area, enrolled_year, status, mobile, address, description, is_bar_council_member, is_office_bearer, office_bearer_position')
+          .select('enrollment_no, name, practice_area, enrolled_year, status, mobile, address, description, is_bar_council_member, is_office_bearer, office_bearer_position, cc_no')
           .eq('enrollment_no', enrollmentNo)
           .single();
         m = result.data;
@@ -597,7 +597,10 @@
         // Row 1: Name (full width)
         '<div class="admin-form-group admin-form-group--full"><label for="em-name">Full Name *</label>' +
         '<input type="text" id="em-name" value="' + esc(m.name) + '" required /></div>' +
-        // Row 2: Practice Area | Enrolled Year
+        // Row 2: C.C.No | Enrolled Year
+        '<div class="admin-form-group"><label for="em-ccno">C.C.No</label>' +
+        '<input type="text" id="em-ccno" value="' + esc(m.cc_no) + '" maxlength="30" placeholder="e.g. CC/AP/00123" /></div>' +
+        // Row 2 (cont): Practice Area | Enrolled Year
         '<div class="admin-form-group"><label for="em-area">Practice Area</label>' +
         '<input type="text" id="em-area" value="' + esc(m.practice_area) + '" /></div>' +
         '<div class="admin-form-group"><label for="em-year">Enrolled Year *</label>' +
@@ -652,6 +655,7 @@
         var isOB = document.getElementById('em-ob').value === 'true';
         var updates = {
           name:                   document.getElementById('em-name').value.trim(),
+          cc_no:                  document.getElementById('em-ccno').value.trim() || null,
           practice_area:          document.getElementById('em-area').value.trim() || null,
           enrolled_year:          parseInt(document.getElementById('em-year').value) || null,
           status:                 document.getElementById('em-status').value,
@@ -672,10 +676,11 @@
           if (data.success) {
             var tr = document.querySelector('#membersTable tbody tr[data-enr="' + enrollmentNo + '"]');
             if (tr) {
-              tr.cells[2].querySelector('.mem-name').textContent = updates.name;
-              tr.cells[3].innerHTML = updates.mobile ? '<a href="tel:' + updates.mobile + '" class="mem-phone-link">' + updates.mobile + '</a>' : '';
-              tr.cells[4].textContent = updates.address || '';
-              tr.cells[5].innerHTML = '<span class="badge badge-' + (updates.status === 'Active' ? 'active' : 'inactive') + '">' + updates.status + '</span>';
+              tr.cells[2].textContent = updates.cc_no || '';
+              tr.cells[3].querySelector('.mem-name').textContent = updates.name;
+              tr.cells[4].innerHTML = updates.mobile ? '<a href="tel:' + updates.mobile + '" class="mem-phone-link">' + updates.mobile + '</a>' : '';
+              tr.cells[5].textContent = updates.address || '';
+              tr.cells[6].innerHTML = '<span class="badge badge-' + (updates.status === 'Active' ? 'active' : 'inactive') + '">' + updates.status + '</span>';
             }
             hideModal();
           } else {

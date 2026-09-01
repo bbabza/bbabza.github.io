@@ -86,6 +86,7 @@
             <tr>
               <th class="mem-photo-th"></th>
               <th>Enr. No.</th>
+              <th>C.C.No</th>
               <th>Name</th>
               <th>Mobile</th>
               <th>Address</th>
@@ -93,9 +94,9 @@
             </tr>
           </thead>
           <tbody>
-            <tr data-enr="AP/018/2022"><td><div class="mem-avatar">&#128100;</div></td><td>AP/018/2022</td><td><div class="mem-name">Smt. Uma Devi Venugopal</div></td><td></td><td></td><td><span class="badge badge-active">Active</span></td></tr>
-            <tr data-enr="AP/019/2023"><td><div class="mem-avatar">&#128100;</div></td><td>AP/019/2023</td><td><div class="mem-name">Sri Vijay Krishna Tadepalli</div></td><td></td><td></td><td><span class="badge badge-active">Active</span></td></tr>
-            <tr data-enr="AP/020/2024"><td><div class="mem-avatar">&#128100;</div></td><td>AP/020/2024</td><td><div class="mem-name">Smt. Yamini Priya Muddada</div></td><td></td><td></td><td><span class="badge badge-active">Active</span></td></tr>
+            <tr data-enr="AP/018/2022"><td><div class="mem-avatar">&#128100;</div></td><td>AP/018/2022</td><td></td><td><div class="mem-name">Smt. Uma Devi Venugopal</div></td><td></td><td></td><td><span class="badge badge-active">Active</span></td></tr>
+            <tr data-enr="AP/019/2023"><td><div class="mem-avatar">&#128100;</div></td><td>AP/019/2023</td><td></td><td><div class="mem-name">Sri Vijay Krishna Tadepalli</div></td><td></td><td></td><td><span class="badge badge-active">Active</span></td></tr>
+            <tr data-enr="AP/020/2024"><td><div class="mem-avatar">&#128100;</div></td><td>AP/020/2024</td><td></td><td><div class="mem-name">Smt. Yamini Priya Muddada</div></td><td></td><td></td><td><span class="badge badge-active">Active</span></td></tr>
           </tbody>
         </table>
       </div>
@@ -164,7 +165,7 @@
 
       const { data, error } = await window._supabase
         .from('members')
-        .select('enrollment_no, name, practice_area, enrolled_year, status, address, mobile, photo_url, description, is_bar_council_member, is_office_bearer, office_bearer_position')
+        .select('enrollment_no, name, practice_area, enrolled_year, status, address, mobile, photo_url, description, is_bar_council_member, is_office_bearer, office_bearer_position, cc_no')
         .order('enrollment_no');
 
       if (error || !data || data.length === 0) return;
@@ -175,6 +176,7 @@
         <tr data-enr="${m.enrollment_no || ''}" data-practice="${(m.practice_area || '').toLowerCase()}">
           <td><div class="mem-avatar">${m.photo_url ? `<img src="${m.photo_url}" alt="" loading="lazy" />` : '&#128100;'}</div></td>
           <td>${m.enrollment_no || ''}</td>
+          <td>${m.cc_no || ''}</td>
           <td>
             <div class="mem-name">${m.name || ''}</div>
             ${m.description ? `<div class="mem-desc">${m.description}</div>` : ''}
