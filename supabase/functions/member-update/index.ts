@@ -55,7 +55,7 @@ serve(async (req: Request) => {
 
   const payload: Record<string, string> = {};
 
-  for (const key of ['name', 'address', 'mobile', 'description']) {
+  for (const key of ['address', 'description']) {
     if (updates?.[key] !== undefined) payload[key] = updates[key];
   }
 

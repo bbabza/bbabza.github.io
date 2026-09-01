@@ -12,6 +12,42 @@
   // ── Disable right-click ────────────────────────────────────
   document.addEventListener('contextmenu', e => e.preventDefault());
 
+  // ── Session inactivity timeout (5 minutes) ─────────────────
+  (function () {
+    var TIMEOUT = 5 * 60 * 1000;
+    var _timer = null;
+    var _fns = [];
+
+    function _fire() {
+      var fns = _fns.slice();
+      _fns = [];
+      clearTimeout(_timer);
+      _timer = null;
+      fns.forEach(function (fn) { try { fn(); } catch (_) {} });
+    }
+
+    function _reset() {
+      if (!_fns.length) return;
+      clearTimeout(_timer);
+      _timer = setTimeout(_fire, TIMEOUT);
+    }
+
+    window._inactivityTimer = {
+      start: function (fn) {
+        if (_fns.indexOf(fn) === -1) _fns.push(fn);
+        _reset();
+      },
+      stop: function (fn) {
+        _fns = _fns.filter(function (f) { return f !== fn; });
+        if (!_fns.length) { clearTimeout(_timer); _timer = null; }
+      },
+    };
+
+    ['mousemove', 'mousedown', 'keydown', 'touchstart', 'scroll', 'click'].forEach(function (evt) {
+      document.addEventListener(evt, _reset, { passive: true });
+    });
+  })();
+
   // ── Admin authentication system ───────────────────────────
   (function initAdmin() {
     const STORE_KEY = 'bba_admin';
@@ -298,6 +334,7 @@
         if (data.success) {
           localStorage.setItem(STORE_KEY, '1');
           sessionStorage.setItem('bba_admin_pass', pass);
+          window._inactivityTimer.start(handleLogout);
           hideModal();
           injectAdminNav();
           injectAddMemberBtn();
@@ -316,6 +353,7 @@
     }
 
     function handleLogout() {
+      window._inactivityTimer.stop(handleLogout);
       localStorage.removeItem(STORE_KEY);
       sessionStorage.removeItem('bba_admin_pass');
       hideModal();
@@ -700,6 +738,7 @@
 
     injectFooterTrigger();
     if (isLoggedIn()) {
+      window._inactivityTimer.start(handleLogout);
       injectAdminNav();
       injectAddMemberBtn();
       injectSetPwdBtns();
@@ -1011,6 +1050,14 @@
       setTimeout(function () { overlay?.remove(); }, 280);
     }
 
+    function doMemberLogout() {
+      window._inactivityTimer.stop(doMemberLogout);
+      localStorage.removeItem(MEMBER_KEY);
+      hideMemberModal();
+      removeMemberNav();
+      injectMemberNav();
+    }
+
     const PERSON_ICON = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="20" height="20" aria-hidden="true"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg>';
 
     function getInitials(name) {
@@ -1081,6 +1128,7 @@
         const data = await res.json();
         if (data.success) {
           localStorage.setItem(MEMBER_KEY, JSON.stringify({ token: data.token, name: data.member.name, enrollment_no: data.member.enrollment_no, member: data.member }));
+          window._inactivityTimer.start(doMemberLogout);
           hideMemberModal();
           removeMemberNav();
           injectMemberNav();
@@ -1113,10 +1161,10 @@
         '<form id="memberProfileForm" autocomplete="off">' +
         '<div class="admin-form-group"><label>Enrollment No.</label>' +
         '<input type="text" value="' + (m.enrollment_no || '') + '" disabled style="opacity:.55;" /></div>' +
-        '<div class="admin-form-group"><label for="mProfName">Full Name</label>' +
-        '<input type="text" id="mProfName" value="' + (m.name || '') + '" required /></div>' +
-        '<div class="admin-form-group"><label for="mProfMobile">Mobile Number</label>' +
-        '<input type="text" id="mProfMobile" value="' + (m.mobile || '') + '" placeholder="10-digit mobile" maxlength="15" /></div>' +
+        '<div class="admin-form-group"><label>Full Name <span style="font-size:11px;font-weight:400;opacity:.6;">(contact admin to change)</span></label>' +
+        '<input type="text" value="' + (m.name || '') + '" disabled style="opacity:.55;" /></div>' +
+        '<div class="admin-form-group"><label>Mobile Number <span style="font-size:11px;font-weight:400;opacity:.6;">(contact admin to change)</span></label>' +
+        '<input type="text" value="' + (m.mobile || '') + '" disabled style="opacity:.55;" /></div>' +
         '<div class="admin-form-group"><label for="mProfAddress">Address</label>' +
         '<textarea id="mProfAddress" rows="2" placeholder="Office / home address">' + (m.address || '') + '</textarea></div>' +
         '<div class="admin-form-group"><label for="mProfDesc">About / Description</label>' +
@@ -1146,8 +1194,6 @@
         if (newPass && newPass.length < 6) { errEl.textContent = 'Password must be at least 6 characters.'; return; }
         btn.disabled = true; btn.textContent = 'Saving…';
         const updates = {
-          name: document.getElementById('mProfName').value.trim(),
-          mobile: document.getElementById('mProfMobile').value.trim(),
           address: document.getElementById('mProfAddress').value.trim(),
           description: document.getElementById('mProfDesc').value.trim(),
         };
@@ -1165,7 +1211,7 @@
             const updated = Object.assign({}, session.member, updates);
             if (data.photo_url) updated.photo_url = data.photo_url;
             delete updated.photo_base64;
-            localStorage.setItem(MEMBER_KEY, JSON.stringify({ token: session.token, name: updates.name, enrollment_no: session.enrollment_no, member: updated }));
+            localStorage.setItem(MEMBER_KEY, JSON.stringify({ token: session.token, name: session.name, enrollment_no: session.enrollment_no, member: updated }));
             hideMemberModal();
             removeMemberNav();
             injectMemberNav();
@@ -1178,12 +1224,7 @@
           btn.disabled = false; btn.textContent = 'Save Changes';
         }
       });
-      overlay.querySelector('#memberLogoutBtn').addEventListener('click', function () {
-        localStorage.removeItem(MEMBER_KEY);
-        hideMemberModal();
-        removeMemberNav();
-        injectMemberNav();
-      });
+      overlay.querySelector('#memberLogoutBtn').addEventListener('click', doMemberLogout);
       overlay.querySelector('#mProfPhotoInput').addEventListener('change', function () {
         const file = this.files[0];
         if (!file) return;
@@ -1364,6 +1405,7 @@
           localStorage.setItem(MEMBER_KEY, JSON.stringify({ token: data.token, name: data.member.name, enrollment_no: data.member.enrollment_no, member: data.member }));
           _verifiedIdToken = null;
           _confirmationResult = null;
+          window._inactivityTimer.start(doMemberLogout);
           hideMemberModal();
           removeMemberNav();
           injectMemberNav();
@@ -1382,6 +1424,7 @@
     });
 
     injectMemberNav();
+    if (isMemberLoggedIn()) window._inactivityTimer.start(doMemberLogout);
   })();
 
 })();
