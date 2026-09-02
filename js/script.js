@@ -61,10 +61,17 @@
       const navUl = document.querySelector('.main-nav ul');
       if (!navUl || navUl.querySelector('.admin-nav-item')) return;
       const contactLi = navUl.querySelector('li:last-child');
-      const li = document.createElement('li');
-      li.className = 'admin-nav-item';
-      li.innerHTML = '<a href="#" class="admin-nav-link" id="adminNavLink">&#128274; Admin</a>';
-      navUl.insertBefore(li, contactLi);
+
+      const newsLi = document.createElement('li');
+      newsLi.className = 'admin-nav-item';
+      newsLi.innerHTML = '<a href="' + ROOT + 'admin-news/" class="admin-nav-link">&#128240; News</a>';
+      navUl.insertBefore(newsLi, contactLi);
+
+      const adminLi = document.createElement('li');
+      adminLi.className = 'admin-nav-item';
+      adminLi.innerHTML = '<a href="#" class="admin-nav-link" id="adminNavLink">&#128274; Admin</a>';
+      navUl.insertBefore(adminLi, contactLi);
+
       document.getElementById('adminNavLink').addEventListener('click', e => {
         e.preventDefault();
         showAdminPanel();
