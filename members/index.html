@@ -77,8 +77,15 @@
       <p class="section-sub" style="margin-bottom:20px;">A partial listing of enrolled advocates. Full directory
         available at the Association office.</p>
       <div class="members-controls">
-        <input type="text" id="memberSearch" placeholder="Search by name or enrollment no.&hellip;"
+        <input type="text" id="memberSearch" placeholder="Search by name, enrollment no. or mobile&hellip;"
           class="search-input" />
+        <select id="memberStatusFilter" class="filter-select">
+          <option value="non-deceased">Active &amp; Pending</option>
+          <option value="active">Active</option>
+          <option value="pending">Pending</option>
+          <option value="deceased">Deceased</option>
+          <option value="all">All Members</option>
+        </select>
       </div>
       <div class="table-wrapper">
         <table class="members-table" id="membersTable" aria-live="polite">
@@ -260,14 +267,23 @@
       }
 
       function applyFilter() {
-        var q = (document.getElementById('memberSearch')?.value || '').toLowerCase().trim();
-        _filtered = q ? _allData.filter(function(m) {
+        var q      = (document.getElementById('memberSearch')?.value || '').toLowerCase().trim();
+        var status = document.getElementById('memberStatusFilter')?.value || 'non-deceased';
+        _filtered = _allData.filter(function(m) {
+          var s = (m.status || 'active');
+          if (status === 'non-deceased' && s === 'deceased') return false;
+          if (status === 'active'       && s !== 'active')   return false;
+          if (status === 'pending'      && s !== 'pending')  return false;
+          if (status === 'deceased'     && s !== 'deceased') return false;
+          if (!q) return true;
           return (m.name || '').toLowerCase().includes(q) ||
                  (m.enrollment_no || '').toLowerCase().includes(q) ||
                  (m.mobile || '').includes(q);
-        }) : _allData.slice();
+        });
         renderPage(1);
       }
+
+      document.getElementById('memberStatusFilter')?.addEventListener('change', applyFilter);
 
       pgEl?.addEventListener('click', function(e) {
         var btn = e.target.closest('[data-page]');
