@@ -81,7 +81,7 @@
           class="search-input" />
       </div>
       <div class="table-wrapper">
-        <table class="members-table" id="membersTable">
+        <table class="members-table" id="membersTable" aria-live="polite">
           <thead>
             <tr>
               <th class="mem-photo-th"></th>
@@ -91,15 +91,17 @@
               <th>Mobile</th>
               <th>Address</th>
               <th>Status</th>
+              <th>Gender</th>
             </tr>
           </thead>
           <tbody>
-            <tr data-enr="AP/018/2022"><td><div class="mem-avatar">&#128100;</div></td><td>AP/018/2022</td><td></td><td><div class="mem-name">Smt. Uma Devi Venugopal</div></td><td></td><td></td><td><span class="badge badge-active">Active</span></td></tr>
-            <tr data-enr="AP/019/2023"><td><div class="mem-avatar">&#128100;</div></td><td>AP/019/2023</td><td></td><td><div class="mem-name">Sri Vijay Krishna Tadepalli</div></td><td></td><td></td><td><span class="badge badge-active">Active</span></td></tr>
-            <tr data-enr="AP/020/2024"><td><div class="mem-avatar">&#128100;</div></td><td>AP/020/2024</td><td></td><td><div class="mem-name">Smt. Yamini Priya Muddada</div></td><td></td><td></td><td><span class="badge badge-active">Active</span></td></tr>
+            <tr data-enr="AP/018/2022"><td><div class="mem-avatar">&#128100;</div></td><td>AP/018/2022</td><td></td><td><div class="mem-name">Smt. Uma Devi Venugopal</div></td><td></td><td></td><td><span class="badge badge-active">Active</span></td><td></td></tr>
+            <tr data-enr="AP/019/2023"><td><div class="mem-avatar">&#128100;</div></td><td>AP/019/2023</td><td></td><td><div class="mem-name">Sri Vijay Krishna Tadepalli</div></td><td></td><td></td><td><span class="badge badge-active">Active</span></td><td></td></tr>
+            <tr data-enr="AP/020/2024"><td><div class="mem-avatar">&#128100;</div></td><td>AP/020/2024</td><td></td><td><div class="mem-name">Smt. Yamini Priya Muddada</div></td><td></td><td></td><td><span class="badge badge-active">Active</span></td><td></td></tr>
           </tbody>
         </table>
       </div>
+      <div class="members-pagination" id="membersPagination"></div>
       <p class="table-note">Showing 20 of 1,800+ members &mdash; Contact the Association office for the complete
         directory or enrollment inquiries.</p>
     </div>
@@ -159,39 +161,122 @@
   <script>
     (async function loadMembers() {
       if (!window._supabase) return;
-      const tbody = document.querySelector('#membersTable tbody');
-      const noteEl = document.querySelector('.table-note');
+      const tbody   = document.querySelector('#membersTable tbody');
+      const noteEl  = document.querySelector('.table-note');
+      const pgEl    = document.getElementById('membersPagination');
       if (!tbody) return;
 
       const { data, error } = await window._supabase
         .from('members')
-        .select('enrollment_no, name, practice_area, enrolled_year, status, address, mobile, photo_url, description, is_bar_council_member, is_office_bearer, office_bearer_position, cc_no')
+        .select('enrollment_no, name, practice_area, enrolled_year, status, address, mobile, photo_url, description, is_bar_council_member, is_office_bearer, office_bearer_position, cc_no, gender')
         .order('enrollment_no');
 
       if (error || !data || data.length === 0) return;
 
-      const isAdmin = localStorage.getItem('bba_admin') === '1';
+      const PAGE_SIZE   = 50;
+      const isAdmin     = localStorage.getItem('bba_admin') === '1';
+      let _allData      = data.slice();
+      let _filtered     = _allData.slice();
+      let _currentPage  = 1;
 
-      tbody.innerHTML = data.map(m => `
-        <tr data-enr="${m.enrollment_no || ''}" data-practice="${(m.practice_area || '').toLowerCase()}">
+      function statusBadge(s) {
+        var cls  = s === 'active' ? 'active' : s === 'deceased' ? 'deceased' : 'inactive';
+        var lbl  = s === 'active' ? 'Active' : s === 'pending' ? 'Pending' : s === 'deceased' ? 'Deceased' : (s || 'Active');
+        return `<span class="badge badge-${cls}">${lbl}</span>`;
+      }
+
+      function rowHtml(m) {
+        var enrEsc = (m.enrollment_no || '').replace(/'/g, "\\'");
+        return `<tr data-enr="${m.enrollment_no || ''}" data-practice="${(m.practice_area || '').toLowerCase()}">
           <td><div class="mem-avatar">${m.photo_url ? `<img src="${m.photo_url}" alt="" loading="lazy" />` : '&#128100;'}</div></td>
           <td>${m.enrollment_no || ''}</td>
           <td>${m.cc_no || ''}</td>
-          <td>
-            <div class="mem-name">${m.name || ''}</div>
-            ${m.description ? `<div class="mem-desc">${m.description}</div>` : ''}
-          </td>
+          <td><div class="mem-name">${m.name || ''}</div>${m.description ? `<div class="mem-desc">${m.description}</div>` : ''}</td>
           <td>${m.mobile ? `<a href="tel:${m.mobile}" class="mem-phone-link">${m.mobile}</a>` : ''}</td>
           <td class="mem-address">${m.address || ''}</td>
-          <td><span class="badge badge-${m.status === 'Active' ? 'active' : 'inactive'}">${m.status || 'Active'}</span></td>
-          ${isAdmin ? `<td class="member-admin-actions-td"><button class="set-pwd-btn" title="Set Password" onclick="window.showMemberSetPwd('${(m.enrollment_no || '').replace(/'/g, "\\'")}')">&#128273;</button> <button class="edit-member-btn" title="Edit Member" onclick="window.showMemberEditModal('${(m.enrollment_no || '').replace(/'/g, "\\'")}')">&#9998;</button></td>` : ''}
-        </tr>`).join('');
+          <td>${statusBadge(m.status)}</td>
+          <td>${m.gender || ''}</td>
+          ${isAdmin ? `<td class="member-admin-actions-td"><button class="set-pwd-btn" title="Set Password" onclick="window.showMemberSetPwd('${enrEsc}')">&#128273;</button> <button class="edit-member-btn" title="Edit Member" onclick="window.showMemberEditModal('${enrEsc}')">&#9998;</button></td>` : ''}
+        </tr>`;
+      }
 
-      if (isAdmin) window.injectAdminMembersColHeader?.();
+      function pageButtons(cur, total) {
+        if (total <= 7) return Array.from({length: total}, (_, i) => i + 1);
+        var pages = [], prev = -1;
+        [1, 2, cur - 1, cur, cur + 1, total - 1, total].forEach(function(p) {
+          if (p < 1 || p > total) return;
+          if (p === prev) return;
+          if (prev !== -1 && p > prev + 1) pages.push('…');
+          pages.push(p);
+          prev = p;
+        });
+        return pages;
+      }
 
-      if (noteEl) noteEl.textContent =
-        `Showing ${data.length} member${data.length !== 1 ? 's' : ''} — Contact the Association office for the complete directory or enrollment inquiries.`;
+      function renderPage(page) {
+        _currentPage  = page;
+        var start     = (page - 1) * PAGE_SIZE;
+        var slice     = _filtered.slice(start, start + PAGE_SIZE);
+        var totalPages = Math.ceil(_filtered.length / PAGE_SIZE);
 
+        tbody.innerHTML = slice.map(rowHtml).join('');
+        if (isAdmin) window.injectAdminMembersColHeader?.();
+
+        // pagination controls
+        if (pgEl) {
+          if (totalPages <= 1) {
+            pgEl.innerHTML = '';
+          } else {
+            var btns = pageButtons(page, totalPages).map(function(p) {
+              if (p === '…') return '<span class="pg-ellipsis">&hellip;</span>';
+              return `<button class="pg-btn${p === page ? ' pg-active' : ''}" data-page="${p}">${p}</button>`;
+            }).join('');
+            pgEl.innerHTML =
+              `<button class="pg-btn pg-prev"${page === 1 ? ' disabled' : ''} data-page="${page - 1}">&#8592; Prev</button>` +
+              btns +
+              `<button class="pg-btn pg-next"${page === totalPages ? ' disabled' : ''} data-page="${page + 1}">Next &#8594;</button>`;
+          }
+        }
+
+        // note
+        if (noteEl) {
+          var from  = _filtered.length === 0 ? 0 : start + 1;
+          var to    = Math.min(start + PAGE_SIZE, _filtered.length);
+          var total = _filtered.length;
+          noteEl.textContent = total === 0
+            ? 'No members found.'
+            : `Showing ${from}–${to} of ${total} member${total !== 1 ? 's' : ''}`;
+        }
+      }
+
+      function applyFilter() {
+        var q = (document.getElementById('memberSearch')?.value || '').toLowerCase().trim();
+        _filtered = q ? _allData.filter(function(m) {
+          return (m.name || '').toLowerCase().includes(q) ||
+                 (m.enrollment_no || '').toLowerCase().includes(q);
+        }) : _allData.slice();
+        renderPage(1);
+      }
+
+      pgEl?.addEventListener('click', function(e) {
+        var btn = e.target.closest('[data-page]');
+        if (!btn || btn.disabled) return;
+        var p = parseInt(btn.dataset.page);
+        if (p >= 1 && p <= Math.ceil(_filtered.length / PAGE_SIZE)) {
+          renderPage(p);
+          document.querySelector('.members-table')?.scrollIntoView({behavior: 'smooth', block: 'start'});
+        }
+      });
+
+      // expose for script.js search handler and admin add-member
+      window._membersPaginated   = true;
+      window._membersApplyFilter = applyFilter;
+      window._membersAddRow = function(m) {
+        _allData.unshift(m);
+        applyFilter();
+      };
+
+      renderPage(1);
       window._membersLoaded = true;
     })();
   </script>

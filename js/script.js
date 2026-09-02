@@ -438,8 +438,9 @@
           <div class="admin-form-group">
             <label for="m-status">Status</label>
             <select id="m-status">
-              <option value="Active">Active</option>
-              <option value="Inactive">Inactive</option>
+              <option value="active">Active</option>
+              <option value="pending">Pending</option>
+              <option value="deceased">Deceased</option>
             </select>
           </div>
           <div class="admin-form-group">
@@ -511,24 +512,8 @@
         return;
       }
 
-      // Prepend new row to table
-      const tbody = document.querySelector('#membersTable tbody');
-      if (tbody) {
-        const tr = document.createElement('tr');
-        tr.dataset.enr = data.enrollment_no;
-        tr.innerHTML = `
-          <td><div class="mem-avatar">&#128100;</div></td>
-          <td>${data.enrollment_no}</td>
-          <td><div class="mem-name">${data.name}</div></td>
-          <td>${data.mobile ? `<a href="tel:${data.mobile}" class="mem-phone-link">${data.mobile}</a>` : ''}</td>
-          <td class="mem-address">${data.address || ''}</td>
-          <td><span class="badge badge-${data.status === 'Active' ? 'active' : 'inactive'}">${data.status}</span></td>
-          <td class="member-admin-actions-td"><button class="set-pwd-btn" title="Set Password" onclick="window.showMemberSetPwd('${data.enrollment_no.replace(/'/g, "\\'")}')">&#128273;</button> <button class="edit-member-btn" title="Edit Member" onclick="window.showMemberEditModal('${data.enrollment_no.replace(/'/g, "\\'")}')">&#9998;</button></td>`;
-        tbody.insertBefore(tr, tbody.firstChild);
-        const count = tbody.querySelectorAll('tr').length;
-        const noteEl = document.querySelector('.table-note');
-        if (noteEl) noteEl.textContent =
-          `Showing ${count} member${count !== 1 ? 's' : ''} — Contact the Association office for enrollment inquiries.`;
+      if (window._membersAddRow) {
+        window._membersAddRow(data);
       }
 
       hideModal();
@@ -616,7 +601,7 @@
       if (window._supabase) {
         var result = await window._supabase
           .from('members')
-          .select('enrollment_no, name, practice_area, enrolled_year, status, mobile, address, description, is_bar_council_member, is_office_bearer, office_bearer_position, cc_no')
+          .select('enrollment_no, name, practice_area, enrolled_year, status, mobile, address, description, is_bar_council_member, is_office_bearer, office_bearer_position, cc_no, gender, membership_type, yearly_renewed_date, res_phone, office_phone')
           .eq('enrollment_no', enrollmentNo)
           .single();
         m = result.data;
@@ -655,8 +640,27 @@
         '<div class="admin-form-group"><label for="em-mobile">Mobile</label>' +
         '<input type="text" id="em-mobile" value="' + esc(m.mobile) + '" maxlength="15" /></div>' +
         '<div class="admin-form-group"><label for="em-status">Status</label>' +
-        '<select id="em-status"><option value="Active"' + (m.status === 'Active' ? ' selected' : '') + '>Active</option>' +
-        '<option value="Inactive"' + (m.status === 'Inactive' ? ' selected' : '') + '>Inactive</option></select></div>' +
+        '<select id="em-status">' +
+        '<option value="active"' + (m.status === 'active' ? ' selected' : '') + '>Active</option>' +
+        '<option value="pending"' + (m.status === 'pending' ? ' selected' : '') + '>Pending</option>' +
+        '<option value="deceased"' + (m.status === 'deceased' ? ' selected' : '') + '>Deceased</option>' +
+        '</select></div>' +
+        '<div class="admin-form-group"><label for="em-gender">Gender</label>' +
+        '<select id="em-gender"><option value=""' + (!m.gender ? ' selected' : '') + '>-- Select --</option>' +
+        '<option value="Male"' + (m.gender === 'Male' ? ' selected' : '') + '>Male</option>' +
+        '<option value="Female"' + (m.gender === 'Female' ? ' selected' : '') + '>Female</option>' +
+        '</select></div>' +
+        '<div class="admin-form-group"><label for="em-mtype">Membership Type</label>' +
+        '<select id="em-mtype"><option value=""' + (!m.membership_type ? ' selected' : '') + '>-- Select --</option>' +
+        '<option value="Life"' + (m.membership_type === 'Life' ? ' selected' : '') + '>Life</option>' +
+        '<option value="Yearly"' + (m.membership_type === 'Yearly' ? ' selected' : '') + '>Yearly</option>' +
+        '</select></div>' +
+        '<div class="admin-form-group"><label for="em-renewed">Yearly Renewed Date</label>' +
+        '<input type="date" id="em-renewed" value="' + (m.yearly_renewed_date || '') + '" /></div>' +
+        '<div class="admin-form-group"><label for="em-resph">Res. Phone</label>' +
+        '<input type="text" id="em-resph" value="' + esc(m.res_phone) + '" maxlength="20" /></div>' +
+        '<div class="admin-form-group"><label for="em-offph">Office Phone</label>' +
+        '<input type="text" id="em-offph" value="' + esc(m.office_phone) + '" maxlength="20" /></div>' +
         // Row 4: Bar Council | Office Bearer
         '<div class="admin-form-group"><label for="em-bc">Bar Council Member?</label>' +
         '<select id="em-bc"><option value="false"' + (!m.is_bar_council_member ? ' selected' : '') + '>No</option>' +
@@ -711,6 +715,11 @@
           is_bar_council_member:  document.getElementById('em-bc').value === 'true',
           is_office_bearer:       isOB,
           office_bearer_position: isOB ? (document.getElementById('em-obp').value.trim() || null) : null,
+          gender:                 document.getElementById('em-gender').value || null,
+          membership_type:        document.getElementById('em-mtype').value || null,
+          yearly_renewed_date:    document.getElementById('em-renewed').value || null,
+          res_phone:              document.getElementById('em-resph').value.trim() || null,
+          office_phone:           document.getElementById('em-offph').value.trim() || null,
         };
         try {
           var res = await fetch(MEMBER_ADMIN_OPS_URL, {
@@ -726,7 +735,8 @@
               tr.cells[3].querySelector('.mem-name').textContent = updates.name;
               tr.cells[4].innerHTML = updates.mobile ? '<a href="tel:' + updates.mobile + '" class="mem-phone-link">' + updates.mobile + '</a>' : '';
               tr.cells[5].textContent = updates.address || '';
-              tr.cells[6].innerHTML = '<span class="badge badge-' + (updates.status === 'Active' ? 'active' : 'inactive') + '">' + updates.status + '</span>';
+              tr.cells[6].innerHTML = '<span class="badge badge-' + (updates.status === 'active' ? 'active' : updates.status === 'deceased' ? 'deceased' : 'inactive') + '">' + (updates.status === 'active' ? 'Active' : updates.status === 'pending' ? 'Pending' : updates.status === 'deceased' ? 'Deceased' : updates.status) + '</span>';
+              tr.cells[7].textContent = updates.gender || '';
             }
             hideModal();
           } else {
@@ -908,6 +918,7 @@
   const filterSelect = document.getElementById('memberFilter');
 
   function filterMembers() {
+    if (window._membersPaginated) { window._membersApplyFilter?.(); return; }
     const query = (searchInput?.value || '').toLowerCase().trim();
     document.querySelectorAll('#membersTable tbody tr').forEach(row => {
       const text = row.textContent.toLowerCase();

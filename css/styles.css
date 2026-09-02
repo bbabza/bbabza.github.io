@@ -506,10 +506,63 @@ img { max-width: 100%; display: block; }
   font-weight: 700;
   letter-spacing: .5px;
 }
-.badge-active   { background: #e6f4ea; color: #1a7a30; }
-.badge-inactive { background: #fdecea; color: #c62828; }
+.badge-active    { background: #e6f4ea; color: #1a7a30; }
+.badge-inactive  { background: #fdecea; color: #c62828; }
+.badge-pending   { background: #fff8e1; color: #e65100; }
+.badge-deceased  { background: #f0f0f0; color: #666; }
 
 .table-note { margin-top: 14px; font-size: 13px; color: var(--muted); text-align: center; }
+
+/* ── Members Pagination ──────────────────────────────────── */
+.members-pagination {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  margin-top: 20px;
+}
+.pg-btn {
+  min-width: 36px;
+  height: 36px;
+  padding: 0 10px;
+  border: 1px solid #d0d8e0;
+  border-radius: 6px;
+  background: #fff;
+  color: var(--navy2);
+  font-size: 13px;
+  font-family: var(--ff-sans);
+  font-weight: 500;
+  cursor: pointer;
+  transition: background .15s, border-color .15s, color .15s;
+}
+.pg-btn:hover:not(:disabled) {
+  background: var(--light);
+  border-color: var(--navy);
+}
+.pg-btn.pg-active {
+  background: var(--navy);
+  border-color: var(--navy);
+  color: #fff;
+  cursor: default;
+}
+.pg-btn:disabled {
+  opacity: .4;
+  cursor: not-allowed;
+}
+.pg-btn.pg-prev, .pg-btn.pg-next {
+  padding: 0 14px;
+  font-size: 12px;
+}
+.pg-ellipsis {
+  display: inline-flex;
+  align-items: center;
+  height: 36px;
+  padding: 0 4px;
+  font-size: 13px;
+  color: var(--muted);
+  user-select: none;
+}
 
 /* ── Member avatar in table ──────────────────────────────── */
 .mem-photo-th { width: 48px; padding: 0 8px !important; }
@@ -2728,6 +2781,18 @@ a.logo-block:hover { opacity: .92; }
   color: #c62828;
   border: 1px solid rgba(198,40,40,.18);
   box-shadow: inset 0 1px 0 rgba(255,255,255,.7);
+}
+.badge-pending {
+  background: linear-gradient(135deg, #fff3cd, #ffe8a0);
+  color: #e65100;
+  border: 1px solid rgba(230,81,0,.18);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.7);
+}
+.badge-deceased {
+  background: linear-gradient(135deg, #ececec, #dcdcdc);
+  color: #666;
+  border: 1px solid rgba(100,100,100,.15);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.6);
 }
 
 /* ── Section badge gloss ──────────────────────────────────── */

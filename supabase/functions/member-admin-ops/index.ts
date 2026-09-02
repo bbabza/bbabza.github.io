@@ -66,7 +66,7 @@ serve(async (req: Request) => {
     if (!enrollment_no?.trim()) {
       return json({ success: false, message: 'Enrollment number required.' }, 400, req);
     }
-    const allowed = ['name', 'cc_no', 'practice_area', 'enrolled_year', 'status', 'mobile', 'address', 'description', 'is_bar_council_member', 'is_office_bearer', 'office_bearer_position'];
+    const allowed = ['name', 'cc_no', 'practice_area', 'enrolled_year', 'status', 'mobile', 'address', 'description', 'is_bar_council_member', 'is_office_bearer', 'office_bearer_position', 'gender', 'membership_type', 'yearly_renewed_date', 'res_phone', 'office_phone'];
     const safe: Record<string, unknown> = {};
     for (const key of allowed) {
       if (updates && key in updates) safe[key] = updates[key];

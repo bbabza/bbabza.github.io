@@ -55,7 +55,7 @@ serve(async (req: Request) => {
 
   const { data: member } = await supabase
     .from('members')
-    .select('enrollment_no, name, practice_area, enrolled_year, status, address, mobile, photo_url, description, cc_no, password_hash')
+    .select('enrollment_no, name, practice_area, enrolled_year, status, address, mobile, photo_url, description, cc_no, gender, membership_type, yearly_renewed_date, res_phone, office_phone, password_hash')
     .eq('enrollment_no', enrollment_no.trim())
     .maybeSingle();
 
