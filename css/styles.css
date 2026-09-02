@@ -2490,3 +2490,229 @@ a.logo-block:hover { opacity: .92; }
   padding: 9px 20px;
   font-size: 13.5px;
 }
+
+/* ═══════════════════════════════════════════════════════════
+   GLOSSY ENHANCEMENTS
+   ═══════════════════════════════════════════════════════════ */
+
+/* ── Animated hero gradient ──────────────────────────────── */
+@keyframes hero-shift {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+.hero {
+  background: linear-gradient(135deg, var(--navy3), var(--navy2), #006868, var(--navy), #007a7a, var(--navy2));
+  background-size: 350% 350%;
+  animation: hero-shift 14s ease infinite;
+}
+
+/* ── Hero heading — gold-to-white gradient text ──────────── */
+.hero-content h2 {
+  background: linear-gradient(100deg, #ffffff 15%, var(--gold) 50%, #ffffff 85%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.hero-eyebrow { text-shadow: 0 0 16px rgba(201,162,39,.4); }
+.stat-num     { text-shadow: 0 0 24px rgba(201,162,39,.45); }
+
+/* ── Page-hero heading gradient text ─────────────────────── */
+.page-hero h2 {
+  background: linear-gradient(100deg, #ffffff 15%, var(--gold) 55%, #ffffff 85%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ── Frosted-glass sticky header on scroll ───────────────── */
+.site-header.scrolled {
+  background: rgba(0,120,120,.86);
+  backdrop-filter: blur(20px) saturate(1.7);
+  -webkit-backdrop-filter: blur(20px) saturate(1.7);
+  box-shadow: 0 2px 28px rgba(0,60,60,.45);
+}
+
+/* ── Shimmer on gold buttons ─────────────────────────────── */
+.btn-gold, .btn-nav {
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 18px rgba(201,162,39,.28);
+}
+.btn-gold::after, .btn-nav::after {
+  content: '';
+  position: absolute;
+  top: -50%; left: -80%;
+  width: 55%; height: 200%;
+  background: linear-gradient(100deg, transparent, rgba(255,255,255,.42), transparent);
+  transform: skewX(-18deg);
+  transition: left .55s ease;
+  pointer-events: none;
+}
+.btn-gold:hover::after, .btn-nav:hover::after { left: 150%; }
+.btn-gold:hover { box-shadow: 0 8px 28px rgba(201,162,39,.45); }
+.btn-nav:hover  { box-shadow: 0 6px 22px rgba(201,162,39,.4); }
+
+/* ── Glossy section cards ─────────────────────────────────── */
+.section-card {
+  background: linear-gradient(148deg, #ffffff 0%, rgba(230,247,247,.65) 100%);
+  border: 1px solid rgba(0,139,139,.14);
+  box-shadow:
+    0 4px 24px rgba(0,96,96,.09),
+    inset 0 1px 0 rgba(255,255,255,1),
+    inset 0 -1px 0 rgba(0,96,96,.03);
+}
+.section-card:hover {
+  transform: translateY(-9px);
+  box-shadow:
+    0 18px 52px rgba(0,96,96,.2),
+    inset 0 1px 0 rgba(255,255,255,1);
+  border-color: rgba(0,139,139,.32);
+}
+.section-card-icon {
+  background: linear-gradient(135deg, #e6f7f7, #c4e8e4);
+  box-shadow: 0 4px 14px rgba(0,96,96,.14), inset 0 1px 0 rgba(255,255,255,.8);
+  border-color: rgba(0,139,139,.2);
+}
+
+/* ── Glossy news cards ────────────────────────────────────── */
+.news-card {
+  background: linear-gradient(148deg, #ffffff 0%, #f0faf8 100%);
+  border: 1px solid rgba(0,139,139,.11);
+  box-shadow:
+    0 2px 16px rgba(0,96,96,.07),
+    inset 0 1px 0 rgba(255,255,255,1);
+}
+.news-card:hover {
+  transform: translateY(-7px);
+  box-shadow:
+    0 16px 48px rgba(0,96,96,.18),
+    inset 0 1px 0 rgba(255,255,255,1);
+  border-color: rgba(0,139,139,.24);
+}
+
+/* ── Glossy pillar cards ──────────────────────────────────── */
+.pillar {
+  background: linear-gradient(148deg, #ffffff 0%, rgba(230,247,247,.5) 100%);
+  box-shadow:
+    0 4px 20px rgba(0,96,96,.09),
+    inset 0 1px 0 rgba(255,255,255,1);
+  transition: transform .25s, box-shadow .25s;
+}
+.pillar:hover {
+  transform: translateX(6px);
+  box-shadow: 0 10px 34px rgba(0,96,96,.18), inset 0 1px 0 rgba(255,255,255,1);
+}
+
+/* ── Glossy timeline bodies ───────────────────────────────── */
+.tl-body {
+  background: linear-gradient(148deg, #ffffff 0%, rgba(230,247,247,.5) 100%);
+  border: 1px solid rgba(0,139,139,.1);
+  box-shadow:
+    0 4px 20px rgba(0,96,96,.09),
+    inset 0 1px 0 rgba(255,255,255,1);
+}
+
+/* ── Bearer cards — glassmorphism boost ───────────────────── */
+.bearer-card {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.14),
+    0 4px 24px rgba(0,0,0,.14);
+}
+.bearer-card:hover {
+  box-shadow:
+    0 16px 48px rgba(0,0,0,.3),
+    inset 0 1px 0 rgba(255,255,255,.18);
+}
+
+/* ── Exec member glass ────────────────────────────────────── */
+.exec-member {
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: border-color .2s, background .2s, transform .2s, box-shadow .2s;
+}
+.exec-member:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(0,0,0,.18);
+}
+
+/* ── Gallery — shadow depth & ring ───────────────────────── */
+.gallery-item {
+  box-shadow: 0 4px 20px rgba(0,0,0,.14);
+}
+.gallery-item:hover {
+  transform: scale(1.05);
+  box-shadow: 0 16px 48px rgba(0,0,0,.28), 0 0 0 3px rgba(0,139,139,.45);
+}
+
+/* ── Member avatar — gold ring on hover ───────────────────── */
+.member-nav-link:hover .member-nav-avatar {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 2px rgba(201,162,39,.55);
+}
+
+/* ── Back-to-top gloss ────────────────────────────────────── */
+.back-to-top {
+  background: linear-gradient(135deg, var(--navy), var(--navy2));
+  box-shadow: 0 4px 20px rgba(0,96,96,.42);
+}
+.back-to-top:hover {
+  background: linear-gradient(135deg, var(--navy2), var(--navy));
+  box-shadow: 0 8px 32px rgba(0,96,96,.55);
+  transform: translateY(-4px) scale(1.05);
+}
+
+/* ── Badge gradients ──────────────────────────────────────── */
+.badge-active {
+  background: linear-gradient(135deg, #cff0d8, #b5e8c2);
+  color: #1a7a30;
+  border: 1px solid rgba(26,122,48,.18);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.7);
+}
+.badge-inactive {
+  background: linear-gradient(135deg, #fde6e6, #f8cfcf);
+  color: #c62828;
+  border: 1px solid rgba(198,40,40,.18);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.7);
+}
+
+/* ── Section badge gloss ──────────────────────────────────── */
+.section-badge {
+  background: linear-gradient(135deg, rgba(0,139,139,.09), rgba(0,139,139,.18));
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.55);
+}
+
+/* ── Members table — gradient header ─────────────────────── */
+.members-table thead tr {
+  background: linear-gradient(90deg, var(--navy2) 0%, var(--navy) 100%);
+}
+
+/* ── Search input — focus glow ────────────────────────────── */
+.search-input:focus {
+  border-color: var(--navy);
+  box-shadow: 0 0 0 3px rgba(0,139,139,.14);
+}
+
+/* ── Blog cards gloss ─────────────────────────────────────── */
+.blog-card {
+  background: linear-gradient(148deg, #ffffff 0%, rgba(240,250,248,.65) 100%);
+  border: 1px solid rgba(0,139,139,.1);
+  box-shadow: 0 2px 14px rgba(0,96,96,.07), inset 0 1px 0 rgba(255,255,255,.9);
+}
+.blog-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 14px 40px rgba(0,96,96,.16), inset 0 1px 0 rgba(255,255,255,1);
+  border-color: rgba(0,139,139,.22);
+}
+
+/* ── Tournament contact cards gloss ──────────────────────── */
+.tourn-contact-card {
+  background: linear-gradient(148deg, #ffffff 0%, #f0faf8 100%);
+  box-shadow: 0 2px 12px rgba(0,96,96,.08), inset 0 1px 0 rgba(255,255,255,1);
+}
+.tourn-contact-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 36px rgba(0,96,96,.16), inset 0 1px 0 rgba(255,255,255,1);
+}
