@@ -166,12 +166,21 @@
       const pgEl    = document.getElementById('membersPagination');
       if (!tbody) return;
 
-      const { data, error } = await window._supabase
-        .from('members')
-        .select('enrollment_no, name, practice_area, enrolled_year, status, address, mobile, photo_url, description, is_bar_council_member, is_office_bearer, office_bearer_position, cc_no, gender')
-        .order('enrollment_no');
+      const CHUNK = 1000;
+      let data = [], from = 0;
+      while (true) {
+        const { data: chunk, error } = await window._supabase
+          .from('members')
+          .select('enrollment_no, name, practice_area, enrolled_year, status, address, mobile, photo_url, description, is_bar_council_member, is_office_bearer, office_bearer_position, cc_no, gender')
+          .order('enrollment_no')
+          .range(from, from + CHUNK - 1);
+        if (error || !chunk || chunk.length === 0) break;
+        data = data.concat(chunk);
+        if (chunk.length < CHUNK) break;
+        from += CHUNK;
+      }
 
-      if (error || !data || data.length === 0) return;
+      if (data.length === 0) return;
 
       const PAGE_SIZE   = 50;
       const isAdmin     = localStorage.getItem('bba_admin') === '1';
@@ -202,15 +211,16 @@
 
       function pageButtons(cur, total) {
         if (total <= 7) return Array.from({length: total}, (_, i) => i + 1);
-        var pages = [], prev = -1;
-        [1, 2, cur - 1, cur, cur + 1, total - 1, total].forEach(function(p) {
-          if (p < 1 || p > total) return;
-          if (p === prev) return;
-          if (prev !== -1 && p > prev + 1) pages.push('…');
-          pages.push(p);
+        var set = new Set([1, 2, total - 1, total]);
+        for (var p = Math.max(1, cur - 1); p <= Math.min(total, cur + 1); p++) set.add(p);
+        var sorted = Array.from(set).sort(function(a, b) { return a - b; });
+        var result = [], prev = 0;
+        sorted.forEach(function(p) {
+          if (prev && p > prev + 1) result.push('…');
+          result.push(p);
           prev = p;
         });
-        return pages;
+        return result;
       }
 
       function renderPage(page) {
@@ -253,7 +263,8 @@
         var q = (document.getElementById('memberSearch')?.value || '').toLowerCase().trim();
         _filtered = q ? _allData.filter(function(m) {
           return (m.name || '').toLowerCase().includes(q) ||
-                 (m.enrollment_no || '').toLowerCase().includes(q);
+                 (m.enrollment_no || '').toLowerCase().includes(q) ||
+                 (m.mobile || '').includes(q);
         }) : _allData.slice();
         renderPage(1);
       }
