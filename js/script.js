@@ -126,6 +126,7 @@
           <h3>Admin Panel</h3>
         </div>
         <p class="admin-panel-greeting">Logged in as <strong>Administrator</strong></p>
+        <a href="${ROOT}admin-news/" class="admin-submit-btn" style="display:block;text-align:center;text-decoration:none;margin-bottom:10px;">&#128240; Manage News &amp; Events</a>
         <button class="admin-submit-btn admin-logout-btn" id="adminLogoutBtn" style="margin-top:4px;">Logout</button>
       `);
       overlay.querySelector('#adminLogoutBtn').addEventListener('click', handleLogout);
@@ -781,10 +782,29 @@
       ]);
     }
 
-    fetch(ROOT + 'news/news.json')
-      .then(r => { if (!r.ok) throw new Error(); return r.json(); })
-      .then(items => { if (!Array.isArray(items) || !items.length) throw new Error(); buildTrack(items); })
-      .catch(loadFallback);
+    function loadFromJson() {
+      fetch(ROOT + 'news/news.json')
+        .then(r => { if (!r.ok) throw new Error(); return r.json(); })
+        .then(items => { if (!Array.isArray(items) || !items.length) throw new Error(); buildTrack(items); })
+        .catch(loadFallback);
+    }
+
+    if (window._supabase) {
+      window._supabase
+        .from('news_events')
+        .select('date_label, title')
+        .eq('type', 'news')
+        .eq('is_published', true)
+        .order('created_at', { ascending: false })
+        .limit(20)
+        .then(function (res) {
+          if (res.error || !res.data || !res.data.length) { loadFromJson(); return; }
+          buildTrack(res.data.map(function (i) { return { date: i.date_label, text: i.title }; }));
+        })
+        .catch(loadFromJson);
+    } else {
+      loadFromJson();
+    }
 
     pauseBtn?.addEventListener('click', () => {
       isPaused = !isPaused;

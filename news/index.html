@@ -223,6 +223,72 @@
   </footer>
 
   <button class="back-to-top" id="backToTop" aria-label="Back to top">&#8679;</button>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <script src="../js/supabase-client.js"></script>
   <script src="../js/script.js"></script>
+  <script>
+  (function () {
+    if (!window._supabase) return;
+    window._supabase
+      .from('news_events')
+      .select('*')
+      .eq('is_published', true)
+      .order('created_at', { ascending: false })
+      .then(function (res) {
+        if (res.error || !res.data || !res.data.length) return;
+        var items = res.data;
+
+        var newsItems   = items.filter(function(i){ return i.type === 'news'; });
+        var eventItems  = items.filter(function(i){ return i.type === 'event'; });
+        var noticeItems = items.filter(function(i){ return i.type === 'notice'; });
+
+        function esc(s) {
+          return (s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+        }
+
+        if (newsItems.length) {
+          document.querySelector('#news-tab .news-grid').innerHTML = newsItems.map(function(item, idx) {
+            var isFeatured = item.is_featured || idx === 0;
+            return '<article class="news-card' + (isFeatured ? ' news-card--featured' : '') + '">' +
+              '<div class="news-meta">' +
+                '<span class="news-cat">' + esc(item.category || 'News') + '</span>' +
+                '<span class="news-date">' + esc(item.date_label) + '</span>' +
+              '</div>' +
+              '<h3>' + esc(item.title) + '</h3>' +
+              '<p>' + esc(item.body) + '</p>' +
+            '</article>';
+          }).join('');
+        }
+
+        if (eventItems.length) {
+          document.querySelector('#events-tab .events-list').innerHTML = eventItems.map(function(item) {
+            return '<div class="event-item">' +
+              '<div class="event-date-block">' +
+                '<span class="event-day">' + esc(item.event_day || '—') + '</span>' +
+                '<span class="event-month">' + esc(item.event_month || '') + '</span>' +
+              '</div>' +
+              '<div class="event-details">' +
+                '<h3>' + esc(item.title) + '</h3>' +
+                '<p>' + esc(item.body) + '</p>' +
+                '<div class="event-meta">' +
+                  (item.event_venue ? '<span>&#128205; ' + esc(item.event_venue) + '</span>' : '') +
+                  (item.event_time  ? '<span>&#128336; ' + esc(item.event_time)  + '</span>' : '') +
+                '</div>' +
+              '</div>' +
+            '</div>';
+          }).join('');
+        }
+
+        if (noticeItems.length) {
+          document.querySelector('#notices-tab .notices-list').innerHTML = noticeItems.map(function(item) {
+            return '<div class="notice-item' + (item.is_urgent ? ' notice-urgent' : '') + '">' +
+              '<span class="notice-label">' + esc(item.category || 'Notice') + '</span>' +
+              '<div><h4>' + esc(item.title) + '</h4><p>' + esc(item.body) + '</p></div>' +
+            '</div>';
+          }).join('');
+        }
+      });
+  })();
+  </script>
 </body>
 </html>

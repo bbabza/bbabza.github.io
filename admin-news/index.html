@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <script>try{if(location.pathname.endsWith("index.html"))history.replaceState(null,"",location.pathname.slice(0,-10)||"./")}catch(e){}</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Admin — News &amp; Events Management" />
+  <title>Manage News &amp; Events | BBA Admin</title>
+  <link rel="icon" href="../images/logo.jpeg" type="image/jpeg" />
+  <link rel="stylesheet" href="../css/styles.css" />
+  <link rel="stylesheet" href="../css/fonts.css" />
+</head>
+<body data-root="../">
+
+  <div class="topbar">
+    <div class="container">
+      <span>&#9742; 0866 &ndash; 2574321</span>
+      <span>&#9993; bbabza@gmail.com</span>
+      <span>&#128205; Civil Courts Campus, Governorpet, Vijayawada &ndash; 520 002</span>
+      <span>&#128197; Established 1906</span>
+    </div>
+  </div>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="../index.html" class="logo-block">
+        <div class="emblem">
+          <img src="../images/logo.jpeg" alt="The Bezwada Bar Association Logo" class="header-logo" />
+        </div>
+        <div class="logo-text">
+          <h1>The Bezwada Bar Association</h1>
+          <p class="tagline">Let Justice Prevail &mdash; Estd. 1906</p>
+        </div>
+      </a>
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation"><span></span><span></span><span></span></button>
+      <nav class="main-nav" id="mainNav">
+        <ul>
+          <li><a href="../index.html">Home</a></li>
+          <li><a href="../about/index.html">About</a></li>
+          <li><a href="../office-bearers/index.html">Office Bearers</a></li>
+          <li><a href="../members/index.html">Members</a></li>
+          <li><a href="../blog/index.html">Blog</a></li>
+          <li><a href="../gallery/index.html">Gallery</a></li>
+          <li><a href="../tournament/index.html" style="color:var(--gold)!important;">&#127992; Tournament</a></li>
+          <li><a href="../contact/index.html" class="btn-nav">Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <div class="news-ticker" id="newsTicker">
+    <div class="ticker-label"><span class="ticker-dot"></span>LATEST NEWS</div>
+    <div class="ticker-viewport">
+      <div class="ticker-track" id="tickerTrack"><span class="ticker-placeholder">Loading latest news&hellip;</span></div>
+    </div>
+    <button class="ticker-pause" id="tickerPause" title="Pause / Resume">&#10074;&#10074;</button>
+  </div>
+
+  <div class="page-hero">
+    <div class="container">
+      <p class="page-hero-eyebrow">Admin</p>
+      <h2>News &amp; Events Manager</h2>
+      <div class="breadcrumb">
+        <a href="../index.html">Home</a>
+        <span class="breadcrumb-sep">&#8250;</span>
+        <span>News Manager</span>
+      </div>
+    </div>
+  </div>
+
+  <section class="section section-light">
+    <div class="container">
+
+      <!-- Access denied -->
+      <div id="newsGuard" style="display:none;text-align:center;padding:60px 0;">
+        <div style="font-size:3rem;margin-bottom:16px;">&#128274;</div>
+        <h3 style="color:var(--navy2);font-family:var(--ff-serif);margin-bottom:10px;">Access Denied</h3>
+        <p style="color:var(--muted);">You must be logged in as admin to access this page.</p>
+        <a href="../index.html" class="btn btn-gold" style="margin-top:20px;display:inline-block;">Go Home</a>
+      </div>
+
+      <!-- Password prompt if session expired -->
+      <div id="newsPassPrompt" style="display:none;max-width:380px;margin:0 auto;padding:40px 0;">
+        <div class="reg-form-card">
+          <h3 style="font-family:var(--ff-serif);color:var(--navy2);margin-bottom:20px;">Confirm Admin Password</h3>
+          <div class="form-group">
+            <label style="font-size:12px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.5px;">Password</label>
+            <input type="password" id="newsPassInput" placeholder="Admin password" style="width:100%;padding:10px 14px;border:1.5px solid var(--border);border-radius:6px;font-size:14px;margin-top:6px;" />
+          </div>
+          <p id="newsPassErr" style="color:#c62828;font-size:13px;margin-bottom:8px;min-height:18px;"></p>
+          <button id="newsPassSubmit" class="btn btn-gold" style="width:100%;padding:11px;">Continue</button>
+        </div>
+      </div>
+
+      <!-- Main management UI -->
+      <div id="newsAdminContent" style="display:none;">
+
+        <!-- Filter bar -->
+        <div style="display:flex;gap:8px;margin-bottom:28px;flex-wrap:wrap;align-items:center;">
+          <button class="gfilter-btn active" data-nfilter="all" onclick="window._newsFilter('all',this)">All</button>
+          <button class="gfilter-btn" data-nfilter="news" onclick="window._newsFilter('news',this)">&#128240; News</button>
+          <button class="gfilter-btn" data-nfilter="event" onclick="window._newsFilter('event',this)">&#128197; Events</button>
+          <button class="gfilter-btn" data-nfilter="notice" onclick="window._newsFilter('notice',this)">&#128276; Notices</button>
+          <button class="btn btn-gold" style="margin-left:auto;padding:8px 20px;font-size:13px;" onclick="window._newsToggleForm()">&#43; Add New</button>
+        </div>
+
+        <!-- Add / Edit form -->
+        <div id="newsFormWrap" style="display:none;margin-bottom:32px;">
+          <div class="reg-form-card">
+            <h3 id="newsFormTitle" style="font-family:var(--ff-serif);color:var(--navy2);margin-bottom:24px;">Add New Item</h3>
+            <input type="hidden" id="newsEditId" value="" />
+
+            <!-- Type selector -->
+            <div class="form-group" style="margin-bottom:18px;">
+              <label style="font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:8px;">Type *</label>
+              <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:14px;font-weight:600;color:var(--navy2);">
+                  <input type="radio" name="newsType" value="news" checked onchange="window._newsTypeChange()" style="accent-color:var(--navy);" /> News
+                </label>
+                <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:14px;font-weight:600;color:var(--navy2);">
+                  <input type="radio" name="newsType" value="event" onchange="window._newsTypeChange()" style="accent-color:var(--navy);" /> Event
+                </label>
+                <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:14px;font-weight:600;color:var(--navy2);">
+                  <input type="radio" name="newsType" value="notice" onchange="window._newsTypeChange()" style="accent-color:var(--navy);" /> Notice
+                </label>
+              </div>
+            </div>
+
+            <!-- Common fields -->
+            <div class="reg-form-grid" style="margin-bottom:16px;">
+              <div class="form-group">
+                <label style="font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:6px;">Title *</label>
+                <input type="text" id="nfTitle" placeholder="Headline or event name" style="width:100%;padding:10px 14px;border:1.5px solid var(--border);border-radius:6px;font-size:14px;" />
+              </div>
+              <div class="form-group">
+                <label style="font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:6px;">Date Label *</label>
+                <input type="text" id="nfDateLabel" placeholder="e.g. 03 Aug 2026" style="width:100%;padding:10px 14px;border:1.5px solid var(--border);border-radius:6px;font-size:14px;" />
+              </div>
+            </div>
+
+            <!-- Category (news + notice) -->
+            <div id="nfCategoryWrap" class="form-group" style="margin-bottom:16px;">
+              <label style="font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:6px;">Category</label>
+              <input type="text" id="nfCategory" placeholder="e.g. Urgent, Welfare, Notice, Circular" style="width:100%;padding:10px 14px;border:1.5px solid var(--border);border-radius:6px;font-size:14px;" />
+            </div>
+
+            <!-- Body -->
+            <div class="form-group" style="margin-bottom:16px;">
+              <label style="font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:6px;">Body / Description *</label>
+              <textarea id="nfBody" rows="4" placeholder="Full content or description" style="width:100%;padding:10px 14px;border:1.5px solid var(--border);border-radius:6px;font-size:14px;resize:vertical;font-family:inherit;"></textarea>
+            </div>
+
+            <!-- Event-only fields -->
+            <div id="nfEventFields" style="display:none;">
+              <div class="reg-form-grid" style="margin-bottom:16px;">
+                <div class="form-group">
+                  <label style="font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:6px;">Event Day</label>
+                  <input type="text" id="nfEventDay" placeholder="e.g. 15" style="width:100%;padding:10px 14px;border:1.5px solid var(--border);border-radius:6px;font-size:14px;" />
+                </div>
+                <div class="form-group">
+                  <label style="font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:6px;">Event Month</label>
+                  <input type="text" id="nfEventMonth" placeholder="e.g. Sep" style="width:100%;padding:10px 14px;border:1.5px solid var(--border);border-radius:6px;font-size:14px;" />
+                </div>
+                <div class="form-group">
+                  <label style="font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:6px;">Time</label>
+                  <input type="text" id="nfEventTime" placeholder="e.g. 10:00 AM" style="width:100%;padding:10px 14px;border:1.5px solid var(--border);border-radius:6px;font-size:14px;" />
+                </div>
+                <div class="form-group">
+                  <label style="font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:6px;">Venue</label>
+                  <input type="text" id="nfEventVenue" placeholder="e.g. Bar Association Hall" style="width:100%;padding:10px 14px;border:1.5px solid var(--border);border-radius:6px;font-size:14px;" />
+                </div>
+              </div>
+            </div>
+
+            <!-- Flags row -->
+            <div style="display:flex;gap:24px;flex-wrap:wrap;margin-bottom:20px;align-items:center;">
+              <label id="nfFeaturedWrap" style="display:flex;align-items:center;gap:7px;cursor:pointer;font-size:13.5px;font-weight:600;color:var(--text);">
+                <input type="checkbox" id="nfFeatured" style="accent-color:var(--navy);width:16px;height:16px;" /> Featured (full-width card)
+              </label>
+              <label id="nfUrgentWrap" style="display:none;align-items:center;gap:7px;cursor:pointer;font-size:13.5px;font-weight:600;color:var(--text);">
+                <input type="checkbox" id="nfUrgent" style="accent-color:#c0392b;width:16px;height:16px;" /> Mark as Urgent
+              </label>
+              <label style="display:flex;align-items:center;gap:7px;cursor:pointer;font-size:13.5px;font-weight:600;color:var(--text);">
+                <input type="checkbox" id="nfPublished" checked style="accent-color:var(--navy);width:16px;height:16px;" /> Published
+              </label>
+            </div>
+
+            <p id="newsFormErr" style="color:#c62828;font-size:13px;margin-bottom:12px;min-height:18px;"></p>
+            <div style="display:flex;gap:10px;">
+              <button id="newsFormSubmit" class="btn btn-gold" style="flex:1;padding:12px;" onclick="window._newsSubmitForm()">Save Item</button>
+              <button class="btn btn-outline" style="background:transparent;border:2px solid var(--border);color:var(--text);padding:12px 20px;" onclick="window._newsToggleForm()">Cancel</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Status / loading -->
+        <p id="newsLoadMsg" style="text-align:center;color:var(--muted);font-size:14px;padding:24px 0;">Loading items&hellip;</p>
+
+        <!-- Items list -->
+        <div id="newsItemsList"></div>
+
+      </div><!-- end newsAdminContent -->
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <h3>The Bezwada Bar Association</h3>
+        <p>Upholding justice and serving the legal fraternity of Vijayawada since 1906.</p>
+        <p>Civil Courts Campus, Gopala Reddy Road,<br/>Governorpet, Vijayawada &ndash; 520 002</p>
+        <p class="footer-tel">&#9742; 0866 &ndash; 2574321 &bull; &#9993; bbabza@gmail.com</p>
+      </div>
+      <div class="footer-links">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="../index.html">Home</a></li>
+          <li><a href="../about/index.html">About</a></li>
+          <li><a href="../office-bearers/index.html">Office Bearers</a></li>
+          <li><a href="../members/index.html">Members Directory</a></li>
+          <li><a href="../news/index.html">News &amp; Events</a></li>
+          <li><a href="../blog/index.html">Blog</a></li>
+          <li><a href="../contact/index.html">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>Resources</h4>
+        <ul>
+          <li><a href="https://www.barcouncilofindia.org" target="_blank" rel="noopener">Bar Council of India</a></li>
+          <li><a href="https://hc.ap.nic.in" target="_blank" rel="noopener">AP High Court</a></li>
+          <li><a href="https://nalsa.gov.in" target="_blank" rel="noopener">NALSA &mdash; Legal Aid</a></li>
+          <li><a href="https://districts.ecourts.gov.in/krishna" target="_blank" rel="noopener">District Courts &mdash; Krishna</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>Affiliations</h4>
+        <ul>
+          <li>Bar Council of Andhra Pradesh</li>
+          <li>Bar Council of India</li>
+          <li>District Legal Services Authority</li>
+          <li>Krishna District Court</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="container">
+        <p>&copy; 2026 The Bezwada Bar Association. All rights reserved.</p>
+        <p>Governorpet &bull; Vijayawada &bull; Krishna District &bull; Andhra Pradesh</p>
+      </div>
+    </div>
+  </footer>
+
+  <button class="back-to-top" id="backToTop" aria-label="Back to top">&#8679;</button>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <script src="../js/supabase-client.js"></script>
+  <script src="../js/script.js"></script>
+  <script>
+  (function () {
+    const ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRpd2F6Ym50eHZ5dndmanpjd3J2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc5MTUxOTYsImV4cCI6MjEwMzQ5MTE5Nn0.XQ-7AadKhw_b74fUxrfGlKMkASqkzbPUz8jrS12af6E';
+    const OPS_URL = 'https://tiwazbntxvyvwfjzcwrv.supabase.co/functions/v1/news-admin-ops';
+
+    // ── Auth guard ────────────────────────────────────────────
+    if (localStorage.getItem('bba_admin') !== '1') {
+      document.getElementById('newsGuard').style.display = '';
+      return;
+    }
+
+    var adminPass = sessionStorage.getItem('bba_admin_pass') || '';
+    var allItems  = [];
+    var curFilter = 'all';
+
+    function escHtml(s) {
+      return (s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
+    // ── Password prompt if session expired ────────────────────
+    function ensurePass(cb) {
+      if (adminPass) { cb(); return; }
+      document.getElementById('newsAdminContent').style.display = 'none';
+      document.getElementById('newsPassPrompt').style.display = '';
+      document.getElementById('newsPassSubmit').onclick = async function () {
+        var p = document.getElementById('newsPassInput').value.trim();
+        if (!p) return;
+        // Quick verify: try a list_all; if 401 show error
+        var r = await callOps('list_all', null, null, p);
+        if (r && r.success) {
+          adminPass = p;
+          sessionStorage.setItem('bba_admin_pass', p);
+          document.getElementById('newsPassPrompt').style.display = 'none';
+          document.getElementById('newsAdminContent').style.display = '';
+          renderItems(r.items);
+        } else {
+          document.getElementById('newsPassErr').textContent = 'Invalid password.';
+        }
+      };
+    }
+
+    async function callOps(operation, id, data, passOverride) {
+      try {
+        var res = await fetch(OPS_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + ANON_KEY },
+          body: JSON.stringify({ admin_password: passOverride || adminPass, operation: operation, id: id, data: data })
+        });
+        var body = await res.json();
+        if (res.status === 401) { adminPass = ''; sessionStorage.removeItem('bba_admin_pass'); }
+        return body;
+      } catch (e) {
+        return { success: false, message: 'Network error.' };
+      }
+    }
+
+    async function loadItems() {
+      document.getElementById('newsLoadMsg').textContent = 'Loading items…';
+      var r = await callOps('list_all', null, null);
+      if (!r || !r.success) {
+        if (!adminPass) { ensurePass(loadItems); return; }
+        document.getElementById('newsLoadMsg').textContent = 'Failed to load: ' + (r ? r.message : 'Network error.');
+        return;
+      }
+      document.getElementById('newsLoadMsg').style.display = 'none';
+      renderItems(r.items || []);
+    }
+
+    function typeBadgeColor(type) {
+      if (type === 'news')   return 'background:#e6f7f7;color:var(--navy2);';
+      if (type === 'event')  return 'background:#e8f0ff;color:#1a3a8f;';
+      if (type === 'notice') return 'background:#fff3cd;color:#856404;';
+      return '';
+    }
+
+    function renderItems(items) {
+      allItems = items;
+      var filtered = curFilter === 'all' ? items : items.filter(function(i){ return i.type === curFilter; });
+      var list = document.getElementById('newsItemsList');
+      if (!filtered.length) {
+        list.innerHTML = '<p style="text-align:center;color:var(--muted);padding:40px 0;">No items yet. Click <strong>+ Add New</strong> to create one.</p>';
+        return;
+      }
+      list.innerHTML = filtered.map(function(item) {
+        return '<div class="news-admin-item" id="nai-' + item.id + '">' +
+          '<div class="news-admin-item-hd">' +
+            '<span style="' + typeBadgeColor(item.type) + 'padding:2px 9px;border-radius:10px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;">' + escHtml(item.type) + '</span>' +
+            (item.category ? '<span style="font-size:12px;color:var(--muted);margin-left:4px;">[' + escHtml(item.category) + ']</span>' : '') +
+            (!item.is_published ? '<span style="background:#fdecea;color:#c62828;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;margin-left:4px;">DRAFT</span>' : '') +
+            (item.is_featured ? '<span style="background:rgba(201,162,39,.15);color:var(--gold2);padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;margin-left:4px;">FEATURED</span>' : '') +
+            (item.is_urgent ? '<span style="background:#fdecea;color:#c62828;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;margin-left:4px;">URGENT</span>' : '') +
+          '</div>' +
+          '<div class="news-admin-item-title-row">' +
+            '<span class="news-admin-item-title">' + escHtml(item.title) + '</span>' +
+            '<span class="news-admin-item-date">' + escHtml(item.date_label) + '</span>' +
+          '</div>' +
+          '<p class="news-admin-item-body">' + escHtml((item.body || '').substring(0, 120)) + ((item.body || '').length > 120 ? '&hellip;' : '') + '</p>' +
+          '<div class="news-admin-item-actions">' +
+            '<button class="set-pwd-btn" onclick="window._newsEditItem(\'' + item.id + '\')">&#9998; Edit</button>' +
+            '<button class="set-pwd-btn" onclick="window._newsTogglePublish(\'' + item.id + '\',' + item.is_published + ')">' +
+              (item.is_published ? '&#128065; Unpublish' : '&#10003; Publish') +
+            '</button>' +
+            '<button class="set-pwd-btn" style="color:#c62828;border-color:#c62828;" onclick="window._newsDeleteItem(\'' + item.id + '\',\'' + escHtml(item.title).replace(/'/g,"\\'") + '\')">&#128465; Delete</button>' +
+          '</div>' +
+        '</div>';
+      }).join('');
+    }
+
+    // ── Filter ────────────────────────────────────────────────
+    window._newsFilter = function(filter, btn) {
+      curFilter = filter;
+      document.querySelectorAll('[data-nfilter]').forEach(function(b){ b.classList.remove('active'); });
+      btn.classList.add('active');
+      renderItems(allItems);
+    };
+
+    // ── Add form toggle ───────────────────────────────────────
+    window._newsToggleForm = function(item) {
+      var wrap = document.getElementById('newsFormWrap');
+      var isHidden = wrap.style.display === 'none';
+      if (!isHidden && !item) { wrap.style.display = 'none'; return; }
+      // Reset form
+      document.getElementById('newsEditId').value = item ? item.id : '';
+      document.getElementById('newsFormTitle').textContent = item ? 'Edit Item' : 'Add New Item';
+      document.querySelectorAll('input[name="newsType"]').forEach(function(r){
+        r.checked = r.value === (item ? item.type : 'news');
+      });
+      document.getElementById('nfTitle').value = item ? (item.title || '') : '';
+      document.getElementById('nfDateLabel').value = item ? (item.date_label || '') : '';
+      document.getElementById('nfCategory').value = item ? (item.category || '') : '';
+      document.getElementById('nfBody').value = item ? (item.body || '') : '';
+      document.getElementById('nfEventDay').value = item ? (item.event_day || '') : '';
+      document.getElementById('nfEventMonth').value = item ? (item.event_month || '') : '';
+      document.getElementById('nfEventTime').value = item ? (item.event_time || '') : '';
+      document.getElementById('nfEventVenue').value = item ? (item.event_venue || '') : '';
+      document.getElementById('nfFeatured').checked = item ? !!item.is_featured : false;
+      document.getElementById('nfUrgent').checked = item ? !!item.is_urgent : false;
+      document.getElementById('nfPublished').checked = item ? !!item.is_published : true;
+      document.getElementById('newsFormErr').textContent = '';
+      document.getElementById('newsFormSubmit').textContent = item ? 'Update Item' : 'Save Item';
+      window._newsTypeChange();
+      wrap.style.display = '';
+      wrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    };
+
+    window._newsTypeChange = function() {
+      var type = document.querySelector('input[name="newsType"]:checked')?.value || 'news';
+      document.getElementById('nfEventFields').style.display = type === 'event' ? '' : 'none';
+      document.getElementById('nfCategoryWrap').style.display = type === 'event' ? 'none' : '';
+      document.getElementById('nfFeaturedWrap').style.display = type === 'news' ? 'flex' : 'none';
+      document.getElementById('nfUrgentWrap').style.display = type === 'notice' ? 'flex' : 'none';
+    };
+
+    // ── Submit form ───────────────────────────────────────────
+    window._newsSubmitForm = async function() {
+      var errEl = document.getElementById('newsFormErr');
+      var btn   = document.getElementById('newsFormSubmit');
+      errEl.textContent = '';
+      var type  = document.querySelector('input[name="newsType"]:checked')?.value || 'news';
+      var title = document.getElementById('nfTitle').value.trim();
+      var dateL = document.getElementById('nfDateLabel').value.trim();
+      var body  = document.getElementById('nfBody').value.trim();
+      if (!title || !dateL || !body) { errEl.textContent = 'Title, Date Label and Body are required.'; return; }
+      btn.disabled = true; btn.textContent = 'Saving…';
+      var data = {
+        type: type,
+        title: title,
+        date_label: dateL,
+        body: body,
+        category: document.getElementById('nfCategory').value.trim() || null,
+        event_day: type === 'event' ? (document.getElementById('nfEventDay').value.trim() || null) : null,
+        event_month: type === 'event' ? (document.getElementById('nfEventMonth').value.trim() || null) : null,
+        event_time: type === 'event' ? (document.getElementById('nfEventTime').value.trim() || null) : null,
+        event_venue: type === 'event' ? (document.getElementById('nfEventVenue').value.trim() || null) : null,
+        is_featured: type === 'news' ? document.getElementById('nfFeatured').checked : false,
+        is_urgent: type === 'notice' ? document.getElementById('nfUrgent').checked : false,
+        is_published: document.getElementById('nfPublished').checked,
+      };
+      var editId = document.getElementById('newsEditId').value;
+      var op = editId ? 'update' : 'create';
+      var r = await callOps(op, editId || null, data);
+      btn.disabled = false; btn.textContent = editId ? 'Update Item' : 'Save Item';
+      if (r && r.success) {
+        document.getElementById('newsFormWrap').style.display = 'none';
+        loadItems();
+      } else {
+        errEl.textContent = (r && r.message) ? r.message : 'Save failed. Try again.';
+      }
+    };
+
+    // ── Edit item ─────────────────────────────────────────────
+    window._newsEditItem = function(id) {
+      var item = allItems.find(function(i){ return i.id === id; });
+      if (!item) return;
+      window._newsToggleForm(item);
+    };
+
+    // ── Toggle publish ────────────────────────────────────────
+    window._newsTogglePublish = async function(id, currentlyPublished) {
+      var r = await callOps('update', id, { is_published: !currentlyPublished });
+      if (r && r.success) loadItems();
+      else alert('Failed: ' + (r ? r.message : 'Network error.'));
+    };
+
+    // ── Delete item ───────────────────────────────────────────
+    window._newsDeleteItem = async function(id, title) {
+      if (!confirm('Delete "' + title + '"?\n\nThis cannot be undone.')) return;
+      var r = await callOps('delete', id, null);
+      if (r && r.success) loadItems();
+      else alert('Failed: ' + (r ? r.message : 'Network error.'));
+    };
+
+    // ── Boot ──────────────────────────────────────────────────
+    document.getElementById('newsAdminContent').style.display = '';
+    if (adminPass) {
+      loadItems();
+    } else {
+      ensurePass(loadItems);
+    }
+  })();
+  </script>
+
+</body>
+</html>

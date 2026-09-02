@@ -2491,6 +2491,58 @@ a.logo-block:hover { opacity: .92; }
   font-size: 13.5px;
 }
 
+/* ─── NEWS ADMIN MANAGEMENT ──────────────────────────────── */
+.news-admin-item {
+  background: linear-gradient(148deg, #ffffff, #f5fffe);
+  border: 1px solid rgba(0,139,139,.13);
+  border-radius: 10px;
+  padding: 18px 20px;
+  margin-bottom: 12px;
+  box-shadow: 0 2px 12px rgba(0,96,96,.07), inset 0 1px 0 rgba(255,255,255,1);
+  transition: box-shadow .2s, transform .2s;
+}
+.news-admin-item:hover {
+  box-shadow: 0 6px 24px rgba(0,96,96,.13);
+  transform: translateY(-1px);
+}
+.news-admin-item-hd {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+.news-admin-item-title-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 6px;
+}
+.news-admin-item-title {
+  font-family: var(--ff-serif);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--navy2);
+}
+.news-admin-item-date {
+  font-size: 12px;
+  color: var(--muted);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.news-admin-item-body {
+  font-size: 13px;
+  color: #555;
+  line-height: 1.6;
+  margin-bottom: 12px;
+}
+.news-admin-item-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
 /* ═══════════════════════════════════════════════════════════
    GLOSSY ENHANCEMENTS
    ═══════════════════════════════════════════════════════════ */
