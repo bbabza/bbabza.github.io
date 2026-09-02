@@ -1159,8 +1159,10 @@
         '<input type="file" id="mProfPhotoInput" accept="image/*" style="display:none;" /></label>' +
         '</div>' +
         '<form id="memberProfileForm" autocomplete="off">' +
-        '<div class="admin-form-group"><label>Enrollment No.</label>' +
+        '<div class="admin-form-group"><label>Enrollment No. <span style="font-size:11px;font-weight:400;opacity:.6;">(contact admin to change)</span></label>' +
         '<input type="text" value="' + (m.enrollment_no || '') + '" disabled style="opacity:.55;" /></div>' +
+        '<div class="admin-form-group"><label>C.C.No <span style="font-size:11px;font-weight:400;opacity:.6;">(contact admin to change)</span></label>' +
+        '<input type="text" value="' + (m.cc_no || '') + '" disabled style="opacity:.55;" /></div>' +
         '<div class="admin-form-group"><label>Full Name <span style="font-size:11px;font-weight:400;opacity:.6;">(contact admin to change)</span></label>' +
         '<input type="text" value="' + (m.name || '') + '" disabled style="opacity:.55;" /></div>' +
         '<div class="admin-form-group"><label>Mobile Number <span style="font-size:11px;font-weight:400;opacity:.6;">(contact admin to change)</span></label>' +
