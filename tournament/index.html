@@ -387,39 +387,50 @@
         <a href="#" onclick="backToStep2(event)" style="font-size:12px;color:var(--navy);font-weight:700;margin-top:10px;display:inline-block;">&#8592; Change details</a>
       </div>
 
-      <!-- Razorpay Payment Panel -->
-      <div class="rzp-pay-panel">
-        <div class="rzp-pay-body">
+      <!-- QR Payment Panel -->
+      <div class="qr-pay-panel">
+
+        <div class="qr-pay-body">
 
           <!-- Order Summary -->
           <div class="rzp-card">
             <div class="rzp-card-title">Order Summary</div>
-            <div id="rzpOrderLines" class="rzp-order-lines"></div>
+            <div id="qrOrderLines" class="rzp-order-lines"></div>
             <div class="rzp-summary-total">
-              <span>Total</span>
-              <strong id="rzpTotalDisplay">&#8377;0</strong>
+              <span>Total Payable</span>
+              <strong id="qrTotalDisplay">&#8377;0</strong>
             </div>
           </div>
 
-          <!-- Registrant -->
-          <div class="rzp-card">
-            <div class="rzp-card-title">Registrant</div>
-            <div class="rzp-reg-row"><span>Name</span><strong id="rzpRegName"></strong></div>
-            <div class="rzp-reg-row"><span>Enrollment</span><strong id="rzpRegEnr"></strong></div>
-            <div class="rzp-reg-row"><span>Mobile</span><strong id="rzpRegMobile"></strong></div>
+          <!-- QR Code -->
+          <div class="rzp-card qr-scan-card">
+            <div class="rzp-card-title">Scan &amp; Pay</div>
+            <div class="qr-image-wrap">
+              <div id="qrCodeCanvas"></div>
+            </div>
+            <div class="qr-upi-row">
+              <span>UPI ID</span>
+              <strong id="qrUpiId"></strong>
+            </div>
+            <div class="qr-amount-badge">Pay <strong id="qrAmountBadge">&#8377;0</strong></div>
           </div>
 
         </div>
 
-        <p id="rzpError" class="rzp-error" style="display:none;"></p>
-
-        <button class="rzp-pay-btn" id="rzpPayBtn" onclick="openRazorpay()">
-          &#128274; &nbsp;Pay <span id="rzpBtnAmount">&#8377;0</span> Securely
-        </button>
-
-        <div class="rzp-powered-row">
-          Secured by <strong>Razorpay</strong> &nbsp;&bull;&nbsp; SSL Encrypted &nbsp;&bull;&nbsp; PCI DSS Compliant
+        <!-- UTR Entry -->
+        <div class="qr-utr-section">
+          <p class="qr-utr-instruction">After completing the payment in your UPI app, enter the <strong>UTR / Transaction Reference Number</strong> shown in your payment receipt.</p>
+          <input type="text" id="utrInput" class="qr-utr-input" placeholder="e.g. 427612345678" maxlength="30" />
+          <p id="utrError" class="rzp-error" style="display:none;margin-top:10px;"></p>
+          <button class="rzp-pay-btn" id="utrSubmitBtn" onclick="submitUTR()">
+            Submit Payment Reference &rarr;
+          </button>
         </div>
+
+        <div class="qr-help-note">
+          &#9432; The UTR is a 12-digit number found in your UPI app under transaction history. Contact a coordinator if you need assistance.
+        </div>
+
       </div>
 
     </div>
@@ -459,13 +470,13 @@
             <span id="confirmTotal"></span>
           </div>
           <div class="confirm-utr-row">
-            <span>Payment ID</span>
-            <strong id="confirmPaymentId">&mdash;</strong>
+            <span>UTR / Ref. No.</span>
+            <strong id="confirmUTR">&mdash;</strong>
           </div>
         </div>
 
-        <div class="confirm-note" style="background:#e8f5e9;border-color:#a5d6a7;color:#1b5e20;">
-          &#10003; <strong>Payment confirmed.</strong> Your registration is complete. Please <strong>screenshot or print this page</strong> for your records.
+        <div class="confirm-note" style="background:#fff8e1;border-color:#ffe082;color:#e65100;">
+          &#9203; <strong>Payment reference submitted.</strong> Our team will verify your payment and confirm your registration. Please <strong>screenshot or print this page</strong> and quote your Ref. No. if contacting a coordinator.
         </div>
 
         <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
@@ -563,15 +574,20 @@
   <button class="back-to-top" id="backToTop" aria-label="Back to top">&#8679;</button>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
   <script src="../js/supabase-client.js"></script>
+  <script src="../js/qrcode.min.js"></script>
   <script src="../js/script.js"></script>
   <script>
     (function () {
       'use strict';
 
-      // Public Supabase anon key — safe to expose in client code
+      // ── Payment QR configuration ─────────────────────────────
+      // Update upiId and payeeName to change the generated QR code.
+      const QR_CONFIG = {
+        upiId:     'bbabza@upi',
+        payeeName: 'Bezwada Bar Association',
+      };
+
       const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRpd2F6Ym50eHZ5dndmanpjd3J2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc5MTUxOTYsImV4cCI6MjEwMzQ5MTE5Nn0.XQ-7AadKhw_b74fUxrfGlKMkASqkzbPUz8jrS12af6E';
-      const CREATE_ORDER_URL  = 'https://tiwazbntxvyvwfjzcwrv.supabase.co/functions/v1/tournament-create-order';
-      const VERIFY_PAY_URL    = 'https://tiwazbntxvyvwfjzcwrv.supabase.co/functions/v1/tournament-verify-payment';
 
       function scrollToSection(id) {
         const el = document.getElementById(id);
@@ -623,6 +639,89 @@
           .eq('ref', ref);
         if (error) console.warn('UTR update failed:', error.message);
       }
+
+      // ── QR payment state ─────────────────────────────────────
+      let _payRef = null, _payTotal = 0, _payName = null, _payEnr = null, _payMobile = null;
+
+      function prepareQRStep(ref, name, enr, mobile, total) {
+        _payRef    = ref;
+        _payTotal  = total;
+        _payName   = name;
+        _payEnr    = enr;
+        _payMobile = mobile;
+
+        // Order summary lines
+        const lines = document.getElementById('qrOrderLines');
+        lines.innerHTML = '';
+        selected.forEach(id => {
+          const c = CATS[id];
+          const div = document.createElement('div');
+          div.className = 'rzp-order-line';
+          div.innerHTML = '<span>' + c.label + '</span><span>&#8377;' + c.fee.toLocaleString('en-IN') + '</span>';
+          lines.appendChild(div);
+        });
+
+        document.getElementById('qrTotalDisplay').innerHTML = '&#8377;' + total.toLocaleString('en-IN');
+        document.getElementById('qrAmountBadge').innerHTML  = '&#8377;' + total.toLocaleString('en-IN');
+        document.getElementById('qrUpiId').textContent      = QR_CONFIG.upiId;
+
+        // Generate UPI QR code
+        var upiString = 'upi://pay?pa=' + encodeURIComponent(QR_CONFIG.upiId) +
+          '&pn=' + encodeURIComponent(QR_CONFIG.payeeName) +
+          '&am=' + total +
+          '&cu=INR' +
+          '&tn=' + encodeURIComponent('Tournament Reg ' + ref);
+        var qrWrap = document.getElementById('qrCodeCanvas');
+        qrWrap.innerHTML = '';
+        new QRCode(qrWrap, {
+          text:         upiString,
+          width:        180,
+          height:       180,
+          correctLevel: QRCode.CorrectLevel.M,
+        });
+
+        document.getElementById('utrInput').value            = '';
+        document.getElementById('utrError').style.display   = 'none';
+        document.getElementById('utrSubmitBtn').disabled    = false;
+        document.getElementById('utrSubmitBtn').textContent = 'Submit Payment Reference →';
+      }
+
+      window.submitUTR = async function () {
+        const btn   = document.getElementById('utrSubmitBtn');
+        const errEl = document.getElementById('utrError');
+        const utr   = (document.getElementById('utrInput').value || '').trim();
+
+        errEl.style.display = 'none';
+        if (!utr) {
+          errEl.textContent   = 'Please enter the UTR / Transaction Reference Number.';
+          errEl.style.display = 'block';
+          return;
+        }
+        if (utr.length < 6) {
+          errEl.textContent   = 'UTR number seems too short. Please check and re-enter.';
+          errEl.style.display = 'block';
+          return;
+        }
+
+        btn.disabled    = true;
+        btn.textContent = 'Submitting…';
+
+        await updateUTRInDB(_payRef, utr);
+
+        // Populate confirmation
+        document.getElementById('confirmUTR').textContent = utr;
+
+        // Advance step bar
+        document.getElementById('step3').classList.remove('active');
+        document.getElementById('step3').classList.add('done');
+        document.getElementById('step3').querySelector('.tourn-step-num').textContent = '✓';
+        document.getElementById('conn3').classList.add('done');
+        document.getElementById('step4').classList.add('active');
+
+        document.getElementById('paymentSection').style.display = 'none';
+        document.getElementById('confirmSection').style.display = 'block';
+        scrollToSection('confirmSection');
+      };
 
       window.toggleCategory = function (id) {
         if (selected.has(id)) selected.delete(id);
@@ -794,7 +893,7 @@
         document.getElementById('confirmTotal').textContent = '₹' + total.toLocaleString('en-IN');
         saveRegistrationToDB(ref, name, enr, bar, mobile, total);
 
-        prepareRazorpayStep(ref, name, enr, mobile, total);
+        prepareQRStep(ref, name, enr, mobile, total);
 
         // Populate payment step summary bar
         document.getElementById('payStepName').textContent = name + ' · ' + enr;
@@ -818,156 +917,13 @@
         scrollToSection('paymentSection');
       });
 
-      // ── Razorpay state ───────────────────────────────────────
-      let _rzpRef = null, _rzpTotal = 0, _rzpName = null, _rzpEnr = null, _rzpMobile = null;
-
-      function prepareRazorpayStep(ref, name, enr, mobile, total) {
-        _rzpRef    = ref;
-        _rzpTotal  = total;
-        _rzpName   = name;
-        _rzpEnr    = enr;
-        _rzpMobile = mobile;
-
-        // Order summary lines
-        const lines = document.getElementById('rzpOrderLines');
-        lines.innerHTML = '';
-        selected.forEach(id => {
-          const c = CATS[id];
-          const div = document.createElement('div');
-          div.className = 'rzp-order-line';
-          div.innerHTML = '<span>' + c.label + '</span><span>&#8377;' + c.fee.toLocaleString('en-IN') + '</span>';
-          lines.appendChild(div);
-        });
-
-        document.getElementById('rzpTotalDisplay').innerHTML = '&#8377;' + total.toLocaleString('en-IN');
-        document.getElementById('rzpBtnAmount').innerHTML    = '&#8377;' + total.toLocaleString('en-IN');
-        document.getElementById('rzpRegName').textContent    = name;
-        document.getElementById('rzpRegEnr').textContent     = enr;
-        document.getElementById('rzpRegMobile').textContent  = mobile;
-
-        const btn   = document.getElementById('rzpPayBtn');
-        const errEl = document.getElementById('rzpError');
-        btn.disabled = false;
-        btn.innerHTML = '&#128274; &nbsp;Pay &#8377;' + total.toLocaleString('en-IN') + ' Securely';
-        errEl.style.display = 'none';
-      }
-
-      // Lazy-load Razorpay checkout.js on first payment attempt
-      function loadRazorpaySdk() {
-        if (window.Razorpay) return Promise.resolve();
-        return new Promise(function (resolve, reject) {
-          const s = document.createElement('script');
-          s.src = 'https://checkout.razorpay.com/v1/checkout.js';
-          s.onload = resolve;
-          s.onerror = reject;
-          document.head.appendChild(s);
-        });
-      }
-
-      window.openRazorpay = async function () {
-        const btn   = document.getElementById('rzpPayBtn');
-        const errEl = document.getElementById('rzpError');
-        errEl.style.display = 'none';
-        btn.disabled = true;
-        btn.textContent = 'Creating order…';
-
-        try {
-          await loadRazorpaySdk();
-
-          const res = await fetch(CREATE_ORDER_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY },
-            body: JSON.stringify({ ref: _rzpRef, amount: _rzpTotal, name: _rzpName, mobile: _rzpMobile }),
-          });
-          const data = await res.json();
-          if (!data.success) throw new Error(data.message || 'Order creation failed.');
-
-          const options = {
-            key:         data.key_id,
-            amount:      _rzpTotal * 100,
-            currency:    'INR',
-            name:        'Bezwada Bar Association',
-            description: 'Tournament Registration — ' + _rzpRef,
-            image:       '../images/logo.jpeg',
-            order_id:    data.order_id,
-            handler: async function (response) {
-              btn.disabled = true;
-              btn.textContent = 'Verifying…';
-              await handlePaymentSuccess(response);
-            },
-            prefill:  { name: _rzpName, contact: _rzpMobile },
-            theme:    { color: '#008B8B' },
-            modal: {
-              ondismiss: function () {
-                btn.disabled = false;
-                btn.innerHTML = '&#128274; &nbsp;Pay &#8377;' + _rzpTotal.toLocaleString('en-IN') + ' Securely';
-              },
-            },
-          };
-
-          const rzp = new window.Razorpay(options);
-          rzp.on('payment.failed', function (resp) {
-            errEl.textContent = 'Payment failed: ' + (resp.error.description || 'Please try again.');
-            errEl.style.display = 'block';
-            btn.disabled = false;
-            btn.innerHTML = '&#128274; &nbsp;Pay &#8377;' + _rzpTotal.toLocaleString('en-IN') + ' Securely';
-          });
-          rzp.open();
-
-        } catch (err) {
-          errEl.textContent = err.message || 'Something went wrong. Please try again.';
-          errEl.style.display = 'block';
-          btn.disabled = false;
-          btn.innerHTML = '&#128274; &nbsp;Pay &#8377;' + _rzpTotal.toLocaleString('en-IN') + ' Securely';
-        }
-      };
-
-      async function handlePaymentSuccess(response) {
-        const btn   = document.getElementById('rzpPayBtn');
-        const errEl = document.getElementById('rzpError');
-        try {
-          const res = await fetch(VERIFY_PAY_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY },
-            body: JSON.stringify({
-              ref:                  _rzpRef,
-              razorpay_payment_id:  response.razorpay_payment_id,
-              razorpay_order_id:    response.razorpay_order_id,
-              razorpay_signature:   response.razorpay_signature,
-            }),
-          });
-          const data = await res.json();
-          if (!data.success) throw new Error(data.message || 'Verification failed.');
-
-          // Populate confirmation step 4
-          document.getElementById('confirmPaymentId').textContent = response.razorpay_payment_id;
-
-          // Advance step bar
-          document.getElementById('step3').classList.remove('active');
-          document.getElementById('step3').classList.add('done');
-          document.getElementById('step3').querySelector('.tourn-step-num').textContent = '✓';
-          document.getElementById('conn3').classList.add('done');
-          document.getElementById('step4').classList.add('active');
-
-          document.getElementById('paymentSection').style.display = 'none';
-          document.getElementById('confirmSection').style.display = 'block';
-          scrollToSection('confirmSection');
-
-        } catch (err) {
-          errEl.textContent = 'Payment received but verification failed. Please contact a coordinator and quote Payment ID: ' + response.razorpay_payment_id;
-          errEl.style.display = 'block';
-          btn.disabled = false;
-          btn.innerHTML = '&#128274; &nbsp;Pay &#8377;' + _rzpTotal.toLocaleString('en-IN') + ' Securely';
-        }
-      }
-
       window.backToStep2 = function (e) {
         e && e.preventDefault();
         document.getElementById('step2').classList.remove('done');
         document.getElementById('step2').querySelector('.tourn-step-num').textContent = '2';
         document.getElementById('conn2').classList.remove('done');
         document.getElementById('step3').classList.remove('active');
-        document.getElementById('rzpError').style.display = 'none';
+        document.getElementById('utrError').style.display = 'none';
         document.getElementById('paymentSection').style.display = 'none';
         document.getElementById('regSection').style.display = 'block';
         scrollToSection('regSection');

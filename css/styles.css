@@ -2278,6 +2278,102 @@ a.logo-block:hover { opacity: .92; }
   margin-top: 4px;
 }
 
+/* ─── QR PAYMENT PANEL ────────────────────────────────────── */
+.qr-pay-panel {
+  max-width: 620px;
+  margin: 0 auto;
+}
+.qr-pay-body {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+@media (max-width: 560px) {
+  .qr-pay-body { grid-template-columns: 1fr; }
+}
+.qr-scan-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+.qr-image-wrap {
+  display: inline-block;
+  margin: 8px auto 12px;
+  border: 2px solid #cde8e5;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #fff;
+  line-height: 0;
+}
+.qr-image-wrap canvas,
+.qr-image-wrap img {
+  display: block;
+  width: 180px !important;
+  height: 180px !important;
+}
+.qr-upi-row {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 10px;
+}
+.qr-upi-row strong {
+  font-size: 13px;
+  color: var(--navy2);
+  word-break: break-all;
+}
+.qr-amount-badge {
+  background: var(--light);
+  border: 1.5px solid #cde8e5;
+  border-radius: 20px;
+  padding: 4px 16px;
+  font-size: 14px;
+  color: var(--navy2);
+}
+.qr-amount-badge strong { color: var(--navy); }
+.qr-utr-section {
+  background: var(--light);
+  border: 1.5px solid #cde8e5;
+  border-radius: 12px;
+  padding: 20px 24px;
+  margin-bottom: 16px;
+}
+.qr-utr-instruction {
+  font-size: 14px;
+  color: var(--text);
+  margin-bottom: 14px;
+  line-height: 1.5;
+}
+.qr-utr-input {
+  width: 100%;
+  padding: 12px 14px;
+  font-size: 15px;
+  font-family: var(--ff-sans);
+  border: 1.5px solid #b0d4d2;
+  border-radius: 8px;
+  background: #fff;
+  color: var(--text);
+  box-sizing: border-box;
+  margin-bottom: 14px;
+  letter-spacing: .5px;
+}
+.qr-utr-input:focus {
+  outline: none;
+  border-color: var(--navy);
+  box-shadow: 0 0 0 3px rgba(0,139,139,.12);
+}
+.qr-help-note {
+  font-size: 12.5px;
+  color: var(--muted);
+  text-align: center;
+  line-height: 1.5;
+}
+
 /* ─── ADMIN MODAL & AUTH ──────────────────────────────────── */
 .admin-modal-overlay {
   position: fixed;
