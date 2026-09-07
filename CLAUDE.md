@@ -19,7 +19,8 @@ news/index.html             ← loads from Supabase; static HTML is fallback; re
 gallery/index.html
 tournament/index.html       ← 4-step registration flow with Razorpay payment; saves to Supabase
 contact/index.html
-blog/index.html
+blog/index.html             ← loads posts from blog/posts.json; has expand/collapse cards
+blog/compose.html           ← Admin-only blog post composer (no public nav link); uses GitHub API
 admin-news/index.html       ← Admin-only news & events management page (no public nav link)
 ```
 
@@ -145,8 +146,11 @@ All deployed at `https://tiwazbntxvyvwfjzcwrv.supabase.co/functions/v1/<name>`.
 | `member-admin-ops` | Admin CRUD on members: `set_password`, `update_member`. Allowed update fields: `name`, `cc_no`, `practice_area`, `enrolled_year`, `status`, `mobile`, `address`, `description`, `is_bar_council_member`, `is_office_bearer`, `office_bearer_position` |
 | `member-reset-password` | OTP-based password reset via Firebase Phone Auth: `check_mobile` and `reset` operations |
 | `news-admin-ops` | Admin CRUD on `news_events`: `list_all`, `create`, `update`, `delete` |
+| `contact-form` | Proxies contact form submissions to Web3Forms API (`WEB3FORMS_KEY` env var); has honeypot spam detection |
 | `tournament-create-order` | Creates a Razorpay order via REST API and saves `razorpay_order_id` to DB |
 | `tournament-verify-payment` | Verifies Razorpay HMAC-SHA256 signature and marks payment as `paid` |
+
+**Edge function source code** lives in `supabase/functions/<name>/index.ts` (Deno/TypeScript). Deploy via the Supabase CLI: `supabase functions deploy <name>`.
 
 **Security invariants:**
 - Service role key is **never** exposed client-side — only used inside edge functions via `SUPABASE_SERVICE_ROLE_KEY` env var.
@@ -268,6 +272,20 @@ All styles in `css/styles.css`. CSS custom properties in `:root`:
 
 ## Forms
 
-- **Contact form** (`contact/index.html`): fully client-side; shows a confirmation after 1.2 s timeout, transmits nothing.
+- **Contact form** (`contact/index.html`): submits via `contact-form` edge function which proxies to Web3Forms API; honeypot field for spam detection.
 - **Tournament registration** (`tournament/index.html`): 4-step flow (Select Events → Registrant Details → Razorpay Payment → Confirmation). Registration data persisted to Supabase. Payment via Razorpay Standard Checkout; signature verified server-side via `tournament-verify-payment` edge function. Test ↔ Live switch is env-var only (`RAZORPAY_KEY_ID`, `RAZORPAY_KEY_SECRET`).
 - **News management** (`admin-news/index.html`): admin-only; creates/edits/deletes `news_events` rows via `news-admin-ops` edge function.
+- **Blog compose** (`blog/compose.html`): admin-only; no auth gate — access is by obscurity. Contains a rich-text WYSIWYG editor. On publish, uses the GitHub REST API (`PUT /repos/{owner}/{repo}/contents/blog/posts.json`) with a user-supplied Personal Access Token (PAT) stored in `localStorage` to prepend the new post to `blog/posts.json` in-place. Falls back to a "Download JSON" button for manual commits if the user prefers not to supply a PAT.
+
+## Blog
+
+The blog is **not Supabase-based** — posts are stored as a static JSON array in `blog/posts.json`.
+
+**Post schema:**
+```json
+{ "id": "slug", "title": "…", "date": "DD Mon YYYY", "author": "…", "category": "…", "excerpt": "…", "content": "<p>HTML…</p>" }
+```
+
+**Data flow:** `blog/index.html` fetches `../blog/posts.json` at load time, builds filter buttons from unique categories, and renders expand/collapse cards. No fallback static HTML — if the fetch fails, the grid shows nothing.
+
+**Publishing:** Go to `blog/compose.html`, fill the form (rich-text editor via `document.execCommand`), and click Publish. The page reads the current `posts.json` from the GitHub API, prepends the new entry, and PUTs it back — no server, no CLI. Requires a fine-grained GitHub PAT with *Contents: Read and Write* on the repo.
