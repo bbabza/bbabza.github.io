@@ -2929,3 +2929,73 @@ a.logo-block:hover { opacity: .92; }
   transform: translateY(-4px);
   box-shadow: 0 12px 36px rgba(0,96,96,.16), inset 0 1px 0 rgba(255,255,255,1);
 }
+
+/* ─── PRINT — Tournament Confirmation only ────────────────── */
+@media print {
+  /* Hide everything except header logo block and confirm card */
+  .topbar,
+  .site-header .main-nav,
+  .site-header .nav-toggle,
+  .news-ticker,
+  .page-hero,
+  .tourn-info-strip,
+  .tourn-prize-strip,
+  #selectSection,
+  #regSection,
+  #paymentSection,
+  #confirmSection .tourn-step-bar,
+  .section.section-white:not(#confirmSection),
+  .site-footer,
+  .back-to-top,
+  #confirmSection .btn,
+  #confirmSection a.btn {
+    display: none !important;
+  }
+
+  body, html { background: #fff !important; }
+
+  /* Letterhead-style header */
+  .site-header {
+    position: static !important;
+    box-shadow: none !important;
+    border-bottom: 1.5px solid #ccc !important;
+    padding: 10px 0 !important;
+    background: #fff !important;
+  }
+  .site-header .logo-text h1 {
+    color: #008B8B !important;
+    font-size: 1.1rem !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .site-header .tagline { color: #555 !important; }
+  .header-logo { width: 48px !important; height: 48px !important; }
+
+  #confirmSection {
+    display: block !important;
+    padding: 16px 0 0 !important;
+    background: #fff !important;
+  }
+
+  .confirm-card {
+    box-shadow: none !important;
+    border: 1px solid #ccc !important;
+    border-radius: 8px !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 24px !important;
+    page-break-inside: avoid;
+  }
+
+  .confirm-ref {
+    background: #f0f0f0 !important;
+    color: #000 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .confirm-note {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}
