@@ -60,6 +60,7 @@
     function injectAdminNav() {
       const navUl = document.querySelector('.main-nav ul');
       if (!navUl || navUl.querySelector('.admin-nav-item')) return;
+      document.body.classList.add('admin-logged-in');
       const contactLi = navUl.querySelector('li:last-child');
 
       const newsLi = document.createElement('li');
@@ -80,6 +81,7 @@
 
     function removeAdminNav() {
       document.querySelectorAll('.admin-nav-item').forEach(el => el.remove());
+      document.body.classList.remove('admin-logged-in');
     }
 
     function buildModal(innerHtml) {
