@@ -61,7 +61,7 @@
       const navUl = document.querySelector('.main-nav ul');
       if (!navUl || navUl.querySelector('.admin-nav-item')) return;
       document.body.classList.add('admin-logged-in');
-      const contactLi = navUl.querySelector('li:last-child');
+      const contactLi = navUl.querySelector(':scope > li:last-child');
 
       const newsLi = document.createElement('li');
       newsLi.className = 'admin-nav-item';
@@ -1135,7 +1135,7 @@
     function injectMemberNav() {
       const navUl = document.querySelector('.main-nav ul');
       if (!navUl || navUl.querySelector('.member-nav-item')) return;
-      const contactLi = navUl.querySelector('li:last-child');
+      const contactLi = navUl.querySelector(':scope > li:last-child');
       const li = document.createElement('li');
       li.className = 'member-nav-item';
       const session = getSession();
