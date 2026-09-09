@@ -207,18 +207,26 @@
 
     init();
 
+    window.onCoverError = function (img) {
+      var span = document.createElement('span');
+      span.className = 'gallery-cat-icon';
+      span.innerHTML = img.dataset.icon;
+      img.parentElement.insertBefore(span, img);
+      img.remove();
+    };
+
     function renderCards() {
       var grid = document.getElementById('galleryCategories');
       if (!grid) return;
       grid.innerHTML = CATEGORIES.map(function (cat) {
         var photos = photosData[cat.key] || [];
         var count = photos.length;
-        var coverStyle = count > 0
-          ? 'background-image:url("' + cat.key + '/' + photos[0] + '");background-size:cover;background-position:center;'
-          : 'background:' + cat.gradient + ';';
+        var coverInner = count > 0
+          ? '<img class="gallery-cat-cover-img" src="' + cat.key + '/' + photos[0] + '" alt="" data-icon="' + cat.icon + '" onerror="onCoverError(this)" loading="lazy" />'
+          : '<span class="gallery-cat-icon">' + cat.icon + '</span>';
         return '<div class="gallery-cat-card" data-cat="' + cat.key + '" tabindex="0" role="button" aria-label="Open ' + cat.label + ' gallery">' +
-          '<div class="gallery-cat-cover" style="' + coverStyle + '">' +
-          (count === 0 ? '<span class="gallery-cat-icon">' + cat.icon + '</span>' : '') +
+          '<div class="gallery-cat-cover" style="background:' + cat.gradient + ';">' +
+          coverInner +
           '<div class="gallery-cat-overlay"></div>' +
           '</div>' +
           '<div class="gallery-cat-info">' +

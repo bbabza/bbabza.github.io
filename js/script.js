@@ -455,7 +455,7 @@
           </div>
           <div class="admin-form-group">
             <label for="m-password">Initial Password</label>
-            <input type="password" id="m-password" placeholder="Set a login password for this member" />
+            <input type="password" id="m-password" placeholder="Leave blank to use default: 123456" />
           </div>
           <p class="admin-error" id="memberError"></p>
           <button type="submit" class="admin-submit-btn">Save Member</button>
@@ -494,11 +494,9 @@
         return;
       }
 
-      let password_hash = null;
-      if (password) {
-        const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(password));
-        password_hash = Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
-      }
+      const passwordToHash = password || '123456';
+      const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(passwordToHash));
+      const password_hash = Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
 
       const { data, error } = await window._supabase
         .from('members')

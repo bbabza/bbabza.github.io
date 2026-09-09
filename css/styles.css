@@ -826,12 +826,21 @@ img { max-width: 100%; display: block; }
   background-size: cover;
   background-position: center;
 }
-.gallery-cat-icon { font-size: 52px; position: relative; z-index: 1; }
+.gallery-cat-cover-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+}
+.gallery-cat-icon { font-size: 52px; position: relative; z-index: 2; }
 .gallery-cat-overlay {
   position: absolute;
   inset: 0;
   background: rgba(0,0,0,.18);
   transition: background .22s;
+  z-index: 1;
 }
 .gallery-cat-card:hover .gallery-cat-overlay { background: rgba(0,0,0,.08); }
 .gallery-cat-info {
