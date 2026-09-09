@@ -51,15 +51,17 @@ serve(async (req: Request) => {
 
   // ── Step 1: check if mobile is registered ─────────────────
   if (operation === 'check_mobile') {
-    if (!mobile?.trim()) {
+    const mobile10 = (mobile ?? '').replace(/\D/g, '').slice(-10);
+    if (mobile10.length !== 10) {
       return json({ success: false, message: 'Mobile number required.' }, 400, req);
     }
+    // Match regardless of stored format: plain 10-digit, +91 prefix, 91 prefix, etc.
     const { data } = await supabase
       .from('members')
       .select('enrollment_no')
-      .eq('mobile', mobile.trim())
-      .maybeSingle();
-    return json({ success: true, exists: !!data }, 200, req);
+      .like('mobile', `%${mobile10}`)
+      .limit(1);
+    return json({ success: true, exists: !!data && data.length > 0 }, 200, req);
   }
 
   // ── Step 2: verify Firebase token + reset password ─────────
@@ -94,15 +96,16 @@ serve(async (req: Request) => {
       return json({ success: false, message: 'Could not verify phone number.' }, 401, req);
     }
 
-    // Normalize to last 10 digits (strip country code)
-    const phone10 = phoneE164.replace(/^\+\d{1,3}/, '').slice(-10);
+    // Normalize to last 10 digits (strip country code and non-digits)
+    const phone10 = phoneE164.replace(/\D/g, '').slice(-10);
 
-    const { data: member } = await supabase
+    const { data: memberRows } = await supabase
       .from('members')
       .select('enrollment_no, name, practice_area, enrolled_year, status, address, mobile, photo_url, description, cc_no, gender, membership_type, yearly_renewed_date, res_phone, office_phone')
-      .eq('mobile', phone10)
-      .maybeSingle();
+      .like('mobile', `%${phone10}`)
+      .limit(1);
 
+    const member = memberRows?.[0] ?? null;
     if (!member) {
       return json({ success: false, message: 'No member found with this phone number.' }, 404, req);
     }
