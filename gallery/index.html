@@ -154,14 +154,58 @@
     var currentCat = null;
     var currentIdx = 0;
 
-    // ── Fetch manifest and render cards ──────────────────────
-    fetch('photos.json?v=' + Date.now())
-      .then(function (r) { return r.json(); })
-      .catch(function () { return {}; })
-      .then(function (data) {
-        photosData = data;
+    var REPO       = 'bbabza/bbabza.github.io';
+    var API_BASE   = 'https://api.github.com/repos/' + REPO + '/contents/gallery/';
+    var IMG_RE     = /\.(jpe?g|png|gif|webp|avif)$/i;
+    var CACHE_KEY  = 'glr_scan_v1';
+    var CACHE_TTL  = 10 * 60 * 1000; // 10 minutes
+
+    // ── Load: GitHub API → sessionStorage cache → photos.json fallback ──
+    function init() {
+      var cached = tryCache();
+      if (cached) { photosData = cached; renderCards(); return; }
+
+      // Scan all 4 category folders in parallel via GitHub Contents API
+      Promise.all(CATEGORIES.map(function (cat) {
+        return fetch(API_BASE + cat.key, { headers: { Accept: 'application/vnd.github+json' } })
+          .then(function (r) { return r.ok ? r.json() : []; })
+          .catch(function () { return []; })
+          .then(function (files) {
+            return {
+              key: cat.key,
+              photos: Array.isArray(files)
+                ? files.filter(function (f) { return f.type === 'file' && IMG_RE.test(f.name); })
+                       .map(function (f) { return f.name; })
+                : []
+            };
+          });
+      })).then(function (results) {
+        var data = {};
+        results.forEach(function (r) { data[r.key] = r.photos; });
+        // If API returned nothing for all categories, fall back to photos.json
+        var hasAny = results.some(function (r) { return r.photos.length > 0; });
+        if (!hasAny) {
+          return fetch('photos.json').then(function (r) { return r.json(); }).catch(function () { return data; });
+        }
+        try { sessionStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Date.now(), data: data })); } catch (_) {}
+        return data;
+      }).then(function (data) {
+        photosData = data || {};
         renderCards();
       });
+    }
+
+    function tryCache() {
+      try {
+        var raw = sessionStorage.getItem(CACHE_KEY);
+        if (!raw) return null;
+        var obj = JSON.parse(raw);
+        if (Date.now() - obj.ts > CACHE_TTL) { sessionStorage.removeItem(CACHE_KEY); return null; }
+        return obj.data;
+      } catch (_) { return null; }
+    }
+
+    init();
 
     function renderCards() {
       var grid = document.getElementById('galleryCategories');

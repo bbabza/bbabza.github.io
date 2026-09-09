@@ -2,5 +2,5 @@
   "events":   [],
   "welfare":  [],
   "heritage": [],
-  "other":    []
+  "other":    ["photo1.jpeg", "photo2.jpeg"]
 }
