@@ -1359,7 +1359,7 @@
       try {
         const chkRes = await fetch(MEMBER_RESET_URL, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY },
           body: JSON.stringify({ operation: 'check_mobile', mobile }),
         });
         const chkData = await chkRes.json();
@@ -1459,7 +1459,7 @@
       try {
         const res = await fetch(MEMBER_RESET_URL, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY },
           body: JSON.stringify({ operation: 'reset', firebase_id_token: _verifiedIdToken, new_password: newPass }),
         });
         const data = await res.json();
