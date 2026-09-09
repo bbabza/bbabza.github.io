@@ -42,7 +42,12 @@
           <li><a href="../about/index.html">About</a></li>
           <li><a href="../office-bearers/index.html">Office Bearers</a></li>
           <li><a href="../members/index.html" aria-current="page">Members</a></li>
-          <li class="nav-more"><a href="#" class="nav-more-toggle">More</a><ul class="nav-dropdown"><li><a href="../blog/index.html">Blog</a></li><li><a href="../gallery/index.html">Gallery</a></li></ul></li>
+          <li class="nav-more"><a href="#" class="nav-more-toggle">More</a>
+            <ul class="nav-dropdown">
+              <li><a href="../blog/index.html">Blog</a></li>
+              <li><a href="../gallery/index.html">Gallery</a></li>
+            </ul>
+          </li>
           <li><a href="../tournament/index.html" style="color:var(--gold)!important;">&#127992; Tournament</a></li>
           <li><a href="../contact/index.html" class="btn-nav">Contact</a></li>
         </ul>
@@ -101,9 +106,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr data-enr="AP/018/2022"><td><div class="mem-avatar">&#128100;</div></td><td>AP/018/2022</td><td></td><td><div class="mem-name">Smt. Uma Devi Venugopal</div></td><td></td><td></td><td><span class="badge badge-active">Active</span></td><td></td></tr>
-            <tr data-enr="AP/019/2023"><td><div class="mem-avatar">&#128100;</div></td><td>AP/019/2023</td><td></td><td><div class="mem-name">Sri Vijay Krishna Tadepalli</div></td><td></td><td></td><td><span class="badge badge-active">Active</span></td><td></td></tr>
-            <tr data-enr="AP/020/2024"><td><div class="mem-avatar">&#128100;</div></td><td>AP/020/2024</td><td></td><td><div class="mem-name">Smt. Yamini Priya Muddada</div></td><td></td><td></td><td><span class="badge badge-active">Active</span></td><td></td></tr>
+
           </tbody>
         </table>
       </div>
@@ -167,9 +170,9 @@
   <script>
     (async function loadMembers() {
       if (!window._supabase) return;
-      const tbody   = document.querySelector('#membersTable tbody');
-      const noteEl  = document.querySelector('.table-note');
-      const pgEl    = document.getElementById('membersPagination');
+      const tbody = document.querySelector('#membersTable tbody');
+      const noteEl = document.querySelector('.table-note');
+      const pgEl = document.getElementById('membersPagination');
       if (!tbody) return;
 
       const CHUNK = 1000;
@@ -188,15 +191,15 @@
 
       if (data.length === 0) return;
 
-      const PAGE_SIZE   = 50;
-      const isAdmin     = localStorage.getItem('bba_admin') === '1';
-      let _allData      = data.slice();
-      let _filtered     = _allData.slice();
-      let _currentPage  = 1;
+      const PAGE_SIZE = 50;
+      const isAdmin = localStorage.getItem('bba_admin') === '1';
+      let _allData = data.slice();
+      let _filtered = _allData.slice();
+      let _currentPage = 1;
 
       function statusBadge(s) {
-        var cls  = s === 'active' ? 'active' : s === 'deceased' ? 'deceased' : 'inactive';
-        var lbl  = s === 'active' ? 'Active' : s === 'pending' ? 'Pending' : s === 'deceased' ? 'Deceased' : (s || 'Active');
+        var cls = s === 'active' ? 'active' : s === 'deceased' ? 'deceased' : 'inactive';
+        var lbl = s === 'active' ? 'Active' : s === 'pending' ? 'Pending' : s === 'deceased' ? 'Deceased' : (s || 'Active');
         return `<span class="badge badge-${cls}">${lbl}</span>`;
       }
 
@@ -216,12 +219,12 @@
       }
 
       function pageButtons(cur, total) {
-        if (total <= 7) return Array.from({length: total}, (_, i) => i + 1);
+        if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1);
         var set = new Set([1, 2, total - 1, total]);
         for (var p = Math.max(1, cur - 1); p <= Math.min(total, cur + 1); p++) set.add(p);
-        var sorted = Array.from(set).sort(function(a, b) { return a - b; });
+        var sorted = Array.from(set).sort(function (a, b) { return a - b; });
         var result = [], prev = 0;
-        sorted.forEach(function(p) {
+        sorted.forEach(function (p) {
           if (prev && p > prev + 1) result.push('…');
           result.push(p);
           prev = p;
@@ -230,9 +233,9 @@
       }
 
       function renderPage(page) {
-        _currentPage  = page;
-        var start     = (page - 1) * PAGE_SIZE;
-        var slice     = _filtered.slice(start, start + PAGE_SIZE);
+        _currentPage = page;
+        var start = (page - 1) * PAGE_SIZE;
+        var slice = _filtered.slice(start, start + PAGE_SIZE);
         var totalPages = Math.ceil(_filtered.length / PAGE_SIZE);
 
         tbody.innerHTML = slice.map(rowHtml).join('');
@@ -243,7 +246,7 @@
           if (totalPages <= 1) {
             pgEl.innerHTML = '';
           } else {
-            var btns = pageButtons(page, totalPages).map(function(p) {
+            var btns = pageButtons(page, totalPages).map(function (p) {
               if (p === '…') return '<span class="pg-ellipsis">&hellip;</span>';
               return `<button class="pg-btn${p === page ? ' pg-active' : ''}" data-page="${p}">${p}</button>`;
             }).join('');
@@ -256,8 +259,8 @@
 
         // note
         if (noteEl) {
-          var from  = _filtered.length === 0 ? 0 : start + 1;
-          var to    = Math.min(start + PAGE_SIZE, _filtered.length);
+          var from = _filtered.length === 0 ? 0 : start + 1;
+          var to = Math.min(start + PAGE_SIZE, _filtered.length);
           var total = _filtered.length;
           noteEl.textContent = total === 0
             ? 'No members found.'
@@ -266,38 +269,38 @@
       }
 
       function applyFilter() {
-        var q      = (document.getElementById('memberSearch')?.value || '').toLowerCase().trim();
+        var q = (document.getElementById('memberSearch')?.value || '').toLowerCase().trim();
         var status = document.getElementById('memberStatusFilter')?.value || 'non-deceased';
-        _filtered = _allData.filter(function(m) {
+        _filtered = _allData.filter(function (m) {
           var s = (m.status || 'active');
           if (status === 'non-deceased' && s === 'deceased') return false;
-          if (status === 'active'       && s !== 'active')   return false;
-          if (status === 'pending'      && s !== 'pending')  return false;
-          if (status === 'deceased'     && s !== 'deceased') return false;
+          if (status === 'active' && s !== 'active') return false;
+          if (status === 'pending' && s !== 'pending') return false;
+          if (status === 'deceased' && s !== 'deceased') return false;
           if (!q) return true;
           return (m.name || '').toLowerCase().includes(q) ||
-                 (m.enrollment_no || '').toLowerCase().includes(q) ||
-                 (m.mobile || '').includes(q);
+            (m.enrollment_no || '').toLowerCase().includes(q) ||
+            (m.mobile || '').includes(q);
         });
         renderPage(1);
       }
 
       document.getElementById('memberStatusFilter')?.addEventListener('change', applyFilter);
 
-      pgEl?.addEventListener('click', function(e) {
+      pgEl?.addEventListener('click', function (e) {
         var btn = e.target.closest('[data-page]');
         if (!btn || btn.disabled) return;
         var p = parseInt(btn.dataset.page);
         if (p >= 1 && p <= Math.ceil(_filtered.length / PAGE_SIZE)) {
           renderPage(p);
-          document.querySelector('.members-table')?.scrollIntoView({behavior: 'smooth', block: 'start'});
+          document.querySelector('.members-table')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
       });
 
       // expose for script.js search handler and admin add-member
-      window._membersPaginated   = true;
+      window._membersPaginated = true;
       window._membersApplyFilter = applyFilter;
-      window._membersAddRow = function(m) {
+      window._membersAddRow = function (m) {
         _allData.unshift(m);
         applyFilter();
       };
