@@ -116,8 +116,8 @@ img { max-width: 100%; display: block; }
   padding: 3px;
 }
 .logo-text h1 {
-  font-family: 'UnifrakturMaguntia', var(--ff-serif);
-  font-size: clamp(0.9rem, 4vw, 1.6rem);
+  font-family: 'Great Vibes', cursive;
+  font-size: clamp(1.2rem, 4.5vw, 2rem);
   color: var(--white);
   line-height: 1.2;
   font-weight: 400;
