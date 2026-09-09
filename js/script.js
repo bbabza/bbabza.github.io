@@ -601,7 +601,7 @@
       if (window._supabase) {
         var result = await window._supabase
           .from('members')
-          .select('enrollment_no, name, practice_area, enrolled_year, status, mobile, address, description, is_bar_council_member, is_office_bearer, office_bearer_position, cc_no, gender, membership_type, yearly_renewed_date, res_phone, office_phone')
+          .select('enrollment_no, name, practice_area, enrolled_year, status, mobile, address, description, is_bar_council_member, is_office_bearer, office_bearer_position, cc_no, gender, membership_type, yearly_renewed_date, res_phone, office_phone, is_admin')
           .eq('enrollment_no', enrollmentNo)
           .single();
         m = result.data;
@@ -668,6 +668,10 @@
         '<div class="admin-form-group"><label for="em-ob">Office Bearer?</label>' +
         '<select id="em-ob"><option value="false"' + (!m.is_office_bearer ? ' selected' : '') + '>No</option>' +
         '<option value="true"' + (m.is_office_bearer ? ' selected' : '') + '>Yes</option></select></div>' +
+        // Super-user only: Admin Privileges
+        '<div class="admin-form-group"><label for="em-admin" style="color:var(--gold);">&#128737; Admin Privileges</label>' +
+        '<select id="em-admin"><option value="false"' + (!m.is_admin ? ' selected' : '') + '>No</option>' +
+        '<option value="true"' + (m.is_admin ? ' selected' : '') + '>Yes</option></select></div>' +
         // Row 5: Office Bearer Position (full width, conditional)
         '<div class="admin-form-group admin-form-group--full" id="em-obp-group" style="' + (!m.is_office_bearer ? 'display:none;' : '') + '">' +
         '<label for="em-obp">Office Bearer Position</label>' +
@@ -715,6 +719,7 @@
           is_bar_council_member:  document.getElementById('em-bc').value === 'true',
           is_office_bearer:       isOB,
           office_bearer_position: isOB ? (document.getElementById('em-obp').value.trim() || null) : null,
+          is_admin:               document.getElementById('em-admin').value === 'true',
           gender:                 document.getElementById('em-gender').value || null,
           membership_type:        document.getElementById('em-mtype').value || null,
           yearly_renewed_date:    document.getElementById('em-renewed').value || null,
