@@ -683,13 +683,13 @@ img { max-width: 100%; display: block; }
 .member-photo-label {
   display: inline-block;
   font-size: 12px; font-weight: 700;
-  color: var(--navy2); cursor: pointer;
+  color: var(--white); cursor: pointer;
   padding: 6px 14px;
-  border: 1.5px solid var(--navy2);
+  border: 1.5px solid rgba(255,255,255,.6);
   border-radius: 20px;
-  transition: background .15s, color .15s;
+  transition: background .15s, border-color .15s;
 }
-.member-photo-label:hover { background: var(--navy2); color: var(--white); }
+.member-photo-label:hover { background: rgba(255,255,255,.15); border-color: var(--white); }
 
 /* ─── NEWS & EVENTS ───────────────────────────────────────── */
 .news-tabs { display: flex; gap: 4px; margin-bottom: 32px; border-bottom: 2px solid #e8e8e8; }

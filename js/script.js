@@ -1297,7 +1297,7 @@
         };
         reader.readAsDataURL(file);
       });
-      document.getElementById('mProfName').focus();
+      document.getElementById('mProfAddress').focus();
     }
 
     // ── Forgot Password flow ──────────────────────────────────
