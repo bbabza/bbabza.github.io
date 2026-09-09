@@ -872,9 +872,24 @@
     navToggle.setAttribute('aria-expanded', mainNav.classList.contains('open'));
   });
 
+  // More dropdown toggle
+  const moreLi = document.querySelector('.nav-more');
+  const moreToggle = document.querySelector('.nav-more-toggle');
+  if (moreLi && moreToggle) {
+    moreToggle.addEventListener('click', function (e) {
+      e.preventDefault();
+      moreLi.classList.toggle('open');
+    });
+    document.addEventListener('click', function (e) {
+      if (!moreLi.contains(e.target)) moreLi.classList.remove('open');
+    });
+  }
+
   // Close nav on link click (mobile)
   mainNav?.querySelectorAll('a').forEach(link => {
-    link.addEventListener('click', () => mainNav.classList.remove('open'));
+    link.addEventListener('click', () => {
+      if (!link.classList.contains('nav-more-toggle')) mainNav.classList.remove('open');
+    });
   });
 
   // ── Active nav highlight on scroll ────────────────────────
