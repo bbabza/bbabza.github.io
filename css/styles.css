@@ -1380,6 +1380,17 @@ a.logo-block:hover { opacity: .92; }
   .exec-grid { grid-template-columns: 1fr 1fr; }
 }
 
+/* ─── INAUGURATION SECTION ────────────────────────────────── */
+.inaug-section { text-align: center; }
+.inaug-grid { display: flex; justify-content: center; gap: 80px; flex-wrap: wrap; margin-top: 8px; }
+.inaug-card { display: flex; flex-direction: column; align-items: center; }
+.inaug-avatar { margin-bottom: 20px; }
+.inaug-photo { display: block; width: 200px; height: 200px; border-radius: 50%; object-fit: cover; object-position: top; border: 4px solid var(--gold); box-shadow: 0 0 0 6px rgba(201,162,39,.15); }
+.inaug-no-photo { width: 200px; height: 200px; border-radius: 50%; background: rgba(201,162,39,.1); border: 2px dashed rgba(201,162,39,.4); display: flex; align-items: center; justify-content: center; font-size: 11px; color: rgba(255,255,255,.4); text-transform: uppercase; letter-spacing: 1px; }
+.inaug-name { font-family: var(--ff-serif); font-size: 1.25rem; color: #fff; margin-bottom: 6px; }
+.inaug-title { font-size: 12px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold); }
+@media (max-width: 600px) { .inaug-grid { gap: 40px; } .inaug-photo, .inaug-no-photo { width: 160px; height: 160px; } }
+
 /* ─── TOURNAMENT PAGE ─────────────────────────────────────── */
 .tourn-info-strip {
   background: var(--navy3);
