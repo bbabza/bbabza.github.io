@@ -22,6 +22,7 @@ contact/index.html
 blog/index.html             ← loads posts from blog/posts.json; has expand/collapse cards
 blog/compose.html           ← Admin-only blog post composer (no public nav link); uses GitHub API
 admin-news/index.html       ← Admin-only news & events management page (no public nav link)
+admin-messages/index.html   ← Admin-only WhatsApp broadcast page (no public nav link); calls Meta Cloud API via whatsapp-broadcast edge function
 ```
 
 ### Key Patterns
@@ -49,7 +50,7 @@ admin-news/index.html       ← Admin-only news & events management page (no pub
 <script src="../js/supabase-client.js"></script>
 <script src="../js/script.js"></script>
 ```
-Pages that load Supabase scripts: `members/index.html`, `tournament/index.html`, `news/index.html`, `admin-news/index.html`. Add the same three tags to any new page that needs DB access.
+Pages that load Supabase scripts: `members/index.html`, `tournament/index.html`, `news/index.html`, `admin-news/index.html`, `admin-messages/index.html`. Add the same three tags to any new page that needs DB access.
 
 **Lazy Supabase loading:** `initAdmin()` exposes an `ensureSupabase()` helper that dynamically injects the CDN scripts on pages that don't include them statically (used by the tournament report on the tournament page).
 
@@ -126,6 +127,21 @@ RLS: public SELECT, INSERT, UPDATE (anon key).
 
 RLS: public SELECT WHERE `is_published = true`. All writes via `news-admin-ops` edge function with admin password.
 
+**`whatsapp_messages`**
+| Column | Type | Notes |
+|---|---|---|
+| `id` | uuid | PK, auto-generated |
+| `recipient_name` | text | nullable |
+| `recipient_mobile` | text | not null — as entered in `members`/`tournament_registrations`, not necessarily E.164 |
+| `template_name` | text | not null — Meta-approved template name |
+| `template_language` | text | not null — e.g. `en_US` |
+| `status` | text | not null — `sent` \| `failed` |
+| `meta_message_id` | text | nullable — WhatsApp message id on success |
+| `error_message` | text | nullable — Meta's error message on failure |
+| `created_at` | timestamptz | default now() |
+
+RLS: enabled, no policies — only ever read/written via the service-role key inside `whatsapp-broadcast` (same pattern as `member_sessions`).
+
 ### Data flow
 - **Members page:** On load, fetches all rows ordered by `enrollment_no`. Replaces static `<tbody>` rows if data is returned; static HTML remains as fallback.
 - **News page:** On load, fetches published `news_events` from Supabase and replaces each tab's static HTML (News, Events, Notices). Static HTML remains as fallback if Supabase returns nothing.
@@ -149,6 +165,7 @@ All deployed at `https://tiwazbntxvyvwfjzcwrv.supabase.co/functions/v1/<name>`.
 | `contact-form` | Proxies contact form submissions to Web3Forms API (`WEB3FORMS_KEY` env var); has honeypot spam detection |
 | `tournament-create-order` | Creates a Razorpay order via REST API and saves `razorpay_order_id` to DB |
 | `tournament-verify-payment` | Verifies Razorpay HMAC-SHA256 signature and marks payment as `paid` |
+| `whatsapp-broadcast` | Admin WhatsApp broadcast via Meta Cloud API: `list_templates` (approved templates from the WABA), `send` (sends a template message per recipient, logs to `whatsapp_messages`), `list_log` (last 200 log rows) |
 
 **Edge function source code** lives in `supabase/functions/<name>/index.ts` (Deno/TypeScript). Deploy via the Supabase CLI: `supabase functions deploy <name>`.
 
@@ -157,6 +174,7 @@ All deployed at `https://tiwazbntxvyvwfjzcwrv.supabase.co/functions/v1/<name>`.
 - Admin password is verified server-side against `ADMIN_HASH` (SHA-256 hex) env var.
 - Razorpay signature is verified server-side — never trust the client.
 - Allowed CORS origins: `https://thebezwadabarassociation.com` and `https://bbabza.github.io` only.
+- WhatsApp: `WHATSAPP_ACCESS_TOKEN`, `WHATSAPP_PHONE_NUMBER_ID`, `WHATSAPP_WABA_ID` are env vars consumed only inside `whatsapp-broadcast` — never exposed client-side. Only body-text template variables are supported (header/button variables are rejected client-side).
 
 ## Admin System
 
@@ -166,11 +184,12 @@ All deployed at `https://tiwazbntxvyvwfjzcwrv.supabase.co/functions/v1/<name>`.
 
 **Accessing the system:** An "Admin Login" link is injected as the last item in the Quick Links footer on every page. When logged in it reads "Admin Panel".
 
-**On login, two nav items are injected** before the Contact button:
+**On login, three nav items are injected** before the Contact button:
 1. `📰 News` — links to `${ROOT}admin-news/` (news & events management page)
-2. `🔒 Admin` — opens the admin panel modal
+2. `💬 Messages` — links to `${ROOT}admin-messages/` (WhatsApp broadcast page)
+3. `🔒 Admin` — opens the admin panel modal
 
-**Admin panel modal** contains a "Manage News & Events" button (routes to `admin-news/`) and a Logout button.
+**Admin panel modal** contains a "Manage News & Events" button (routes to `admin-news/`), a "Send WhatsApp Messages" button (routes to `admin-messages/`), and a Logout button.
 
 **On logout:** Both injected nav items are removed (`removeAdminNav()` clears all `.admin-nav-item` elements); `localStorage` and `sessionStorage` flags are cleared.
 
@@ -182,6 +201,8 @@ All deployed at `https://tiwazbntxvyvwfjzcwrv.supabase.co/functions/v1/<name>`.
 
 **Tournament page admin feature:**
 - `injectTournamentReport()` — injects a live registrations report table below the registration form (only on `tournament/index.html`).
+
+**WhatsApp broadcast (`admin-messages/index.html`):** Standalone admin page (not part of `initAdmin()` — it's a dedicated page like `admin-news/index.html`). 3-step wizard: (1) pick recipients from `members` or `tournament_registrations` (queried directly via `window._supabase`, deduped by normalized mobile number in a `Map`), (2) pick a Meta-approved template (`whatsapp-broadcast/list_templates`) and fill body variables (static text or "Recipient's Name"), (3) review and send in batches of 20 (`whatsapp-broadcast/send`), with a log of past sends (`whatsapp-broadcast/list_log`). Only body-text template variables are supported.
 
 **Adding new admin-only features:**
 1. Add a function inside `initAdmin()`.
@@ -269,6 +290,8 @@ All styles in `css/styles.css`. CSS custom properties in `:root`:
 4. Add `aria-current="page"` to the correct nav `<a>`.
 5. Add a nav `<li>` to **all** existing HTML files (currently 10 public pages).
 6. Add a `.page-hero` div after the ticker, before the first `<section>`.
+7. Add `<link rel="canonical" href="https://thebezwadabarassociation.com/<section-name>/" />` in `<head>` (trailing slash, matching `sitemap.xml`) — every public page needs this; its absence is what caused Google Search Console's "Page with redirect" indexing issue (the sitewide clean-URL script triggers a client-side `history.replaceState` from the crawled `.../index.html` URL to `.../`, which Google's renderer flags as a redirect unless a canonical tag disambiguates the target). Add the new page's URL to `sitemap.xml` too.
+8. If the page is admin-only with no public nav link (like `admin-news/`, `admin-messages/`), add `<meta name="robots" content="noindex, nofollow" />` instead of a canonical tag.
 
 ## Forms
 

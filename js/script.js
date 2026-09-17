@@ -68,6 +68,11 @@
       newsLi.innerHTML = '<a href="' + ROOT + 'admin-news/" class="admin-nav-link">&#128240; News</a>';
       navUl.insertBefore(newsLi, contactLi);
 
+      const messagesLi = document.createElement('li');
+      messagesLi.className = 'admin-nav-item';
+      messagesLi.innerHTML = '<a href="' + ROOT + 'admin-messages/" class="admin-nav-link">&#128172; Messages</a>';
+      navUl.insertBefore(messagesLi, contactLi);
+
       const adminLi = document.createElement('li');
       adminLi.className = 'admin-nav-item';
       adminLi.innerHTML = '<a href="#" class="admin-nav-link" id="adminNavLink">&#128274; Admin</a>';
@@ -136,6 +141,7 @@
         </div>
         <p class="admin-panel-greeting">Logged in as <strong>Administrator</strong></p>
         <a href="${ROOT}admin-news/" class="admin-submit-btn" style="display:block;text-align:center;text-decoration:none;margin-bottom:10px;">&#128240; Manage News &amp; Events</a>
+        <a href="${ROOT}admin-messages/" class="admin-submit-btn" style="display:block;text-align:center;text-decoration:none;margin-bottom:10px;">&#128172; Send WhatsApp Messages</a>
         <button class="admin-submit-btn admin-logout-btn" id="adminLogoutBtn" style="margin-top:4px;">Logout</button>
       `);
       overlay.querySelector('#adminLogoutBtn').addEventListener('click', handleLogout);

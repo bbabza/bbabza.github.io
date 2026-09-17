@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <script>try{if(location.pathname.endsWith("index.html"))history.replaceState(null,"",location.pathname.slice(0,-10)||"./")}catch(e){}</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <meta name="description" content="Admin — WhatsApp Broadcast" />
+  <title>Send WhatsApp Messages | BBA Admin</title>
+  <link rel="icon" href="../images/logo.jpeg" type="image/jpeg" />
+  <link rel="stylesheet" href="../css/styles.css" />
+  <link rel="stylesheet" href="../css/fonts.css" />
+</head>
+<body data-root="../">
+
+  <div class="topbar">
+    <div class="container">
+      <span>&#9742; 0866 &ndash; 2574321</span>
+      <span>&#9993; bbabza@gmail.com</span>
+      <span>&#128205; Civil Courts Campus, Governorpet, Vijayawada &ndash; 520 002</span>
+      <span>&#128197; Established 1906</span>
+    </div>
+  </div>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="../index.html" class="logo-block">
+        <div class="emblem">
+          <img src="../images/logo.jpeg" alt="The Bezwada Bar Association Logo" class="header-logo" />
+        </div>
+        <div class="logo-text">
+          <h1>The Bezwada Bar Association</h1>
+          <p class="tagline">Dharmo Rakṣati Rakṣitaḥ — ధర్మో రక్షతి రక్షితః</p>
+        </div>
+      </a>
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation"><span></span><span></span><span></span></button>
+      <nav class="main-nav" id="mainNav">
+        <ul>
+          <li><a href="../index.html">Home</a></li>
+          <li><a href="../about/index.html">About</a></li>
+          <li><a href="../office-bearers/index.html">Office Bearers</a></li>
+          <li><a href="../members/index.html">Members</a></li>
+          <li class="nav-more"><a href="#" class="nav-more-toggle">More</a><ul class="nav-dropdown"><li><a href="../blog/index.html">Blog</a></li><li><a href="../gallery/index.html">Gallery</a></li></ul></li>
+          <li><a href="../tournament/index.html" style="color:var(--gold)!important;">&#127992; Tournament</a></li>
+          <li><a href="../contact/index.html" class="btn-nav">Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <div class="news-ticker" id="newsTicker">
+    <div class="ticker-label"><span class="ticker-dot"></span>LATEST NEWS</div>
+    <div class="ticker-viewport">
+      <div class="ticker-track" id="tickerTrack"><span class="ticker-placeholder">Loading latest news&hellip;</span></div>
+    </div>
+    <button class="ticker-pause" id="tickerPause" title="Pause / Resume">&#10074;&#10074;</button>
+  </div>
+
+  <div class="page-hero">
+    <div class="container">
+      <p class="page-hero-eyebrow">Admin</p>
+      <h2>WhatsApp Broadcast</h2>
+      <div class="breadcrumb">
+        <a href="../index.html">Home</a>
+        <span class="breadcrumb-sep">&#8250;</span>
+        <span>WhatsApp Broadcast</span>
+      </div>
+    </div>
+  </div>
+
+  <section class="section section-light">
+    <div class="container">
+
+      <!-- Access denied -->
+      <div id="msgGuard" style="display:none;text-align:center;padding:60px 0;">
+        <div style="font-size:3rem;margin-bottom:16px;">&#128274;</div>
+        <h3 style="color:var(--navy2);font-family:var(--ff-serif);margin-bottom:10px;">Access Denied</h3>
+        <p style="color:var(--muted);">You must be logged in as admin to access this page.</p>
+        <a href="../index.html" class="btn btn-gold" style="margin-top:20px;display:inline-block;">Go Home</a>
+      </div>
+
+      <!-- Password prompt if session expired -->
+      <div id="msgPassPrompt" style="display:none;max-width:380px;margin:0 auto;padding:40px 0;">
+        <div class="reg-form-card">
+          <h3 style="font-family:var(--ff-serif);color:var(--navy2);margin-bottom:20px;">Confirm Admin Password</h3>
+          <div class="form-group">
+            <label style="font-size:12px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.5px;">Password</label>
+            <input type="password" id="msgPassInput" placeholder="Admin password" style="width:100%;padding:10px 14px;border:1.5px solid var(--border);border-radius:6px;font-size:14px;margin-top:6px;" />
+          </div>
+          <p id="msgPassErr" style="color:#c62828;font-size:13px;margin-bottom:8px;min-height:18px;"></p>
+          <button id="msgPassSubmit" class="btn btn-gold" style="width:100%;padding:11px;">Continue</button>
+        </div>
+      </div>
+
+      <!-- Main UI -->
+      <div id="msgAdminContent" style="display:none;">
+
+        <div class="tourn-step-bar">
+          <div class="tourn-step active" id="waStepInd1"><span class="tourn-step-num">1</span> Recipients</div>
+          <div class="tourn-step-connector" id="waConn1"></div>
+          <div class="tourn-step" id="waStepInd2"><span class="tourn-step-num">2</span> Template</div>
+          <div class="tourn-step-connector" id="waConn2"></div>
+          <div class="tourn-step" id="waStepInd3"><span class="tourn-step-num">3</span> Review &amp; Send</div>
+        </div>
+
+        <!-- STEP 1: Recipients -->
+        <div id="waStep1">
+          <div style="display:flex;gap:10px;margin-bottom:18px;">
+            <button class="blog-filter-btn active" id="waTabMembers">Members</button>
+            <button class="blog-filter-btn" id="waTabTournament">Tournament Registrants</button>
+          </div>
+
+          <div class="report-toolbar">
+            <input class="report-search" id="waSearch" type="text" placeholder="Search name or mobile&hellip;" />
+            <select class="report-filter" id="waStatusFilter"></select>
+          </div>
+
+          <div class="report-table-wrap">
+            <table class="report-table">
+              <thead><tr>
+                <th style="width:34px;"><input type="checkbox" id="waSelectAll" /></th>
+                <th>Name</th>
+                <th>Mobile</th>
+                <th id="waStatusColHd">Status</th>
+              </tr></thead>
+              <tbody id="waRecipientTbody"><tr><td colspan="4" style="text-align:center;color:var(--muted);padding:24px;">Loading&hellip;</td></tr></tbody>
+            </table>
+          </div>
+
+          <p id="waSelectedCount" style="margin:14px 0 0;font-size:13.5px;color:var(--navy2);font-weight:700;">0 recipients selected</p>
+
+          <div style="margin-top:20px;text-align:right;">
+            <button class="btn btn-gold" id="waNext1" style="padding:11px 28px;">Next: Choose Template &#8594;</button>
+          </div>
+        </div>
+
+        <!-- STEP 2: Template -->
+        <div id="waStep2" style="display:none;">
+          <div class="reg-form-card" style="margin-bottom:20px;">
+            <div class="form-group" style="margin-bottom:16px;">
+              <label style="font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:6px;">Approved Template</label>
+              <select id="waTemplateSelect" style="width:100%;padding:10px 14px;border:1.5px solid var(--border);border-radius:6px;font-size:14px;">
+                <option value="">Loading templates&hellip;</option>
+              </select>
+              <p id="waTemplateWarn" style="color:#c62828;font-size:12.5px;margin-top:6px;min-height:16px;"></p>
+            </div>
+
+            <div id="waVarsWrap"></div>
+
+            <div id="waPreviewWrap" style="display:none;margin-top:18px;padding:16px;background:var(--light);border-radius:8px;">
+              <p style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Preview (sample recipient)</p>
+              <p id="waPreviewText" style="font-size:14px;color:var(--text);white-space:pre-wrap;"></p>
+            </div>
+          </div>
+
+          <div style="display:flex;justify-content:space-between;">
+            <button class="btn btn-outline" id="waBack2" style="background:transparent;border:2px solid var(--border);color:var(--text);padding:11px 24px;">&#8592; Back</button>
+            <button class="btn btn-gold" id="waNext2" style="padding:11px 28px;">Next: Review &amp; Send &#8594;</button>
+          </div>
+        </div>
+
+        <!-- STEP 3: Review & Send -->
+        <div id="waStep3" style="display:none;">
+          <div class="reg-form-card" style="margin-bottom:20px;">
+            <p style="font-size:13px;color:var(--muted);margin-bottom:4px;">Template</p>
+            <p id="waReviewTemplate" style="font-weight:700;color:var(--navy2);margin-bottom:16px;"></p>
+            <p style="font-size:13px;color:var(--muted);margin-bottom:4px;">Recipients</p>
+            <p id="waReviewCount" style="font-weight:700;color:var(--navy2);margin-bottom:16px;"></p>
+            <div style="padding:16px;background:var(--light);border-radius:8px;">
+              <p style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Message Preview</p>
+              <p id="waReviewPreview" style="font-size:14px;color:var(--text);white-space:pre-wrap;"></p>
+            </div>
+          </div>
+
+          <div style="display:flex;justify-content:space-between;margin-bottom:20px;">
+            <button class="btn btn-outline" id="waBack3" style="background:transparent;border:2px solid var(--border);color:var(--text);padding:11px 24px;">&#8592; Back</button>
+            <button class="btn btn-gold" id="waSendBtn" style="padding:11px 28px;">&#128172; Send Broadcast</button>
+          </div>
+
+          <div id="waProgressWrap" style="display:none;margin-bottom:20px;">
+            <div style="background:#e8f0ef;border-radius:8px;height:10px;overflow:hidden;">
+              <div id="waProgressBar" style="background:var(--gold);height:100%;width:0%;transition:width .2s;"></div>
+            </div>
+            <p id="waProgressText" style="font-size:13px;color:var(--muted);margin-top:8px;text-align:center;"></p>
+          </div>
+
+          <div id="waResultsWrap" style="display:none;">
+            <div class="report-table-wrap">
+              <table class="report-table">
+                <thead><tr><th>Name</th><th>Mobile</th><th>Status</th><th>Detail</th></tr></thead>
+                <tbody id="waResultsTbody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Message log -->
+        <div style="margin-top:56px;">
+          <div class="section-header" style="margin-bottom:24px;">
+            <span class="section-badge">Log</span>
+            <h2 class="section-title" style="font-size:1.6rem;">Recent Broadcasts</h2>
+            <div class="divider"></div>
+          </div>
+          <p id="waLogLoadMsg" style="text-align:center;color:var(--muted);font-size:14px;">Loading log&hellip;</p>
+          <div id="waLogList"></div>
+        </div>
+
+      </div><!-- end msgAdminContent -->
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <h3>The Bezwada Bar Association</h3>
+        <p>Upholding justice and serving the legal fraternity of Vijayawada since 1906.</p>
+        <p>Civil Courts Campus, Gopala Reddy Road,<br/>Governorpet, Vijayawada &ndash; 520 002</p>
+        <p class="footer-tel">&#9742; 0866 &ndash; 2574321 &bull; &#9993; bbabza@gmail.com</p>
+      </div>
+      <div class="footer-links">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="../index.html">Home</a></li>
+          <li><a href="../about/index.html">About</a></li>
+          <li><a href="../office-bearers/index.html">Office Bearers</a></li>
+          <li><a href="../members/index.html">Members Directory</a></li>
+          <li><a href="../news/index.html">News &amp; Events</a></li>
+          <li><a href="../blog/index.html">Blog</a></li>
+          <li><a href="../contact/index.html">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>Resources</h4>
+        <ul>
+          <li><a href="https://www.barcouncilofindia.org" target="_blank" rel="noopener">Bar Council of India</a></li>
+          <li><a href="https://hc.ap.nic.in" target="_blank" rel="noopener">AP High Court</a></li>
+          <li><a href="https://nalsa.gov.in" target="_blank" rel="noopener">NALSA &mdash; Legal Aid</a></li>
+          <li><a href="https://districts.ecourts.gov.in/krishna" target="_blank" rel="noopener">District Courts &mdash; Krishna</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>Affiliations</h4>
+        <ul>
+          <li>Bar Council of Andhra Pradesh</li>
+          <li>Bar Council of India</li>
+          <li>District Legal Services Authority</li>
+          <li>Krishna District Court</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="container">
+        <p>&copy; 2026 The Bezwada Bar Association. All rights reserved.</p>
+        <p>Governorpet &bull; Vijayawada &bull; Krishna District &bull; Andhra Pradesh</p>
+      </div>
+    </div>
+  </footer>
+
+  <button class="back-to-top" id="backToTop" aria-label="Back to top">&#8679;</button>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <script src="../js/supabase-client.js"></script>
+  <script src="../js/script.js"></script>
+  <script>
+  (function () {
+    const ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRpd2F6Ym50eHZ5dndmanpjd3J2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc5MTUxOTYsImV4cCI6MjEwMzQ5MTE5Nn0.XQ-7AadKhw_b74fUxrfGlKMkASqkzbPUz8jrS12af6E';
+    const OPS_URL = 'https://tiwazbntxvyvwfjzcwrv.supabase.co/functions/v1/whatsapp-broadcast';
+
+    // ── Auth guard ────────────────────────────────────────────
+    if (localStorage.getItem('bba_admin') !== '1') {
+      document.getElementById('msgGuard').style.display = '';
+      return;
+    }
+
+    var adminPass = sessionStorage.getItem('bba_admin_pass') || '';
+
+    // recipients: Map<normalizedMobile, {name, mobile}>
+    var selected = new Map();
+    var curTab = 'members';
+    var membersData = null;
+    var tournamentData = null;
+    var templates = [];
+    var selectedTemplate = null; // {name, language, body, varCount}
+    var varModes = []; // [{mode:'static'|'name', value:''}]
+
+    function escHtml(s) {
+      return (s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
+    function normMobile(raw) {
+      var digits = (raw || '').replace(/\D/g, '');
+      return digits.slice(-10);
+    }
+
+    // ── Password prompt if session expired ────────────────────
+    function ensurePass(cb) {
+      if (adminPass) { cb(); return; }
+      document.getElementById('msgAdminContent').style.display = 'none';
+      document.getElementById('msgPassPrompt').style.display = '';
+      document.getElementById('msgPassSubmit').onclick = async function () {
+        var p = document.getElementById('msgPassInput').value.trim();
+        if (!p) return;
+        var r = await callOps({ operation: 'list_log' }, p);
+        if (r && r.success) {
+          adminPass = p;
+          sessionStorage.setItem('bba_admin_pass', p);
+          document.getElementById('msgPassPrompt').style.display = 'none';
+          document.getElementById('msgAdminContent').style.display = '';
+          cb();
+        } else {
+          document.getElementById('msgPassErr').textContent = 'Invalid password.';
+        }
+      };
+    }
+
+    async function callOps(payload, passOverride) {
+      try {
+        var res = await fetch(OPS_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + ANON_KEY },
+          body: JSON.stringify(Object.assign({ admin_password: passOverride || adminPass }, payload))
+        });
+        var body = await res.json();
+        if (res.status === 401) { adminPass = ''; sessionStorage.removeItem('bba_admin_pass'); }
+        return body;
+      } catch (e) {
+        return { success: false, message: 'Network error.' };
+      }
+    }
+
+    // ── Step navigation ────────────────────────────────────────
+    function gotoStep(n) {
+      [1, 2, 3].forEach(function (i) {
+        document.getElementById('waStep' + i).style.display = i === n ? '' : 'none';
+        var ind = document.getElementById('waStepInd' + i);
+        ind.classList.remove('active', 'done');
+        if (i < n) ind.classList.add('done');
+        if (i === n) ind.classList.add('active');
+      });
+      document.getElementById('waConn1').classList.toggle('done', n > 1);
+      document.getElementById('waConn2').classList.toggle('done', n > 2);
+      if (n === 2 && !templates.length) loadTemplates();
+      if (n === 3) renderReview();
+    }
+
+    // ── Step 1: recipients ─────────────────────────────────────
+    async function ensureSupabaseReady() {
+      var tries = 0;
+      while (!window._supabase && tries < 50) {
+        await new Promise(function (r) { setTimeout(r, 100); });
+        tries++;
+      }
+      return !!window._supabase;
+    }
+
+    async function loadMembers() {
+      var tbody = document.getElementById('waRecipientTbody');
+      tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:var(--muted);padding:24px;">Loading&hellip;</td></tr>';
+      var ready = await ensureSupabaseReady();
+      if (!ready) { tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:#c0392b;padding:24px;">Could not connect to database.</td></tr>'; return; }
+      var rows = [];
+      var from = 0, CHUNK = 1000;
+      while (true) {
+        var q = await window._supabase.from('members').select('enrollment_no, name, mobile, status').order('enrollment_no').range(from, from + CHUNK - 1);
+        if (q.error) { tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:#c0392b;padding:24px;">Error: ' + escHtml(q.error.message) + '</td></tr>'; return; }
+        rows = rows.concat(q.data || []);
+        if ((q.data || []).length < CHUNK) break;
+        from += CHUNK;
+      }
+      membersData = rows;
+      renderTable();
+    }
+
+    async function loadTournament() {
+      var tbody = document.getElementById('waRecipientTbody');
+      tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:var(--muted);padding:24px;">Loading&hellip;</td></tr>';
+      var ready = await ensureSupabaseReady();
+      if (!ready) { tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:#c0392b;padding:24px;">Could not connect to database.</td></tr>'; return; }
+      var q = await window._supabase.from('tournament_registrations').select('ref, name, mobile, payment_status').order('ref', { ascending: false });
+      if (q.error) { tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:#c0392b;padding:24px;">Error: ' + escHtml(q.error.message) + '</td></tr>'; return; }
+      tournamentData = q.data || [];
+      renderTable();
+    }
+
+    function statusFilterOptions() {
+      var sel = document.getElementById('waStatusFilter');
+      if (curTab === 'members') {
+        sel.innerHTML = '<option value="">All Statuses</option><option value="active">Active</option><option value="inactive">Inactive</option><option value="deceased">Deceased</option>';
+        document.getElementById('waStatusColHd').textContent = 'Status';
+      } else {
+        sel.innerHTML = '<option value="">All Statuses</option><option value="utr_submitted">UTR Submitted</option><option value="pending">Pending</option>';
+        document.getElementById('waStatusColHd').textContent = 'Payment';
+      }
+    }
+
+    function renderTable() {
+      statusFilterOptions();
+      var rows = curTab === 'members' ? (membersData || []) : (tournamentData || []);
+      var tbody = document.getElementById('waRecipientTbody');
+      if (!rows.length) {
+        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:var(--muted);padding:24px;">No records.</td></tr>';
+        return;
+      }
+      tbody.innerHTML = rows.map(function (r) {
+        var status = curTab === 'members' ? (r.status || '') : (r.payment_status || '');
+        var statusLabel = curTab === 'members' ? status : (status === 'utr_submitted' ? 'UTR Submitted' : 'Pending');
+        var mobile = r.mobile || '';
+        var key = normMobile(mobile);
+        var checked = key && selected.has(key) ? 'checked' : '';
+        var search = ((r.name || '') + ' ' + mobile).toLowerCase();
+        return '<tr data-search="' + escHtml(search) + '" data-status="' + escHtml((status || '').toLowerCase()) + '">' +
+          '<td><input type="checkbox" class="wa-recipient-cb" data-mobile="' + escHtml(mobile) + '" data-name="' + escHtml(r.name || '') + '" ' + checked + ' ' + (key ? '' : 'disabled title="No valid mobile number"') + ' /></td>' +
+          '<td>' + escHtml(r.name || '') + '</td>' +
+          '<td style="white-space:nowrap;">' + escHtml(mobile) + '</td>' +
+          '<td>' + escHtml(statusLabel) + '</td>' +
+          '</tr>';
+      }).join('');
+
+      tbody.querySelectorAll('.wa-recipient-cb').forEach(function (cb) {
+        cb.addEventListener('change', function () {
+          var key = normMobile(cb.dataset.mobile);
+          if (!key) return;
+          if (cb.checked) selected.set(key, { name: cb.dataset.name, mobile: cb.dataset.mobile });
+          else selected.delete(key);
+          updateSelectedCount();
+        });
+      });
+      document.getElementById('waSelectAll').checked = false;
+      applyFilter();
+      updateSelectedCount();
+    }
+
+    function applyFilter() {
+      var q = (document.getElementById('waSearch').value || '').toLowerCase();
+      var status = document.getElementById('waStatusFilter').value;
+      document.querySelectorAll('#waRecipientTbody tr').forEach(function (tr) {
+        var matchQ = !q || (tr.dataset.search || '').includes(q);
+        var matchS = !status || tr.dataset.status === status;
+        tr.style.display = (matchQ && matchS) ? '' : 'none';
+      });
+    }
+
+    function updateSelectedCount() {
+      document.getElementById('waSelectedCount').textContent = selected.size + ' recipient' + (selected.size === 1 ? '' : 's') + ' selected';
+    }
+
+    document.getElementById('waSearch').addEventListener('input', applyFilter);
+    document.getElementById('waStatusFilter').addEventListener('change', applyFilter);
+    document.getElementById('waSelectAll').addEventListener('change', function (e) {
+      var checkAll = e.target.checked;
+      document.querySelectorAll('#waRecipientTbody tr').forEach(function (tr) {
+        if (tr.style.display === 'none') return;
+        var cb = tr.querySelector('.wa-recipient-cb');
+        if (!cb || cb.disabled) return;
+        cb.checked = checkAll;
+        var key = normMobile(cb.dataset.mobile);
+        if (checkAll) selected.set(key, { name: cb.dataset.name, mobile: cb.dataset.mobile });
+        else selected.delete(key);
+      });
+      updateSelectedCount();
+    });
+
+    document.getElementById('waTabMembers').addEventListener('click', function () {
+      curTab = 'members';
+      document.getElementById('waTabMembers').classList.add('active');
+      document.getElementById('waTabTournament').classList.remove('active');
+      if (membersData) renderTable(); else loadMembers();
+    });
+    document.getElementById('waTabTournament').addEventListener('click', function () {
+      curTab = 'tournament';
+      document.getElementById('waTabTournament').classList.add('active');
+      document.getElementById('waTabMembers').classList.remove('active');
+      if (tournamentData) renderTable(); else loadTournament();
+    });
+
+    document.getElementById('waNext1').addEventListener('click', function () {
+      if (!selected.size) { alert('Select at least one recipient.'); return; }
+      gotoStep(2);
+    });
+    document.getElementById('waBack2').addEventListener('click', function () { gotoStep(1); });
+    document.getElementById('waBack3').addEventListener('click', function () { gotoStep(2); });
+
+    // ── Step 2: template ────────────────────────────────────────
+    function extractVars(bodyText) {
+      var matches = (bodyText || '').match(/\{\{\d+\}\}/g) || [];
+      var unique = Array.from(new Set(matches));
+      return unique.length;
+    }
+
+    async function loadTemplates() {
+      var sel = document.getElementById('waTemplateSelect');
+      sel.innerHTML = '<option value="">Loading templates&hellip;</option>';
+      var r = await callOps({ operation: 'list_templates' });
+      if (!r || !r.success) {
+        sel.innerHTML = '<option value="">Failed to load templates</option>';
+        document.getElementById('waTemplateWarn').textContent = (r && r.message) ? r.message : 'Could not load templates.';
+        return;
+      }
+      templates = r.templates || [];
+      if (!templates.length) {
+        sel.innerHTML = '<option value="">No approved templates found</option>';
+        return;
+      }
+      sel.innerHTML = '<option value="">-- Select a template --</option>' + templates.map(function (t, i) {
+        return '<option value="' + i + '">' + escHtml(t.name) + ' (' + escHtml(t.language) + ', ' + escHtml(t.category) + ')</option>';
+      }).join('');
+    }
+
+    document.getElementById('waTemplateSelect').addEventListener('change', function (e) {
+      var idx = e.target.value;
+      var warn = document.getElementById('waTemplateWarn');
+      warn.textContent = '';
+      document.getElementById('waVarsWrap').innerHTML = '';
+      document.getElementById('waPreviewWrap').style.display = 'none';
+      selectedTemplate = null;
+      if (idx === '') return;
+      var t = templates[idx];
+      var header = (t.components || []).find(function (c) { return c.type === 'HEADER'; });
+      var buttons = (t.components || []).find(function (c) { return c.type === 'BUTTONS'; });
+      if ((header && /\{\{\d+\}\}/.test(header.text || '')) || (buttons && /\{\{\d+\}\}/.test(JSON.stringify(buttons.buttons || [])))) {
+        warn.textContent = 'This template has header/button variables, which are not supported here. Choose a template with only body-text variables.';
+        return;
+      }
+      var body = (t.components || []).find(function (c) { return c.type === 'BODY'; });
+      var bodyText = body ? body.text : '';
+      var varCount = extractVars(bodyText);
+      selectedTemplate = { name: t.name, language: t.language, body: bodyText, varCount: varCount };
+      varModes = [];
+      for (var i = 0; i < varCount; i++) varModes.push({ mode: 'static', value: '' });
+      renderVarInputs();
+    });
+
+    function renderVarInputs() {
+      var wrap = document.getElementById('waVarsWrap');
+      if (!selectedTemplate.varCount) {
+        wrap.innerHTML = '';
+        updatePreview();
+        return;
+      }
+      wrap.innerHTML = varModes.map(function (v, i) {
+        return '<div class="form-group" style="margin-bottom:14px;display:flex;gap:10px;align-items:flex-end;">' +
+          '<div style="flex:0 0 140px;">' +
+            '<label style="font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:6px;">Variable {{' + (i + 1) + '}}</label>' +
+            '<select class="wa-var-mode" data-i="' + i + '" style="width:100%;padding:9px 10px;border:1.5px solid var(--border);border-radius:6px;font-size:13.5px;">' +
+              '<option value="static"' + (v.mode === 'static' ? ' selected' : '') + '>Static text</option>' +
+              '<option value="name"' + (v.mode === 'name' ? ' selected' : '') + '>Recipient\'s Name</option>' +
+            '</select>' +
+          '</div>' +
+          '<div style="flex:1;">' +
+            '<input type="text" class="wa-var-value" data-i="' + i + '" placeholder="Value for {{' + (i + 1) + '}}" value="' + escHtml(v.value) + '" style="width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:6px;font-size:13.5px;" ' + (v.mode === 'name' ? 'disabled' : '') + ' />' +
+          '</div>' +
+        '</div>';
+      }).join('');
+
+      wrap.querySelectorAll('.wa-var-mode').forEach(function (sel) {
+        sel.addEventListener('change', function () {
+          var i = parseInt(sel.dataset.i, 10);
+          varModes[i].mode = sel.value;
+          renderVarInputs();
+        });
+      });
+      wrap.querySelectorAll('.wa-var-value').forEach(function (inp) {
+        inp.addEventListener('input', function () {
+          var i = parseInt(inp.dataset.i, 10);
+          varModes[i].value = inp.value;
+          updatePreview();
+        });
+      });
+      updatePreview();
+    }
+
+    function sampleRecipient() {
+      var first = selected.values().next();
+      return first.done ? { name: 'Recipient Name' } : first.value;
+    }
+
+    function resolvedBody(recipient) {
+      if (!selectedTemplate) return '';
+      var text = selectedTemplate.body || '';
+      varModes.forEach(function (v, i) {
+        var val = v.mode === 'name' ? (recipient.name || '') : v.value;
+        text = text.replace('{{' + (i + 1) + '}}', val || '');
+      });
+      return text;
+    }
+
+    function updatePreview() {
+      if (!selectedTemplate) return;
+      var wrap = document.getElementById('waPreviewWrap');
+      wrap.style.display = '';
+      document.getElementById('waPreviewText').textContent = resolvedBody(sampleRecipient());
+    }
+
+    document.getElementById('waNext2').addEventListener('click', function () {
+      if (!selectedTemplate) { alert('Choose a template.'); return; }
+      gotoStep(3);
+    });
+
+    // ── Step 3: review & send ────────────────────────────────────
+    function renderReview() {
+      document.getElementById('waReviewTemplate').textContent = selectedTemplate.name + ' (' + selectedTemplate.language + ')';
+      document.getElementById('waReviewCount').textContent = selected.size + ' recipient' + (selected.size === 1 ? '' : 's');
+      document.getElementById('waReviewPreview').textContent = resolvedBody(sampleRecipient());
+      document.getElementById('waProgressWrap').style.display = 'none';
+      document.getElementById('waResultsWrap').style.display = 'none';
+      document.getElementById('waSendBtn').disabled = false;
+      document.getElementById('waSendBtn').textContent = '💬 Send Broadcast';
+    }
+
+    document.getElementById('waSendBtn').addEventListener('click', async function () {
+      if (!confirm('Send this WhatsApp broadcast to ' + selected.size + ' recipient(s)? This cannot be undone.')) return;
+      var btn = document.getElementById('waSendBtn');
+      btn.disabled = true;
+      btn.textContent = 'Sending&hellip;';
+
+      var recipients = Array.from(selected.values()).map(function (r) {
+        return {
+          name: r.name,
+          mobile: r.mobile,
+          values: varModes.map(function (v) { return v.mode === 'name' ? (r.name || '') : v.value; })
+        };
+      });
+
+      var BATCH = 20;
+      var allResults = [];
+      var progWrap = document.getElementById('waProgressWrap');
+      var progBar = document.getElementById('waProgressBar');
+      var progText = document.getElementById('waProgressText');
+      progWrap.style.display = '';
+
+      for (var i = 0; i < recipients.length; i += BATCH) {
+        var batch = recipients.slice(i, i + BATCH);
+        var r = await callOps({
+          operation: 'send',
+          template_name: selectedTemplate.name,
+          template_language: selectedTemplate.language,
+          recipients: batch
+        });
+        if (r && r.success) {
+          allResults = allResults.concat(r.results || []);
+        } else {
+          batch.forEach(function (b) { allResults.push({ name: b.name, mobile: b.mobile, status: 'failed', error: (r && r.message) || 'Request failed.' }); });
+        }
+        var done = Math.min(i + BATCH, recipients.length);
+        progBar.style.width = Math.round((done / recipients.length) * 100) + '%';
+        progText.textContent = 'Sent ' + done + ' / ' + recipients.length;
+      }
+
+      renderResults(allResults);
+      btn.textContent = 'Done';
+      loadLog();
+    });
+
+    function renderResults(results) {
+      var wrap = document.getElementById('waResultsWrap');
+      wrap.style.display = '';
+      document.getElementById('waResultsTbody').innerHTML = results.map(function (r) {
+        var ok = r.status === 'sent';
+        return '<tr>' +
+          '<td>' + escHtml(r.name || '') + '</td>' +
+          '<td style="white-space:nowrap;">' + escHtml(r.mobile || '') + '</td>' +
+          '<td><span class="r-badge ' + (ok ? 'r-badge--sent' : 'r-badge--failed') + '">' + (ok ? 'Sent' : 'Failed') + '</span></td>' +
+          '<td style="font-size:12px;color:var(--muted);">' + escHtml(ok ? (r.messageId || '') : (r.error || '')) + '</td>' +
+          '</tr>';
+      }).join('');
+    }
+
+    // ── Message log ──────────────────────────────────────────────
+    async function loadLog() {
+      var msg = document.getElementById('waLogLoadMsg');
+      var list = document.getElementById('waLogList');
+      msg.style.display = '';
+      msg.textContent = 'Loading log…';
+      var r = await callOps({ operation: 'list_log' });
+      if (!r || !r.success) {
+        msg.textContent = 'Failed to load log: ' + ((r && r.message) || 'Network error.');
+        return;
+      }
+      msg.style.display = 'none';
+      var items = r.items || [];
+      if (!items.length) {
+        list.innerHTML = '<p style="text-align:center;color:var(--muted);padding:24px 0;">No messages sent yet.</p>';
+        return;
+      }
+      list.innerHTML = items.map(function (it) {
+        var ok = it.status === 'sent';
+        var when = new Date(it.created_at).toLocaleString('en-IN');
+        return '<div class="news-admin-item">' +
+          '<div class="news-admin-item-hd">' +
+            '<span class="r-badge ' + (ok ? 'r-badge--sent' : 'r-badge--failed') + '">' + (ok ? 'Sent' : 'Failed') + '</span>' +
+          '</div>' +
+          '<div class="news-admin-item-title-row">' +
+            '<span class="news-admin-item-title">' + escHtml(it.template_name) + '</span>' +
+            '<span class="news-admin-item-date">' + escHtml(when) + '</span>' +
+          '</div>' +
+          '<p class="news-admin-item-body">' + escHtml(it.recipient_name || '') + ' &mdash; ' + escHtml(it.recipient_mobile || '') + (it.error_message ? ' &mdash; ' + escHtml(it.error_message) : '') + '</p>' +
+        '</div>';
+      }).join('');
+    }
+
+    // ── Boot ────────────────────────────────────────────────────
+    function boot() {
+      document.getElementById('msgAdminContent').style.display = '';
+      gotoStep(1);
+      loadMembers();
+      loadLog();
+    }
+
+    if (adminPass) {
+      boot();
+    } else {
+      ensurePass(boot);
+    }
+  })();
+  </script>
+
+</body>
+</html>
