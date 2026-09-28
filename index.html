@@ -3,71 +3,95 @@
 
 <head>
   <meta charset="UTF-8" />
-  <script>try { if (location.pathname.endsWith("index.html")) history.replaceState(null, "", location.pathname.slice(0, -10) || "./") } catch (e) { }</script>
+  <base href="/" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description"
-    content="The Bezwada Bar Association, Vijayawada — serving enrolled advocates at the Civil Courts, Governorpet since 1906. Members directory, news, events, and tournament registration." />
-  <title>Bezwada Bar Association | Vijayawada | Estd. 1906</title>
-
-  <!-- Canonical -->
-  <link rel="canonical" href="https://thebezwadabarassociation.com/" />
-
-  <!-- Open Graph -->
-  <meta property="og:type"        content="website" />
-  <meta property="og:url"         content="https://thebezwadabarassociation.com/" />
-  <meta property="og:site_name"   content="The Bezwada Bar Association" />
-  <meta property="og:title"       content="Bezwada Bar Association | Vijayawada | Estd. 1906" />
-  <meta property="og:description" content="The Bezwada Bar Association, Vijayawada — serving enrolled advocates at the Civil Courts, Governorpet since 1906." />
-  <meta property="og:image"       content="https://thebezwadabarassociation.com/images/logo.jpeg" />
-  <meta property="og:locale"      content="en_IN" />
-
-  <!-- Geo -->
-  <meta name="geo.region"      content="IN-AP" />
-  <meta name="geo.placename"   content="Vijayawada, Andhra Pradesh, India" />
-  <meta name="geo.position"    content="16.5062;80.6480" />
-  <meta name="ICBM"            content="16.5062, 80.6480" />
-
-  <!-- JSON-LD Organisation Schema -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Organization",
-    "name": "The Bezwada Bar Association",
-    "alternateName": ["Bezwada Bar Association", "BBA Vijayawada", "Vijayawada Bar Association"],
-    "url": "https://thebezwadabarassociation.com",
-    "logo": "https://thebezwadabarassociation.com/images/logo.jpeg",
-    "image": "https://thebezwadabarassociation.com/images/logo.jpeg",
-    "foundingDate": "1906",
-    "description": "The Bezwada Bar Association is one of the oldest bar associations in Andhra Pradesh, serving enrolled advocates practising at the Civil Courts, Vijayawada since 1906.",
-    "address": {
-      "@type": "PostalAddress",
-      "streetAddress": "Civil Courts Campus, Gopala Reddy Road, Governorpet",
-      "addressLocality": "Vijayawada",
-      "addressRegion": "Andhra Pradesh",
-      "postalCode": "520002",
-      "addressCountry": "IN"
-    },
-    "contactPoint": {
-      "@type": "ContactPoint",
-      "telephone": "+91-866-2574321",
-      "email": "bbabza@gmail.com",
-      "contactType": "General Enquiries",
-      "areaServed": "IN",
-      "availableLanguage": ["English", "Telugu"]
-    },
-    "memberOf": [
-      { "@type": "Organization", "name": "Bar Council of Andhra Pradesh" },
-      { "@type": "Organization", "name": "Bar Council of India" }
-    ],
-    "sameAs": [
-      "https://bbabza.github.io"
-    ]
-  }
-  </script>
-
+  <meta name="robots" content="noindex" />
+  <title>Page Not Found | The Bezwada Bar Association</title>
   <link rel="icon" href="images/logo.jpeg" type="image/jpeg" />
   <link rel="stylesheet" href="css/styles.css" />
   <link rel="stylesheet" href="css/fonts.css" />
+  <style>
+    .error-section {
+      min-height: 68vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 20px;
+      background: var(--light);
+    }
+
+    .error-card {
+      background: #fff;
+      border-radius: 18px;
+      box-shadow: 0 8px 40px rgba(42, 157, 143, 0.13);
+      padding: 56px 48px 48px;
+      max-width: 560px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .error-code {
+      font-family: var(--ff-serif);
+      font-size: clamp(80px, 18vw, 140px);
+      font-weight: 700;
+      line-height: 1;
+      color: var(--navy);
+      letter-spacing: -4px;
+      margin-bottom: 4px;
+    }
+
+    .error-gavel {
+      font-size: 48px;
+      margin-bottom: 16px;
+      display: block;
+    }
+
+    .error-title {
+      font-family: var(--ff-serif);
+      font-size: 1.55rem;
+      color: var(--navy2);
+      margin: 0 0 12px;
+    }
+
+    .error-desc {
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.65;
+      margin: 0 0 32px;
+    }
+
+    .error-actions {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 32px;
+    }
+
+    .error-countdown {
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .error-countdown strong {
+      color: var(--navy2);
+      font-weight: 700;
+    }
+
+    .error-divider {
+      width: 48px;
+      height: 3px;
+      background: var(--gold);
+      border-radius: 2px;
+      margin: 20px auto 24px;
+    }
+
+    @media (max-width: 520px) {
+      .error-card {
+        padding: 40px 24px 36px;
+      }
+    }
+  </style>
 </head>
 
 <body data-root="">
@@ -95,15 +119,15 @@
       <button class="nav-toggle" id="navToggle"
         aria-label="Toggle navigation"><span></span><span></span><span></span></button>
       <nav class="main-nav" id="mainNav">
-        <ul>
-          <li><a href="index.html" aria-current="page">Home</a></li>
+        <!-- <ul>
+          <li><a href="index.html">Home</a></li>
           <li><a href="about/index.html">About</a></li>
           <li><a href="office-bearers/index.html">Office Bearers</a></li>
           <li><a href="members/index.html">Members</a></li>
           <li class="nav-more"><a href="#" class="nav-more-toggle">More</a><ul class="nav-dropdown"><li><a href="blog/index.html">Blog</a></li><li><a href="gallery/index.html">Gallery</a></li></ul></li>
           <li><a href="tournament/index.html" style="color:var(--gold)!important;">&#127992; Tournament</a></li>
           <li><a href="contact/index.html" class="btn-nav">Contact</a></li>
-        </ul>
+        </ul> -->
       </nav>
     </div>
   </header>
@@ -111,125 +135,31 @@
   <div class="news-ticker" id="newsTicker">
     <div class="ticker-label"><span class="ticker-dot"></span>LATEST NEWS</div>
     <div class="ticker-viewport">
-      <div class="ticker-track" id="tickerTrack"><span class="ticker-placeholder">Loading latest news&hellip;</span>
+      <div class="ticker-track" id="tickerTrack">
+        <span class="ticker-placeholder">Loading latest news&hellip;</span>
       </div>
     </div>
     <button class="ticker-pause" id="tickerPause" title="Pause / Resume">&#10074;&#10074;</button>
   </div>
 
-  <!-- HERO -->
-  <section class="hero">
-    <div class="hero-overlay"></div>
-    <div class="container hero-content">
-      <p class="hero-eyebrow">Vijayawada &bull; Krishna District &bull; Andhra Pradesh</p>
-      <h2>Upholding Justice.<br />Serving the Bar.</h2>
-      <p class="hero-sub">The Bezwada Bar Association has stood as the cornerstone of the legal fraternity in Vijayawada
-        for over a century, championing the rights of advocates and the cause of justice since 1906.</p>
-      <div class="hero-actions">
-        <a href="about/index.html" class="btn btn-gold">Discover Our Legacy</a>
-        <a href="members/index.html" class="btn btn-outline">Members Directory</a>
+  <section class="error-section">
+    <div class="error-card">
+      <span class="error-gavel">&#9878;</span>
+      <div class="error-code">404</div>
+      <div class="error-divider"></div>
+      <h2 class="error-title">Page Not Found</h2>
+      <p class="error-desc">
+        The page you are looking for does not exist, may have been moved,
+        or the address was entered incorrectly. Please check the URL or
+        return to our home page.
+      </p>
+      <div class="error-actions">
+        <a href="index.html" class="btn btn-gold">&#8962; Go to Home Page</a>
+        <a href="contact/index.html" class="btn btn-outline">Contact Us</a>
       </div>
-    </div>
-    <div class="hero-stats">
-      <div class="container stats-row">
-        <div class="stat"><span class="stat-num">1906</span><span class="stat-label">Year Founded</span></div>
-        <div class="stat"><span class="stat-num">1800+</span><span class="stat-label">Enrolled Members</span></div>
-        <div class="stat"><span class="stat-num">118+</span><span class="stat-label">Years of Service</span></div>
-        <div class="stat"><span class="stat-num">12</span><span class="stat-label">Practice Areas</span></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- INAUGURATION -->
-  <section class="section section-dark inaug-section">
-    <div class="container">
-      <div class="section-header">
-        <span class="section-badge">Website Launch</span>
-        <h2 class="section-title">Inaugurated By</h2>
-        <div class="divider"></div>
-      </div>
-      <div class="inaug-grid">
-
-        <div class="inaug-card">
-          <div class="inaug-avatar">
-            <img src="images/Inaugurator-1.jpeg" alt="Sri Justice Ravi Nath Tilhari" class="inaug-photo" onerror="this.outerHTML='<div class=&quot;inaug-no-photo&quot;>No Photo</div>'" />
-          </div>
-          <h3 class="inaug-name">Sri Justice Ravi Nath Tilhari</h3>
-          <p class="inaug-title">Administrative Judge, Krishna</p>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- SECTION CARDS -->
-  <section class="section section-light">
-    <div class="container">
-      <div class="section-header">
-        <span class="section-badge">Explore</span>
-        <h2 class="section-title">Explore Our Association</h2>
-        <div class="divider"></div>
-      </div>
-      <div class="section-cards-grid">
-        <a href="about/index.html" class="section-card">
-          <div class="section-card-icon">&#128220;</div>
-          <h3>About &amp; History</h3>
-          <p>Learn about our century-long legacy, mission, vision, and the milestones that have shaped the Bezwada Bar
-            Association since 1906.</p>
-          <span class="section-card-link">Read Our Story &rarr;</span>
-        </a>
-        <a href="office-bearers/index.html" class="section-card">
-          <div class="section-card-icon">&#9878;</div>
-          <h3>Office Bearers</h3>
-          <p>Meet the elected leadership — President, General Secretary, and all office bearers steering the
-            Association's affairs.</p>
-          <span class="section-card-link">Meet the Leaders &rarr;</span>
-        </a>
-        <a href="members/index.html" class="section-card">
-          <div class="section-card-icon">&#128101;</div>
-          <h3>Members Directory</h3>
-          <p>Search and browse our directory of enrolled advocates practising at the Civil Courts, Vijayawada.</p>
-          <span class="section-card-link">Browse Directory &rarr;</span>
-        </a>
-        <a href="news/index.html" class="section-card">
-          <div class="section-card-icon">&#128240;</div>
-          <h3>News &amp; Events</h3>
-          <p>Stay updated with the latest announcements, upcoming events, notices, and circulars from the Association.
-          </p>
-          <span class="section-card-link">View News &rarr;</span>
-        </a>
-        <a href="gallery/index.html" class="section-card">
-          <div class="section-card-icon">&#128247;</div>
-          <h3>Photo Gallery</h3>
-          <p>Relive the moments from our events, seminars, legal aid camps, cultural programmes, and landmark occasions.
-          </p>
-          <span class="section-card-link">View Gallery &rarr;</span>
-        </a>
-        <a href="contact/index.html" class="section-card">
-          <div class="section-card-icon">&#128205;</div>
-          <h3>Contact Us</h3>
-          <p>Reach the Association office at Civil Courts Campus, Governorpet. Get in touch with our office bearers
-            directly.</p>
-          <span class="section-card-link">Get in Touch &rarr;</span>
-        </a>
-      </div>
-    </div>
-  </section>
-
-  <!-- RECENT NEWS PREVIEW -->
-  <section class="section section-white">
-    <div class="container">
-      <div class="section-header">
-        <span class="section-badge">Latest</span>
-        <h2 class="section-title">Recent News</h2>
-        <div class="divider"></div>
-      </div>
-      <div class="home-news-grid" id="homeNewsGrid">
-        <p style="grid-column:1/-1;text-align:center;color:var(--muted);">Loading&hellip;</p>
-      </div>
-      <div class="view-all-wrap">
-        <a href="news/index.html" class="btn btn-gold">View All News &amp; Events</a>
-      </div>
+      <p class="error-countdown">
+        Redirecting to home page in <strong id="countdownNum">10</strong> seconds&hellip;
+      </p>
     </div>
   </section>
 
@@ -243,14 +173,14 @@
       </div>
       <div class="footer-links">
         <h4>Quick Links</h4>
-        <ul>
+        <!-- <ul>
           <li><a href="index.html">Home</a></li>
           <li><a href="about/index.html">About</a></li>
           <li><a href="office-bearers/index.html">Office Bearers</a></li>
           <li><a href="members/index.html">Members Directory</a></li>
           <li><a href="news/index.html">News &amp; Events</a></li>
           <li><a href="contact/index.html">Contact</a></li>
-        </ul>
+        </ul> -->
       </div>
       <div class="footer-links">
         <h4>Resources</h4>
@@ -282,6 +212,25 @@
 
   <button class="back-to-top" id="backToTop" aria-label="Back to top">&#8679;</button>
   <script src="js/script.js"></script>
+  <script>
+    (function () {
+      var seconds = 10;
+      var display = document.getElementById('countdownNum');
+      var interval = setInterval(function () {
+        seconds -= 1;
+        display.textContent = seconds;
+        if (seconds <= 0) {
+          clearInterval(interval);
+          window.location.href = '/';
+        }
+      }, 1000);
+
+      // Cancel auto-redirect if user clicks any link
+      document.querySelectorAll('a').forEach(function (a) {
+        a.addEventListener('click', function () { clearInterval(interval); });
+      });
+    })();
+  </script>
 </body>
 
 </html>
