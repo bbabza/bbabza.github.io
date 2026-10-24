@@ -354,6 +354,10 @@
       const SK = { token: 'bba_gh_token', owner: 'bba_gh_owner', repo: 'bba_gh_repo' };
 
       function loadSettings() {
+        if (localStorage.getItem('bba_admin') !== '1') {
+          document.getElementById('ghSettings').style.display = 'none';
+          return;
+        }
         document.getElementById('gh-token').value = localStorage.getItem(SK.token) || '';
         document.getElementById('gh-owner').value = localStorage.getItem(SK.owner) || 'bbabza';
         document.getElementById('gh-repo').value = localStorage.getItem(SK.repo) || 'bbabza.github.io';
