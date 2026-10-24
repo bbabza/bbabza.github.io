@@ -2406,6 +2406,13 @@ a.logo-block:hover { opacity: .92; }
   margin-bottom: 16px;
 }
 .gh-settings-grid .form-group { margin: 0; }
+.gh-settings-grid .form-group label { color: #5a4a00; }
+.gh-settings-grid .form-group input {
+  background: var(--white);
+  border: 1.5px solid #f0d060;
+  color: var(--text);
+}
+.gh-settings-grid .form-group input::placeholder { color: #999; }
 
 /* ─── PUBLISH STATUS ────────────────────────────────────── */
 .publish-status {
