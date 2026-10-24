@@ -367,7 +367,6 @@
     }
 
     function showGalleryUploadModal() {
-      var hasToken = !!localStorage.getItem(GH_SK.token);
       var overlay = buildModal(
         '<button class="admin-modal-close" aria-label="Close">&times;</button>' +
         '<div class="admin-modal-header"><span class="admin-modal-icon">&#128247;</span><h3>Upload Gallery Photo</h3></div>' +
@@ -382,23 +381,6 @@
         '<label for="gu-file">Photo *</label>' +
         '<input type="file" id="gu-file" accept="image/*" />' +
         '</div>' +
-        '<details id="guGhSettings"' + (hasToken ? '' : ' open') + ' style="margin:10px 0;">' +
-        '<summary style="cursor:pointer;font-size:13px;color:var(--muted);">&#9881; GitHub Connection Settings</summary>' +
-        '<div style="padding-top:10px;">' +
-        '<div class="admin-form-group">' +
-        '<label for="gu-token">Personal Access Token</label>' +
-        '<input type="password" id="gu-token" placeholder="ghp_xxxxxxxxxxxx" autocomplete="off" value="' + (localStorage.getItem(GH_SK.token) || '') + '" />' +
-        '</div>' +
-        '<div class="admin-form-group">' +
-        '<label for="gu-owner">Repository Owner</label>' +
-        '<input type="text" id="gu-owner" value="' + (localStorage.getItem(GH_SK.owner) || 'bbabza') + '" />' +
-        '</div>' +
-        '<div class="admin-form-group">' +
-        '<label for="gu-repo">Repository Name</label>' +
-        '<input type="text" id="gu-repo" value="' + (localStorage.getItem(GH_SK.repo) || 'bbabza.github.io') + '" />' +
-        '</div>' +
-        '</div>' +
-        '</details>' +
         '<p class="admin-error" id="guError"></p>' +
         '<div id="guStatus" style="display:none;font-size:13px;margin:10px 0;"></div>' +
         '<button type="submit" class="admin-submit-btn" id="guSubmitBtn">&#9650; Upload</button>' +
@@ -422,19 +404,14 @@
       if (!/^image\//.test(file.type)) { errEl.textContent = 'Please choose an image file.'; return; }
       if (file.size > 4 * 1024 * 1024) { errEl.textContent = 'Photo is too large (max 4 MB). Please compress it first.'; return; }
 
-      var token = document.getElementById('gu-token').value.trim();
-      var owner = document.getElementById('gu-owner').value.trim() || 'bbabza';
-      var repo = document.getElementById('gu-repo').value.trim() || 'bbabza.github.io';
+      var token = localStorage.getItem(GH_SK.token);
+      var owner = localStorage.getItem(GH_SK.owner) || 'bbabza';
+      var repo = localStorage.getItem(GH_SK.repo) || 'bbabza.github.io';
 
       if (!token) {
-        errEl.textContent = 'Enter your GitHub Personal Access Token below (fine-grained PAT with Contents: Read and Write).';
-        document.getElementById('guGhSettings').open = true;
+        errEl.textContent = 'GitHub connection not set up yet. Go to Blog → Compose, open ⚙ GitHub Connection Settings, save your token once, then try again here.';
         return;
       }
-
-      localStorage.setItem(GH_SK.token, token);
-      localStorage.setItem(GH_SK.owner, owner);
-      localStorage.setItem(GH_SK.repo, repo);
 
       btn.disabled = true;
       btn.textContent = 'Uploading…';
