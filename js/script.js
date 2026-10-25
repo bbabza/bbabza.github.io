@@ -325,16 +325,17 @@
       URL.revokeObjectURL(url);
     }
 
-    // ── Gallery photo upload — commits straight to the repo via the
-    // GitHub Contents API (gallery page only). Category keys below must
-    // match the CATEGORIES list and folder names in gallery/index.html.
+    // ── Gallery photo upload — sends to the gallery-upload edge function,
+    // which holds the GitHub token server-side and commits to the repo
+    // (gallery page only). Category keys below must match the CATEGORIES
+    // list and folder names in gallery/index.html.
     var GALLERY_CATS = [
       { key: 'events', label: 'Events' },
       { key: 'welfare', label: 'Welfare' },
       { key: 'heritage', label: 'Heritage' },
       { key: 'other', label: 'Other' }
     ];
-    var GH_SK = { token: 'bba_gh_token', owner: 'bba_gh_owner', repo: 'bba_gh_repo' };
+    var GALLERY_UPLOAD_URL = 'https://tiwazbntxvyvwfjzcwrv.supabase.co/functions/v1/gallery-upload';
 
     function injectGalleryUploadBtn() {
       var grid = document.getElementById('galleryCategories');
@@ -404,15 +405,6 @@
       if (!/^image\//.test(file.type)) { errEl.textContent = 'Please choose an image file.'; return; }
       if (file.size > 4 * 1024 * 1024) { errEl.textContent = 'Photo is too large (max 4 MB). Please compress it first.'; return; }
 
-      var token = localStorage.getItem(GH_SK.token);
-      var owner = localStorage.getItem(GH_SK.owner) || 'bbabza';
-      var repo = localStorage.getItem(GH_SK.repo) || 'bbabza.github.io';
-
-      if (!token) {
-        errEl.textContent = 'GitHub connection not set up yet. Go to Blog → Compose, open ⚙ GitHub Connection Settings, save your token once, then try again here.';
-        return;
-      }
-
       btn.disabled = true;
       btn.textContent = 'Uploading…';
       statusEl.style.display = 'block';
@@ -421,24 +413,26 @@
 
       try {
         var base64 = await galleryReadAsBase64(file);
-        var filename = Date.now() + '-' + gallerySanitizeFilename(file.name);
-        var path = 'gallery/' + category + '/' + filename;
 
         statusEl.textContent = 'Uploading to GitHub…';
 
-        var res = await fetch('https://api.github.com/repos/' + owner + '/' + repo + '/contents/' + path, {
-          method: 'PUT',
+        var res = await fetch(GALLERY_UPLOAD_URL, {
+          method: 'POST',
           headers: {
-            Authorization: 'token ' + token,
-            Accept: 'application/vnd.github.v3+json',
+            Authorization: 'Bearer ' + SUPABASE_ANON_KEY,
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify({ message: 'Gallery: add photo to ' + category, content: base64 })
+          body: JSON.stringify({
+            admin_password: sessionStorage.getItem('bba_admin_pass') || '',
+            category: category,
+            filename: gallerySanitizeFilename(file.name),
+            content_base64: base64
+          })
         });
+        var resBody = await res.json().catch(function () { return {}; });
 
-        if (!res.ok) {
-          var errBody = await res.json().catch(function () { return {}; });
-          throw new Error(errBody.message || ('Upload failed: ' + res.status));
+        if (!res.ok || !resBody.success) {
+          throw new Error(resBody.message || ('Upload failed: ' + res.status));
         }
 
         try { sessionStorage.removeItem('glr_scan_v1'); } catch (_) {}
